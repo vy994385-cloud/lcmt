@@ -1,16 +1,24 @@
+import "./Hero.css"
+
 function Hero() {
   return (
-    <section>
-      <h1>Little Changes That Matter</h1>
+    <section className="hero">
+
+      <h1>
+        Love Creates
+        <br />
+        Magic Together
+      </h1>
 
       <p>
-        Building technology that creates meaningful impact through small
-        improvements.
+        Meaningful connections begin with small moments.
+        Discover people, share stories, and build something real.
       </p>
 
       <button>
-        Get Started
+        Join LCMT
       </button>
+
     </section>
   )
 }

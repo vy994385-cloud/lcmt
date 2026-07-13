@@ -1,9 +1,11 @@
+import "./Navbar.css"
+
 function Navbar() {
   return (
-    <nav>
+    <nav className="navbar">
       <h2>LCTM</h2>
 
-      <div>
+      <div className="nav-links">
         <a href="#">Home</a>
         <a href="#">About</a>
         <a href="#">Contact</a>
