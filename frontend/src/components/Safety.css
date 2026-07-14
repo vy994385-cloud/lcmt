@@ -1,0 +1,36 @@
+.safety {
+  padding: 80px 60px;
+  text-align: center;
+}
+
+.safety h2 {
+  font-size: 45px;
+  margin-bottom: 15px;
+}
+
+.safety > p {
+  font-size: 20px;
+  margin-bottom: 50px;
+}
+
+.safety-cards {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.safety-card {
+  width: 280px;
+  padding: 35px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.65);
+}
+
+.safety-card h3 {
+  margin: 20px 0 10px;
+}
+
+.safety-card p {
+  line-height: 1.5;
+}

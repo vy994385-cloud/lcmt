@@ -2,15 +2,35 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 60px;
+  padding: 25px 60px;
+}
+
+.brand h2 {
+  font-size: 32px;
+  color: #ff4d8d;
+}
+
+.brand span {
+  font-size: 12px;
+  color: #666;
 }
 
 .nav-links {
   display: flex;
-  gap: 25px;
+  align-items: center;
+  gap: 30px;
 }
 
 .nav-links a {
   text-decoration: none;
-  color: black;
+  color: #222;
+}
+
+.nav-links button {
+  padding: 10px 25px;
+  border-radius: 25px;
+  border: none;
+  background: #ff4d8d;
+  color: white;
+  cursor: pointer;
 }

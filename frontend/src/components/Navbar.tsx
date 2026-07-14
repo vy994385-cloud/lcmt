@@ -1,15 +1,27 @@
+import { Link } from "react-router-dom"
 import "./Navbar.css"
 
 function Navbar() {
   return (
     <nav className="navbar">
-      <h2>LCTM</h2>
+
+      <div className="brand">
+        <h2>LCMT</h2>
+        <span>Love Creates Magic Together</span>
+      </div>
 
       <div className="nav-links">
-        <a href="#">Home</a>
-        <a href="#">About</a>
-        <a href="#">Contact</a>
+        <Link to="/">Explore</Link>
+
+        <Link to="/login">Login</Link>
+
+        <Link to="/signup">
+          <button>
+            Join
+          </button>
+        </Link>
       </div>
+
     </nav>
   )
 }

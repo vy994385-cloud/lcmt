@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 import "./Hero.css"
 
 function Hero() {
@@ -15,9 +16,11 @@ function Hero() {
         Discover people, share stories, and build something real.
       </p>
 
-      <button>
-        Join LCMT
-      </button>
+      <Link to="/signup">
+        <button>
+          Join LCMT
+        </button>
+      </Link>
 
     </section>
   )

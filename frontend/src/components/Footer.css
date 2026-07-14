@@ -1,0 +1,31 @@
+.footer {
+  padding: 50px 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255,255,255,0.5);
+}
+
+.footer-brand h2 {
+  font-size: 35px;
+  color: #ff4d8d;
+}
+
+.footer-brand p {
+  margin-top: 8px;
+  color: #555;
+}
+
+.signature {
+  text-align: right;
+}
+
+.signature p {
+  font-style: italic;
+  color: #777;
+}
+
+.signature h3 {
+  margin-top: 8px;
+  font-size: 22px;
+}

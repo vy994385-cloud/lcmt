@@ -1,0 +1,35 @@
+.why {
+  padding: 80px 60px;
+  text-align: center;
+}
+
+.why h2 {
+  font-size: 45px;
+  margin-bottom: 15px;
+}
+
+.why > p {
+  font-size: 20px;
+  margin-bottom: 50px;
+}
+
+.cards {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+}
+
+.card {
+  width: 280px;
+  padding: 30px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.6);
+}
+
+.card h3 {
+  margin: 15px 0;
+}
+
+.card p {
+  line-height: 1.5;
+}

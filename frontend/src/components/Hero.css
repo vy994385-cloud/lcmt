@@ -9,22 +9,31 @@
 }
 
 .hero h1 {
-  font-size: 64px;
+  font-size: 70px;
   line-height: 1.1;
+  background: linear-gradient(
+    90deg,
+    #ff4d8d,
+    #8b5cf6
+  );
+  background-clip: text;
+  color: transparent;
   margin-bottom: 25px;
 }
 
 .hero p {
-  font-size: 20px;
+  font-size: 21px;
   max-width: 650px;
-  margin-bottom: 35px;
   line-height: 1.6;
+  margin-bottom: 35px;
 }
 
 .hero button {
-  padding: 15px 35px;
+  padding: 16px 40px;
   font-size: 18px;
-  border-radius: 30px;
+  border-radius: 40px;
   border: none;
+  background: #ff4d8d;
+  color: white;
   cursor: pointer;
 }

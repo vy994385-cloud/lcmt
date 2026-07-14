@@ -1,0 +1,24 @@
+.join {
+  padding: 100px 60px;
+  text-align: center;
+}
+
+.join h2 {
+  font-size: 45px;
+  margin-bottom: 20px;
+}
+
+.join p {
+  font-size: 20px;
+  margin-bottom: 35px;
+}
+
+.join button {
+  padding: 16px 45px;
+  border-radius: 40px;
+  border: none;
+  background: #ff4d8d;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+}
