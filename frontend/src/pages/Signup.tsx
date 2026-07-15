@@ -27,7 +27,7 @@ function Signup() {
 
     try {
       const response = await axios.post(
-        ""https://lcmt-backend.onrender.com/api/auth/signup"",
+        "https://lcmt-backend.onrender.com/api/auth/signup",
         {
           name,
           email,
