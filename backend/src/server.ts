@@ -4,6 +4,7 @@ import dotenv from "dotenv"
 
 import { connectDatabase } from "./config/database"
 import authRoutes from "./routes/authRoutes"
+import profileRoutes from "./routes/profileRoutes"
 
 dotenv.config()
 
@@ -24,6 +25,7 @@ app.use(
 app.use(express.json())
 
 app.use("/api/auth", authRoutes)
+app.use("/api", profileRoutes)
 
 app.get("/api/status", (req, res) => {
   res.json({
@@ -38,6 +40,9 @@ app.get("/api/routes", (_req, res) => {
       "/api/status",
       "/api/auth/signup",
       "/api/auth/login",
+      "/api/profile",
+      "/api/profile/me",
+      "/api/users",
     ],
   })
 })
