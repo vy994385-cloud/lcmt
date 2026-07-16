@@ -14,12 +14,19 @@ const PORT = process.env.PORT || 5000
 
 app.use(
   cors({
-    origin: [
-  "http://localhost:5173",
-  "http://localhost:5175",
-  "https://lcmt.vercel.app",
-  "https://lcmt1.vercel.app",
-],
+    origin(origin, callback) {
+      if (
+        !origin ||
+        origin.startsWith("http://localhost:") ||
+        origin === "https://lcmt.vercel.app" ||
+        origin === "https://lcmt1.vercel.app"
+      ) {
+        callback(null, true)
+      } else {
+        callback(new Error("Not allowed by CORS"))
+      }
+    },
+    credentials: true,
   })
 )
 
