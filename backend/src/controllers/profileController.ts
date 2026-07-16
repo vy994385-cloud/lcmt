@@ -66,11 +66,13 @@ export async function getMyProfile(
 }
 
 export async function getUsers(
-  _req: AuthRequest,
+  req: AuthRequest,
   res: Response
 ) {
   try {
-    const users = await User.find().select("-password")
+    const users = await User.find({
+      _id: { $ne: req.userId },
+    }).select("-password")
 
     res.status(200).json(users)
   } catch (error) {
