@@ -15,10 +15,11 @@ const PORT = process.env.PORT || 5000
 app.use(
   cors({
     origin: [
-      "http://localhost:5173",
-      "https://lcmt.vercel.app",
-      "https://lcmt1.vercel.app",
-    ],
+  "http://localhost:5173",
+  "http://localhost:5175",
+  "https://lcmt.vercel.app",
+  "https://lcmt1.vercel.app",
+],
   })
 )
 
