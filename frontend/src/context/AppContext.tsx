@@ -24,7 +24,7 @@ type AppContextType = {
   matches: User[]
   passedUsers: User[]
   refreshUsers: () => Promise<void>
-  likeUser: (user: User) => void
+  likeUser: (user: User) => Promise<void>
   passUser: (user: User) => void
 }
 
@@ -49,6 +49,8 @@ export function AppProvider({
     try {
       const response = await api.get("/users")
 
+      console.log("USERS FROM API:", response.data)
+
       const formattedUsers = response.data.map((user: any) => ({
         id: user._id,
         name: user.name,
@@ -58,7 +60,7 @@ export function AppProvider({
         image:
           user.image && user.image.trim() !== ""
             ? user.image
-            : "https://via.placeholder.com/300x400",
+            : "https://placehold.co/300x400?text=No+Photo",
 
         gender: user.gender || "",
         college: user.college || "",
@@ -81,8 +83,20 @@ export function AppProvider({
     refreshUsers()
   }, [])
 
-  function likeUser(user: User) {
-    setMatches((previous) => [...previous, user])
+  async function likeUser(user: User) {
+    try {
+      const response = await api.post(`/likes/${user.id}`)
+
+      alert(response.data.message)
+
+      setMatches((previous) => [...previous, user])
+
+      setUsers((previous) =>
+        previous.filter((person) => person.id !== user.id)
+      )
+    } catch (error) {
+      console.log("Like failed", error)
+    }
   }
 
   function passUser(user: User) {
@@ -93,6 +107,10 @@ export function AppProvider({
 
       return [...previous, user]
     })
+
+    setUsers((previous) =>
+      previous.filter((person) => person.id !== user.id)
+    )
   }
 
   return (

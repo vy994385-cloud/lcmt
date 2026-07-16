@@ -89,3 +89,83 @@ export async function getUsers(
     })
   }
 }
+
+export async function likeUser(
+  req: AuthRequest,
+  res: Response
+) {
+  try {
+    const currentUserId = req.userId
+    const likedUserId = req.params.userId
+
+    if (currentUserId === likedUserId) {
+      return res.status(400).json({
+        message: "You cannot like yourself",
+      })
+    }
+
+    const currentUser = await User.findById(currentUserId)
+    const likedUser = await User.findById(likedUserId)
+
+    if (!currentUser || !likedUser) {
+      return res.status(404).json({
+        message: "User not found",
+      })
+    }
+
+    const alreadyLiked = currentUser.likedUsers.some(
+      (id: any) => id.toString() === likedUserId
+    )
+
+    if (alreadyLiked) {
+      return res.status(200).json({
+        message: "Already liked",
+      })
+    }
+
+    currentUser.likedUsers.push(likedUser._id)
+
+    let matched = false
+
+    const mutualLike = likedUser.likedUsers.some(
+      (id: any) => id.toString() === currentUserId
+    )
+
+    if (mutualLike) {
+      matched = true
+
+      if (
+        !currentUser.matchedUsers.some(
+          (id: any) => id.toString() === likedUserId
+        )
+      ) {
+        currentUser.matchedUsers.push(likedUser._id)
+      }
+
+      if (
+        !likedUser.matchedUsers.some(
+          (id: any) => id.toString() === currentUserId
+        )
+      ) {
+        likedUser.matchedUsers.push(currentUser._id)
+      }
+
+      await likedUser.save()
+    }
+
+    await currentUser.save()
+
+    res.status(200).json({
+      message: matched
+        ? "It's a Match! ❤️"
+        : "Liked successfully ❤️",
+      matched,
+    })
+  } catch (error) {
+    console.error(error)
+
+    res.status(500).json({
+      message: "Server Error",
+    })
+  }
+}

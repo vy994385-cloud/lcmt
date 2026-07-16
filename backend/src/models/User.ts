@@ -18,7 +18,6 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
 
-
     // Basic Profile
 
     age: {
@@ -46,7 +45,6 @@ const userSchema = new mongoose.Schema(
       default: 1,
     },
 
-
     // About User
 
     bio: {
@@ -63,7 +61,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
-
 
     // LCMT Compatibility System
 
@@ -87,6 +84,23 @@ const userSchema = new mongoose.Schema(
       default: {},
     },
 
+    // Dating System
+
+    likedUsers: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        default: [],
+      },
+    ],
+
+    matchedUsers: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        default: [],
+      },
+    ],
   },
   {
     timestamps: true,
