@@ -7,7 +7,15 @@ export async function signup(req: Request, res: Response) {
   try {
     const { name, email, password } = req.body
 
-    const existingUser = await User.findOne({ email })
+if (!name || !email || !password) {
+  return res.status(400).json({
+    message: "All fields are required",
+  })
+}
+
+const existingUser = await User.findOne({ email })
+
+    
 
     if (existingUser) {
       return res.status(400).json({
@@ -23,10 +31,19 @@ export async function signup(req: Request, res: Response) {
       password: hashedPassword,
     })
 
-    res.status(201).json({
-      message: "Account created successfully",
-      user,
-    })
+    const userResponse = {
+  _id: user._id,
+  name: user.name,
+  email: user.email,
+  age: user.age,
+  bio: user.bio,
+  image: user.image,
+}
+
+res.status(201).json({
+  message: "Account created successfully",
+  user: userResponse,
+})
 
   } catch (error) {
     console.error(error)
