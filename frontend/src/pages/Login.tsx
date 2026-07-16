@@ -1,18 +1,52 @@
 import { useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import axios from "axios"
 import "./Login.css"
 
 function Login() {
+  const navigate = useNavigate()
+
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
 
-    console.log({
-      email,
-      password,
-    })
+    if (!email || !password) {
+      alert("Please enter your email and password")
+      return
+    }
+
+    try {
+      const response = await axios.post(
+        "https://lcmt-backend.onrender.com/api/auth/login",
+        {
+          email,
+          password,
+        }
+      )
+
+      // Save JWT token
+      localStorage.setItem("token", response.data.token)
+
+      // Save logged-in user
+      localStorage.setItem(
+        "user",
+        JSON.stringify(response.data.user)
+      )
+
+      alert(response.data.message)
+
+      // Go to Discover page
+      navigate("/discover")
+
+    } catch (error: any) {
+      alert(
+        error.response?.data?.message ||
+        "Login failed"
+      )
+    }
   }
 
   return (
@@ -39,6 +73,7 @@ function Login() {
             placeholder="Enter your email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
           />
 
           <label>Password</label>
@@ -48,6 +83,7 @@ function Login() {
             placeholder="Enter your password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
           />
 
           <button
@@ -64,7 +100,8 @@ function Login() {
         </form>
 
         <p className="signup-link">
-          Don't have an account? <a href="/signup">Create one</a>
+          Don't have an account?{" "}
+          <Link to="/signup">Create one</Link>
         </p>
 
       </section>

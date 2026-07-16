@@ -51,3 +51,9 @@ app.get("/api/routes", (_req, res) => {
     ],
   })
 })
+
+routes: [
+  "/api/status",
+  "/api/auth/signup",
+  "/api/auth/login-test",
+]
