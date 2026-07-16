@@ -41,3 +41,13 @@ async function startServer() {
 }
 
 startServer()
+
+app.get("/api/routes", (_req, res) => {
+  res.json({
+    routes: [
+      "/api/status",
+      "/api/auth/signup",
+      "/api/auth/login",
+    ],
+  })
+})
