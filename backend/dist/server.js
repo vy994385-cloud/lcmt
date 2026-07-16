@@ -12,7 +12,11 @@ dotenv_1.default.config();
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 5000;
 app.use((0, cors_1.default)({
-    origin: "http://localhost:5173",
+    origin: [
+        "http://localhost:5173",
+        "https://lcmt.vercel.app",
+        "https://lcmt1.vercel.app",
+    ],
 }));
 app.use(express_1.default.json());
 app.use("/api/auth", authRoutes_1.default);
@@ -29,3 +33,12 @@ async function startServer() {
     });
 }
 startServer();
+app.get("/api/routes", (_req, res) => {
+    res.json({
+        routes: [
+            "/api/status",
+            "/api/auth/signup",
+            "/api/auth/login",
+        ],
+    });
+});
