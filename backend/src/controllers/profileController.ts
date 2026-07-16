@@ -3,6 +3,7 @@ import User from "../models/User"
 import { AuthRequest } from "../middleware/authMiddleware"
 
 
+
 export async function updateProfile(
   req: AuthRequest,
   res: Response
@@ -22,6 +23,7 @@ export async function updateProfile(
       values,
       personality,
     } = req.body
+
 
 
     const user = await User.findByIdAndUpdate(
@@ -45,10 +47,12 @@ export async function updateProfile(
     ).select("-password")
 
 
+
     res.status(200).json({
       message: "Profile updated successfully",
       user,
     })
+
 
 
   } catch (error) {
@@ -61,6 +65,9 @@ export async function updateProfile(
 
   }
 }
+
+
+
 
 
 
@@ -72,11 +79,14 @@ export async function getMyProfile(
 
   try {
 
-    const user = await User.findById(req.userId)
+    const user =
+      await User.findById(req.userId)
       .select("-password")
 
 
+
     res.status(200).json(user)
+
 
 
   } catch (error) {
@@ -90,6 +100,10 @@ export async function getMyProfile(
   }
 
 }
+
+
+
+
 
 
 
@@ -105,18 +119,28 @@ export async function getUsers(
 
     const users = await User.find({
 
+      // Do not show current user
       _id: {
         $ne: req.userId,
       },
 
-      // Only show users who completed profile
-      age: {
-        $exists: true,
-      },
+
+      // Only completed profiles
 
       bio: {
-        $exists: true,
+        $ne: "",
       },
+
+
+      college: {
+        $ne: "",
+      },
+
+
+      course: {
+        $ne: "",
+      },
+
 
     })
     .select("-password")
@@ -148,6 +172,8 @@ export async function getUsers(
 
 
 
+
+
 export async function likeUser(
   req: AuthRequest,
   res: Response
@@ -162,6 +188,7 @@ export async function likeUser(
 
 
 
+
     if (currentUserId === likedUserId) {
 
       return res.status(400).json({
@@ -169,6 +196,7 @@ export async function likeUser(
       })
 
     }
+
 
 
 
@@ -194,6 +222,7 @@ export async function likeUser(
 
 
 
+
     const alreadyLiked =
       currentUser.likedUsers.some(
         (id: any) =>
@@ -213,13 +242,18 @@ export async function likeUser(
 
 
 
+
+
     currentUser.likedUsers.push(
       likedUser._id
     )
 
 
 
+
+
     let matched = false
+
 
 
 
@@ -233,10 +267,13 @@ export async function likeUser(
 
 
 
+
+
     if (mutualLike) {
 
 
       matched = true
+
 
 
 
@@ -286,7 +323,10 @@ export async function likeUser(
 
 
 
+
     await currentUser.save()
+
+
 
 
 
