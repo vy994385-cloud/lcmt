@@ -32,16 +32,6 @@ app.get("/api/status", (req, res) => {
   })
 })
 
-async function startServer() {
-  await connectDatabase()
-
-  app.listen(PORT, () => {
-    console.log(`🚀 LCMT Backend running on port ${PORT}`)
-  })
-}
-
-startServer()
-
 app.get("/api/routes", (_req, res) => {
   res.json({
     routes: [
@@ -52,8 +42,12 @@ app.get("/api/routes", (_req, res) => {
   })
 })
 
-routes: [
-  "/api/status",
-  "/api/auth/signup",
-  "/api/auth/login-test",
-]
+async function startServer() {
+  await connectDatabase()
+
+  app.listen(PORT, () => {
+    console.log(`🚀 LCMT Backend running on port ${PORT}`)
+  })
+}
+
+startServer()
