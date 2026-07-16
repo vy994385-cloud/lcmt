@@ -7,8 +7,8 @@ function Chat() {
   const { matches } = useApp()
 
   const user = matches.find(
-    (person) => person.id === Number(id)
-  )
+  (person) => person.id === id
+)
 
   const [message, setMessage] = useState("")
 
