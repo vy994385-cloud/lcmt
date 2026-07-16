@@ -1,10 +1,13 @@
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import axios from "axios"
+import { useApp } from "../context/AppContext"
 import "./Login.css"
 
 function Login() {
   const navigate = useNavigate()
+
+  const { refreshUsers } = useApp()
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -27,18 +30,17 @@ function Login() {
         }
       )
 
-      // Save JWT token
       localStorage.setItem("token", response.data.token)
 
-      // Save logged-in user
       localStorage.setItem(
         "user",
         JSON.stringify(response.data.user)
       )
 
+      await refreshUsers()
+
       alert(response.data.message)
 
-      // Go to Discover page
       navigate("/discover")
 
     } catch (error: any) {

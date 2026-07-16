@@ -1,18 +1,29 @@
-import { createContext, useContext, useState } from "react"
-import { users as initialUsers } from "../data/users"
+import { createContext, useContext, useState, useEffect } from "react"
+import api from "../api/axios"
 
 type User = {
-  id: number
+  id: string
   name: string
   age: number
   bio: string
   image: string
+
+  gender: string
+  college: string
+  course: string
+  year: number
+
+  interests: string[]
+  values: string[]
+  personality: string
+  lookingFor: string
 }
 
 type AppContextType = {
   users: User[]
   matches: User[]
   passedUsers: User[]
+  refreshUsers: () => Promise<void>
   likeUser: (user: User) => void
   passUser: (user: User) => void
 }
@@ -24,45 +35,65 @@ export function AppProvider({
 }: {
   children: React.ReactNode
 }) {
-
-  const [users] = useState<User[]>(initialUsers)
-
+  const [users, setUsers] = useState<User[]>([])
   const [matches, setMatches] = useState<User[]>([])
-
   const [passedUsers, setPassedUsers] = useState<User[]>([])
 
+  async function refreshUsers() {
+    const token = localStorage.getItem("token")
+
+    if (!token) {
+      return
+    }
+
+    try {
+      const response = await api.get("/users")
+
+      const formattedUsers = response.data.map((user: any) => ({
+        id: user._id,
+        name: user.name,
+        age: user.age,
+        bio: user.bio,
+
+        image:
+          user.image && user.image.trim() !== ""
+            ? user.image
+            : "https://via.placeholder.com/300x400",
+
+        gender: user.gender || "",
+        college: user.college || "",
+        course: user.course || "",
+        year: user.year || 1,
+
+        interests: user.interests || [],
+        values: user.values || [],
+        personality: user.personality || "",
+        lookingFor: user.lookingFor || "",
+      }))
+
+      setUsers(formattedUsers)
+    } catch (error) {
+      console.log("Failed to load users", error)
+    }
+  }
+
+  useEffect(() => {
+    refreshUsers()
+  }, [])
 
   function likeUser(user: User) {
-
-  console.log("LIKE CLICKED:", user.name)
-
-  setMatches((previous) => {
-
-    console.log("OLD MATCHES:", previous)
-
-    const updatedMatches = [...previous, user]
-
-    console.log("NEW MATCHES:", updatedMatches)
-
-    return updatedMatches
-  })
-}
-
+    setMatches((previous) => [...previous, user])
+  }
 
   function passUser(user: User) {
-
     setPassedUsers((previous) => {
-
       if (previous.some((person) => person.id === user.id)) {
         return previous
       }
 
       return [...previous, user]
-
     })
-
   }
-
 
   return (
     <AppContext.Provider
@@ -70,6 +101,7 @@ export function AppProvider({
         users,
         matches,
         passedUsers,
+        refreshUsers,
         likeUser,
         passUser,
       }}
@@ -79,9 +111,7 @@ export function AppProvider({
   )
 }
 
-
 export function useApp() {
-
   const context = useContext(AppContext)
 
   if (!context) {
