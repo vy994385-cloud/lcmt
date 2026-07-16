@@ -18,6 +18,9 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
 
+
+    // Basic Profile
+
     age: {
       type: Number,
       default: 18,
@@ -43,6 +46,9 @@ const userSchema = new mongoose.Schema(
       default: 1,
     },
 
+
+    // About User
+
     bio: {
       type: String,
       default: "",
@@ -57,6 +63,30 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+
+
+    // LCMT Compatibility System
+
+    lookingFor: {
+      type: String,
+      default: "",
+    },
+
+    values: {
+      type: [String],
+      default: [],
+    },
+
+    personality: {
+      type: String,
+      default: "",
+    },
+
+    answers: {
+      type: mongoose.Schema.Types.Mixed,
+      default: {},
+    },
+
   },
   {
     timestamps: true,
