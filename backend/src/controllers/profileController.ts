@@ -16,6 +16,9 @@ export async function updateProfile(
       bio,
       interests,
       image,
+      lookingFor,
+      values,
+      personality,
     } = req.body
 
     const user = await User.findByIdAndUpdate(
@@ -29,6 +32,9 @@ export async function updateProfile(
         bio,
         interests,
         image,
+        lookingFor,
+        values,
+        personality,
       },
       {
         new: true,
