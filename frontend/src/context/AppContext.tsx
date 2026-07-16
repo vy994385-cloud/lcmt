@@ -49,8 +49,6 @@ export function AppProvider({
     try {
       const response = await api.get("/users")
 
-      console.log("USERS FROM API:", response.data)
-
       const formattedUsers = response.data.map((user: any) => ({
         id: user._id,
         name: user.name,
@@ -85,15 +83,23 @@ export function AppProvider({
 
   async function likeUser(user: User) {
     try {
-      const response = await api.post(`/likes/${user.id}`)
+
+      const response = await api.post(
+        `/users/${user.id}/like`
+      )
 
       alert(response.data.message)
 
-      setMatches((previous) => [...previous, user])
+      if (response.data.matched) {
+        setMatches((previous) => [...previous, user])
+      }
 
       setUsers((previous) =>
-        previous.filter((person) => person.id !== user.id)
+        previous.filter(
+          (person) => person.id !== user.id
+        )
       )
+
     } catch (error) {
       console.log("Like failed", error)
     }
@@ -101,7 +107,11 @@ export function AppProvider({
 
   function passUser(user: User) {
     setPassedUsers((previous) => {
-      if (previous.some((person) => person.id === user.id)) {
+      if (
+        previous.some(
+          (person) => person.id === user.id
+        )
+      ) {
         return previous
       }
 
@@ -109,7 +119,9 @@ export function AppProvider({
     })
 
     setUsers((previous) =>
-      previous.filter((person) => person.id !== user.id)
+      previous.filter(
+        (person) => person.id !== user.id
+      )
     )
   }
 
@@ -133,7 +145,9 @@ export function useApp() {
   const context = useContext(AppContext)
 
   if (!context) {
-    throw new Error("useApp must be used inside AppProvider")
+    throw new Error(
+      "useApp must be used inside AppProvider"
+    )
   }
 
   return context
