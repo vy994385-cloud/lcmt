@@ -3,15 +3,20 @@ import cors from "cors"
 import dotenv from "dotenv"
 
 import { connectDatabase } from "./config/database"
+
 import authRoutes from "./routes/authRoutes"
 import profileRoutes from "./routes/profileRoutes"
 import userRoutes from "./routes/userRoutes"
+import chatRoutes from "./routes/chatRoutes"
+
 
 dotenv.config()
+
 
 const app = express()
 
 const PORT = process.env.PORT || 5000
+
 
 
 app.use(
@@ -32,18 +37,27 @@ app.use(
   })
 )
 
+
+
 app.use(express.json())
 
 
+
 // Routes
+
 app.use("/api/auth", authRoutes)
 
 app.use("/api", profileRoutes)
 
 app.use("/api/users", userRoutes)
 
+app.use("/api/chat", chatRoutes)
 
-app.get("/api/status", (req, res) => {
+
+
+
+
+app.get("/api/status", (_req, res) => {
   res.json({
     message: "LCMT Backend Running ❤️",
     database: "Connected",
@@ -51,28 +65,47 @@ app.get("/api/status", (req, res) => {
 })
 
 
+
+
+
 app.get("/api/routes", (_req, res) => {
   res.json({
     routes: [
       "/api/status",
+
       "/api/auth/signup",
       "/api/auth/login",
+
       "/api/profile",
       "/api/profile/me",
+
       "/api/users/discover",
       "/api/users/like/:id",
       "/api/users/matches",
+
+      "/api/chat",
+      "/api/chat/:id",
+      "/api/chat/send/:id",
     ],
   })
 })
 
+
+
+
+
+
 async function startServer() {
+
   await connectDatabase()
+
 
   app.listen(PORT, () => {
     console.log(`🚀 LCMT Backend running on port ${PORT}`)
   })
+
 }
+
 
 
 startServer()
