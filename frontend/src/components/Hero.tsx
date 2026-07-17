@@ -7,11 +7,10 @@ function Hero() {
 
     <section className="hero">
 
-
       {/* Floating connection cards */}
 
       <div className="hero-card card-one">
-        👩‍🎓
+        🎓
         <span>
           Student Community
         </span>
@@ -21,7 +20,7 @@ function Hero() {
       <div className="hero-card card-two">
         💭
         <span>
-          Match Ideas
+          Thoughts First
         </span>
       </div>
 
@@ -34,10 +33,21 @@ function Hero() {
       </div>
 
 
+      <div className="hero-card card-four">
+        ✨
+        <span>
+          Shared Values
+        </span>
+      </div>
 
 
 
       <div className="hero-content">
+
+
+        <div className="hero-badge">
+          ❤️ Built for meaningful student connections
+        </div>
 
 
         <h1>
@@ -52,32 +62,53 @@ function Hero() {
 
 
 
-
         <p>
 
-          Meaningful connections begin with small moments.
-          Discover people, share stories, and build something real.
+          Find people who match your thoughts,
+          personality, and values.
+          Because real connections begin with understanding.
 
         </p>
 
 
 
+        <div className="hero-buttons">
+
+          <Link to="/signup">
+
+            <button className="primary-btn">
+
+              Start Your Journey ✨
+
+            </button>
+
+          </Link>
 
 
-        <Link to="/signup">
+          <Link to="/discover">
 
-          <button>
+            <button className="secondary-btn">
 
-            Join LCMT ✨
+              Explore Community 💭
 
-          </button>
+            </button>
 
-        </Link>
+          </Link>
+
+
+        </div>
+
+
+
+        <div className="hero-note">
+
+          💡 Discover minds before faces
+
+        </div>
 
 
 
       </div>
-
 
 
     </section>
