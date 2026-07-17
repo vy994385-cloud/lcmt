@@ -3,6 +3,7 @@ import { useApp } from "../context/AppContext"
 
 function Matches() {
   const { matches } = useApp()
+  console.log("Matches state:", matches)
   const navigate = useNavigate()
 
   return (

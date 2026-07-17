@@ -21,18 +21,20 @@ import HowItWorks from "../components/HowItWorks"
 import Safety from "../components/Safety"
 import JoinLCMT from "../components/JoinLCMT"
 import Footer from "../components/Footer"
+import ChatInbox from "../pages/ChatInbox"
 
 
 function LandingPage() {
   return (
     <>
-      <Navbar />
-      <Hero />
-      <WhyLCMT />
-      <HowItWorks />
-      <Safety />
-      <JoinLCMT />
-      <Footer />
+     <>
+  <Hero />
+  <WhyLCMT />
+  <HowItWorks />
+  <Safety />
+  <JoinLCMT />
+  <Footer />
+</>
     </>
   )
 }
@@ -58,8 +60,7 @@ export default function AppRoutes() {
 
       <Route path="/matches" element={<Matches />} />
 
-      <Route path="/chat/:id" element={<Chat />} />
-
+      
       <Route path="/settings" element={<Settings />} />
 
       <Route path="/notifications" element={<Notifications />} />
@@ -69,6 +70,18 @@ export default function AppRoutes() {
       <Route path="/likes-received" element={<LikesReceived />} />
 
       <Route path="/likes-sent" element={<LikesSent />} />
+
+      <Route 
+  path="/chat"
+  element={<ChatInbox />}
+/>
+
+<Route 
+  path="/chat/:id"
+  element={<Chat />}
+/>
+
+      
 
     </Routes>
   )

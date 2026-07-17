@@ -70,11 +70,9 @@ export function AppProvider({
     if (!token) return
 
     try {
-      const response = await api.get("/users")
+      const response = await api.get("/users/discover")
 
-      setUsers(
-        response.data.map(formatUser)
-      )
+      setUsers(response.data.map(formatUser))
     } catch (error) {
       console.log("Failed to load users", error)
     }
@@ -86,11 +84,11 @@ export function AppProvider({
     if (!token) return
 
     try {
-      const response = await api.get("/matches")
+      const response = await api.get("/users/matches")
 
-      setMatches(
-        response.data.map(formatUser)
-      )
+      console.log("Matches API:", response.data)
+
+      setMatches(response.data.map(formatUser))
     } catch (error) {
       console.log("Failed to load matches", error)
     }
@@ -104,7 +102,7 @@ export function AppProvider({
   async function likeUser(user: User) {
     try {
       const response = await api.post(
-        `/users/${user.id}/like`
+        `/users/like/${user.id}`
       )
 
       alert(response.data.message)

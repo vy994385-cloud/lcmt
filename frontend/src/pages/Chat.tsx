@@ -1,99 +1,280 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import { useApp } from "../context/AppContext"
+import api from "../api/axios"
+
 
 function Chat() {
+
   const { id } = useParams()
-  const { matches } = useApp()
 
-  const user = matches.find(
-  (person) => person.id === id
-)
+  const [messages, setMessages] = useState<any[]>([])
+  const [text, setText] = useState("")
 
-  const [message, setMessage] = useState("")
 
-  const [messages, setMessages] = useState([
-    "Hey 👋",
-    "Nice to connect with you 😊",
-  ])
+  const currentUser = JSON.parse(
+    localStorage.getItem("user") || "{}"
+  )
 
-  function sendMessage() {
-    if (message.trim() === "") return
 
-    setMessages([
-      ...messages,
-      message,
-    ])
 
-    setMessage("")
+  async function loadMessages(){
+
+    try{
+
+      const response = await api.get(
+        `/chat/${id}`
+      )
+
+      setMessages(response.data)
+
+    }
+    catch(error){
+
+      console.log(
+        "Loading messages failed",
+        error
+      )
+
+    }
+
   }
 
 
-  if (!user) {
-    return (
-      <main style={{ padding: "40px" }}>
-        <h1>User not found</h1>
-      </main>
-    )
+
+
+  async function sendMessage(){
+
+    if(!text.trim()) return
+
+
+    try{
+
+      await api.post(
+        `/chat/send/${id}`,
+        {
+          text
+        }
+      )
+
+
+      setText("")
+
+      loadMessages()
+
+
+    }
+    catch(error){
+
+      console.log(
+        "Sending message failed",
+        error
+      )
+
+    }
+
   }
+
+
+
+
+  useEffect(()=>{
+
+    loadMessages()
+
+  },[id])
+
+
 
 
   return (
-    <main style={{ padding: "40px" }}>
+
+    <main
+      style={{
+        padding:"30px",
+        maxWidth:"700px",
+        margin:"auto"
+      }}
+    >
+
 
       <h1>
-        Chat with {user.name} 💬
+        Chat ❤️
       </h1>
 
 
+
       <div
         style={{
-          marginTop: "30px",
-          minHeight: "300px",
-          border: "1px solid #ddd",
-          borderRadius: "15px",
-          padding: "20px",
+          height:"500px",
+          overflowY:"auto",
+          border:"1px solid #ddd",
+          borderRadius:"20px",
+          padding:"20px",
+          background:"#fafafa"
         }}
       >
 
-        {messages.map((msg, index) => (
-          <p key={index}>
-            {msg}
-          </p>
-        ))}
+
+      {
+        messages.map(
+          (message)=>(
+
+
+            <div
+              key={message._id}
+
+              style={{
+                display:"flex",
+
+                justifyContent:
+message.sender.toString() === currentUser._id
+?
+"flex-end"
+:
+"flex-start",
+
+                marginBottom:"15px"
+              }}
+
+            >
+
+
+              <div
+
+              style={{
+
+                maxWidth:"70%",
+
+                padding:"12px 18px",
+
+                borderRadius:"20px",
+
+                background:
+message.sender.toString() === currentUser._id
+?
+"#ff4d88"
+:
+"#e5e5e5",
+
+                color:
+message.sender.toString() === currentUser._id
+?
+"white"
+:
+"black"
+
+              }}
+
+              >
+
+
+                <p
+                style={{
+                  margin:0
+                }}
+                >
+                  {message.text}
+                </p>
+
+
+                <small>
+
+                  {
+                    new Date(
+                      message.createdAt
+                    ).toLocaleTimeString(
+                      [],
+                      {
+                        hour:"2-digit",
+                        minute:"2-digit"
+                      }
+                    )
+                  }
+
+                </small>
+
+
+              </div>
+
+
+            </div>
+
+
+          )
+        )
+      }
+
 
       </div>
 
 
+
       <div
-        style={{
-          display: "flex",
-          gap: "10px",
-          marginTop: "20px",
-        }}
+      style={{
+        display:"flex",
+        gap:"10px",
+        marginTop:"20px"
+      }}
       >
 
+
         <input
-          value={message}
-          onChange={(e) =>
-            setMessage(e.target.value)
+
+          value={text}
+
+          onChange={
+            (e)=>
+            setText(e.target.value)
           }
-          placeholder="Type a message..."
+
+          onKeyDown={
+            (e)=>{
+
+              if(e.key==="Enter"){
+                sendMessage()
+              }
+
+            }
+          }
+
+          placeholder="Type message..."
+
           style={{
-            flex: 1,
-            padding: "12px",
+            flex:1,
+            padding:"14px",
+            borderRadius:"15px",
+            border:"1px solid #ccc"
           }}
+
         />
 
 
-        <button onClick={sendMessage}>
-          Send
+
+        <button
+
+          onClick={sendMessage}
+
+          style={{
+            padding:"0 25px",
+            borderRadius:"15px",
+            cursor:"pointer"
+          }}
+
+        >
+
+          Send ❤️
+
         </button>
+
 
       </div>
 
+
     </main>
+
   )
+
 }
+
 
 export default Chat

@@ -1,299 +1,183 @@
+import Layout from "../components/Layout"
 import { useApp } from "../context/AppContext"
+import "./Discover.css"
 
-
-function calculateCompatibility(currentUser:any, user:any){
-
+function calculateCompatibility(currentUser: any, user: any) {
   let score = 0
 
-
-  if(
+  if (
     currentUser.college &&
     currentUser.college === user.college
-  ){
+  ) {
     score += 20
   }
 
-
-  if(
+  if (
     currentUser.course &&
     currentUser.course === user.course
-  ){
+  ) {
     score += 20
   }
 
-
   const commonInterests =
-    currentUser.interests?.filter(
-      (item:string)=>
-        user.interests?.includes(item)
+    currentUser.interests?.filter((item: string) =>
+      user.interests?.includes(item)
     ) || []
-
 
   score += commonInterests.length * 10
 
-
-
   const commonValues =
-    currentUser.values?.filter(
-      (item:string)=>
-        user.values?.includes(item)
+    currentUser.values?.filter((item: string) =>
+      user.values?.includes(item)
     ) || []
-
 
   score += commonValues.length * 10
 
-
-
-  if(score > 100){
-    score = 100
-  }
-
+  if (score > 100) score = 100
 
   return score
-
 }
 
-
-
-
-function Discover(){
-
+function Discover() {
 
   const {
     users,
     matches,
     passedUsers,
     likeUser,
-    passUser
+    passUser,
   } = useApp()
 
+  const currentUser = JSON.parse(
+    localStorage.getItem("user") || "{}"
+  )
 
-
-  const currentUser =
-    JSON.parse(
-      localStorage.getItem("user") || "{}"
-    )
-
-
-
-
-  const availableUsers =
-    users.filter(
-      (user)=>
-
-        user.id !== currentUser._id &&
-
-        !matches.some(
-          match=>match.id===user.id
-        )
-
-        &&
-
-        !passedUsers.some(
-          passed=>passed.id===user.id
-        )
-
-    )
-
-
-
+  const availableUsers = users.filter(
+    (user) =>
+      user.id !== currentUser._id &&
+      !matches.some((match) => match.id === user.id) &&
+      !passedUsers.some((passed) => passed.id === user.id)
+  )
 
   return (
+    <Layout>
 
-    <main style={{
-      padding:"40px"
-    }}>
+      <main className="discover-page">
 
+        <h1 className="discover-title">
+          Discover ❤️
+        </h1>
 
-      <h1>
-        Discover ❤️
-      </h1>
+        {
+          availableUsers.length === 0 ?
 
+          <p>No more profiles available ❤️</p>
 
+          :
 
-      {
-        availableUsers.length===0 ?
+          <div className="discover-grid">
 
-        (
+            {
+              availableUsers.map((user) => (
 
-          <p>
-            No more profiles available ❤️
-          </p>
+                <div
+                  key={user.id}
+                  className="profile-card"
+                >
 
-        )
+                  <div className="image-container">
 
-        :
+                    <img
+                      className="profile-image"
+                      src={user.image}
+                      alt={user.name}
+                    />
 
-        (
+                    <div className="image-overlay">
 
-          <div
-          style={{
-            display:"flex",
-            gap:"25px",
-            flexWrap:"wrap"
-          }}
-          >
+                      <div className="match-badge">
+                        ❤️ {calculateCompatibility(
+                          currentUser,
+                          user
+                        )}% Match
+                      </div>
 
+                      <div className="profile-info">
 
-          {
-            availableUsers.map(
-              (user)=>(
+                        <h2>
+                          {user.name}, {user.age}
+                        </h2>
 
+                        <p>
+                          🎓 {user.college}
+                        </p>
 
-              <div
+                        <p>
+                          💻 {user.course}
+                        </p>
 
-              key={user.id}
+                      </div>
 
-              style={{
+                    </div>
 
-                width:"300px",
+                  </div>
 
-                border:
-                "1px solid #ddd",
+                  <div className="profile-content">
 
-                borderRadius:"20px",
+                    <p className="info">
+                      {user.bio}
+                    </p>
 
-                padding:"20px"
+                    <div className="interests">
 
-              }}
+                      {(user.interests || []).map(
+                        (interest: string) => (
 
-              >
+                          <span
+                            key={interest}
+                            className="interest"
+                          >
+                            {interest}
+                          </span>
 
+                        )
+                      )}
 
+                    </div>
 
-              <img
+                    <div className="action-buttons">
 
-              src={user.image}
+                      <button
+                        className="pass-btn"
+                        onClick={() => passUser(user)}
+                      >
+                        ❌ Pass
+                      </button>
 
-              alt={user.name}
+                      <button
+                        className="like-btn"
+                        onClick={() => likeUser(user)}
+                      >
+                        ❤️ Like
+                      </button>
 
-              style={{
+                    </div>
 
-                width:"100%",
+                  </div>
 
-                height:"300px",
+                </div>
 
-                objectFit:"cover",
-
-                borderRadius:"15px"
-
-              }}
-
-              />
-
-
-
-
-              <h2>
-
-                {user.name}, {user.age}
-
-              </h2>
-
-
-
-
-              <h3>
-
-                ❤️ Compatibility:
-                {" "}
-                {
-                  calculateCompatibility(
-                    currentUser,
-                    user
-                  )
-                }%
-
-              </h3>
-
-
-
-
-              <p>
-                {user.bio}
-              </p>
-
-
-
-
-              <p>
-                🎓 {user.college}
-              </p>
-
-
-              <p>
-                💻 {user.course}
-              </p>
-
-
-
-              <p>
-
-                🎯
-
-                {
-                  (user.interests || []).join(" • ")
-
-                }
-
-              </p>
-
-
-
-
-              <div
-              style={{
-                display:"flex",
-                justifyContent:"space-between"
-              }}
-              >
-
-              <button
-              onClick={()=>
-                passUser(user)
-              }
-              >
-                ❌ Pass
-              </button>
-
-
-
-
-              <button
-              onClick={()=>
-                likeUser(user)
-              }
-              >
-                ❤️ Like
-              </button>
-
-
-              </div>
-
-
-
-              </div>
-
-
-              )
-
-            )
-          }
-
+              ))
+            }
 
           </div>
 
-        )
+        }
 
-      }
+      </main>
 
-
-
-    </main>
-
+    </Layout>
   )
-
 }
-
 
 export default Discover

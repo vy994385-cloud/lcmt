@@ -1,29 +1,115 @@
-import { Link } from "react-router-dom"
+import { NavLink } from "react-router-dom"
 import "./Navbar.css"
 
 function Navbar() {
+
   return (
+
     <nav className="navbar">
 
-      <div className="brand">
-        <h2>LCMT</h2>
-        <span>Love Creates Magic Together</span>
-      </div>
+
+      <NavLink 
+        to="/discover" 
+        className="logo"
+      >
+
+        <span>
+          ❤️
+        </span>
+
+        LCMT
+
+      </NavLink>
+
+
+
+
 
       <div className="nav-links">
-        <Link to="/">Explore</Link>
 
-        <Link to="/login">Login</Link>
 
-        <Link to="/signup">
-          <button>
-            Join
-          </button>
-        </Link>
+        <NavLink 
+          to="/discover"
+          className={({isActive}) =>
+            isActive ? "active" : ""
+          }
+        >
+
+          Discover
+
+        </NavLink>
+
+
+
+
+
+        <NavLink 
+          to="/matches"
+          className={({isActive}) =>
+            isActive ? "active" : ""
+          }
+        >
+
+          Matches
+
+        </NavLink>
+
+
+
+
+
+        <NavLink 
+          to="/chat"
+          className={({isActive}) =>
+            isActive ? "active" : ""
+          }
+        >
+
+          Chat
+
+        </NavLink>
+
+
+
+
+
+        <NavLink 
+          to="/notifications"
+          className={({isActive}) =>
+            isActive ? "active" : ""
+          }
+        >
+
+          Notifications
+
+        </NavLink>
+
+
+
+
+
+        <NavLink 
+          to="/profile"
+          className={({isActive}) =>
+            isActive ? "active" : ""
+          }
+        >
+
+          Profile
+
+        </NavLink>
+
+
+
       </div>
 
+
+
     </nav>
+
   )
+
 }
+
 
 export default Navbar

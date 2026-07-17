@@ -1,31 +1,272 @@
 .footer {
-  padding: 50px 60px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: rgba(255,255,255,0.5);
+
+  padding:80px 40px 30px;
+
+
+  background:
+
+
+  linear-gradient(
+    135deg,
+    #171717,
+    #262038
+  );
+
+
+  color:white;
+
+
 }
+
+
+
+
+
+
+.footer-content {
+
+
+  max-width:1200px;
+
+
+  margin:auto;
+
+
+  display:grid;
+
+
+  grid-template-columns:
+
+  2fr 1fr 1fr;
+
+
+  gap:50px;
+
+
+}
+
+
+
+
+
 
 .footer-brand h2 {
-  font-size: 35px;
-  color: #ff4d8d;
+
+
+  font-size:42px;
+
+
+  background:
+
+
+  linear-gradient(
+    90deg,
+    #ff3d8d,
+    #8b5cf6
+  );
+
+
+  -webkit-background-clip:text;
+
+
+  color:transparent;
+
+
 }
+
+
+
+
+
 
 .footer-brand p {
-  margin-top: 8px;
-  color: #555;
+
+
+  margin-top:10px;
+
+
+  font-size:18px;
+
+
 }
 
-.signature {
-  text-align: right;
+
+
+.footer-brand span {
+
+
+  display:block;
+
+
+  margin-top:20px;
+
+
+  max-width:350px;
+
+
+  color:#bbb;
+
+
+  line-height:1.6;
+
+
 }
 
-.signature p {
-  font-style: italic;
-  color: #777;
+
+
+
+
+
+
+.footer-links,
+.footer-community {
+
+
+  display:flex;
+
+
+  flex-direction:column;
+
+
+  gap:15px;
+
+
 }
 
-.signature h3 {
-  margin-top: 8px;
-  font-size: 22px;
+
+
+
+
+.footer h3 {
+
+
+  margin-bottom:10px;
+
+
+  font-size:20px;
+
+
+}
+
+
+
+
+
+.footer a {
+
+
+  color:#ccc;
+
+
+  text-decoration:none;
+
+
+  transition:.3s;
+
+
+}
+
+
+
+
+
+.footer a:hover {
+
+
+  color:#ff3d8d;
+
+
+}
+
+
+
+
+
+
+
+.footer-community p {
+
+
+  color:#ccc;
+
+
+}
+
+
+
+
+
+
+
+.footer-bottom {
+
+
+  max-width:1200px;
+
+
+  margin:60px auto 0;
+
+
+  padding-top:25px;
+
+
+  border-top:1px solid rgba(255,255,255,.15);
+
+
+  display:flex;
+
+
+  justify-content:space-between;
+
+
+  align-items:center;
+
+
+  color:#aaa;
+
+
+}
+
+
+
+
+
+
+.footer-bottom h3 {
+
+
+  color:white;
+
+
+}
+
+
+
+
+
+@media(max-width:800px){
+
+
+.footer-content {
+
+
+  grid-template-columns:1fr;
+
+
+}
+
+
+
+.footer-bottom {
+
+
+  flex-direction:column;
+
+
+  gap:10px;
+
+
+}
+
+
 }
