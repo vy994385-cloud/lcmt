@@ -1,5 +1,9 @@
 import express from "express"
-import { discoverUsers, likeUser } from "../controllers/userController"
+import { 
+  discoverUsers,
+  likeUser,
+  getMatches
+} from "../controllers/userController"
 import { protect } from "../middleware/authMiddleware"
 
 const router = express.Router()
@@ -7,6 +11,12 @@ const router = express.Router()
 router.get("/discover", protect, discoverUsers)
 
 router.post("/like/:id", protect, likeUser)
+
+router.get(
+  "/matches",
+  protect,
+  getMatches
+)
 
 router.get("/test/:id", async (req, res) => {
   const User = (await import("../models/User")).default

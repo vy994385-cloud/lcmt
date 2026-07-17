@@ -135,3 +135,33 @@ console.log("LIKED USER FOUND:", likedUser?._id)
 
   }
 }
+export async function getMatches(
+  req: AuthRequest,
+  res: Response
+) {
+  try {
+
+    const user = await User.findById(req.userId)
+      .populate(
+        "matchedUsers",
+        "name age bio image college course"
+      )
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found"
+      })
+    }
+
+    res.json(user.matchedUsers)
+
+  } catch(error) {
+
+    console.log(error)
+
+    res.status(500).json({
+      message:"Server error"
+    })
+
+  }
+}
