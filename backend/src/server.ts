@@ -61,10 +61,10 @@ app.get("/api/routes", (_req, res) => {
       "/api/profile/me",
       "/api/users/discover",
       "/api/users/like/:id",
+      "/api/users/matches",
     ],
   })
 })
-
 
 async function startServer() {
   await connectDatabase()
