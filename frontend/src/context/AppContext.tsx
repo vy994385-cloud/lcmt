@@ -24,6 +24,7 @@ type AppContextType = {
   matches: User[]
   passedUsers: User[]
   refreshUsers: () => Promise<void>
+  refreshMatches: () => Promise<void>
   likeUser: (user: User) => Promise<void>
   passUser: (user: User) => void
 }
@@ -39,60 +40,74 @@ export function AppProvider({
   const [matches, setMatches] = useState<User[]>([])
   const [passedUsers, setPassedUsers] = useState<User[]>([])
 
+  function formatUser(user: any): User {
+    return {
+      id: user._id,
+      name: user.name,
+      age: user.age,
+      bio: user.bio,
+
+      image:
+        user.image && user.image.trim() !== ""
+          ? user.image
+          : "https://placehold.co/300x400?text=No+Photo",
+
+      gender: user.gender || "",
+      college: user.college || "",
+      course: user.course || "",
+      year: user.year || 1,
+
+      interests: user.interests || [],
+      values: user.values || [],
+      personality: user.personality || "",
+      lookingFor: user.lookingFor || "",
+    }
+  }
+
   async function refreshUsers() {
     const token = localStorage.getItem("token")
 
-    if (!token) {
-      return
-    }
+    if (!token) return
 
     try {
       const response = await api.get("/users")
 
-      const formattedUsers = response.data.map((user: any) => ({
-        id: user._id,
-        name: user.name,
-        age: user.age,
-        bio: user.bio,
-
-        image:
-          user.image && user.image.trim() !== ""
-            ? user.image
-            : "https://placehold.co/300x400?text=No+Photo",
-
-        gender: user.gender || "",
-        college: user.college || "",
-        course: user.course || "",
-        year: user.year || 1,
-
-        interests: user.interests || [],
-        values: user.values || [],
-        personality: user.personality || "",
-        lookingFor: user.lookingFor || "",
-      }))
-
-      setUsers(formattedUsers)
+      setUsers(
+        response.data.map(formatUser)
+      )
     } catch (error) {
       console.log("Failed to load users", error)
     }
   }
 
+  async function refreshMatches() {
+    const token = localStorage.getItem("token")
+
+    if (!token) return
+
+    try {
+      const response = await api.get("/matches")
+
+      setMatches(
+        response.data.map(formatUser)
+      )
+    } catch (error) {
+      console.log("Failed to load matches", error)
+    }
+  }
+
   useEffect(() => {
     refreshUsers()
+    refreshMatches()
   }, [])
 
   async function likeUser(user: User) {
     try {
-
       const response = await api.post(
         `/users/${user.id}/like`
       )
 
       alert(response.data.message)
-
-      if (response.data.matched) {
-        setMatches((previous) => [...previous, user])
-      }
 
       setUsers((previous) =>
         previous.filter(
@@ -100,6 +115,7 @@ export function AppProvider({
         )
       )
 
+      await refreshMatches()
     } catch (error) {
       console.log("Like failed", error)
     }
@@ -132,6 +148,7 @@ export function AppProvider({
         matches,
         passedUsers,
         refreshUsers,
+        refreshMatches,
         likeUser,
         passUser,
       }}
