@@ -5,6 +5,7 @@ import {
   getMyProfile,
   getUsers,
   likeUser,
+  getMatches,
 } from "../controllers/profileController"
 
 import { protect } from "../middleware/authMiddleware"
@@ -36,6 +37,17 @@ router.get(
   getUsers
 )
 
+router.post(
+  "/users/:userId/like",
+  protect,
+  likeUser
+)
+
+router.get(
+  "/matches",
+  protect,
+  getMatches
+)
 
 
 // Like a user
