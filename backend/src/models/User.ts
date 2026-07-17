@@ -1,4 +1,4 @@
-import mongoose from "mongoose"
+import mongoose, { Document } from "mongoose"
 
 const userSchema = new mongoose.Schema(
   {
@@ -106,5 +106,27 @@ const userSchema = new mongoose.Schema(
     timestamps: true,
   }
 )
+interface IUser extends Document {
+  name: string
+  email: string
+  password: string
 
-export default mongoose.model("User", userSchema)
+  age: number
+  gender: string
+  college: string
+  course: string
+  year: number
+
+  bio: string
+  interests: string[]
+  image: string
+
+  lookingFor: string
+  values: string[]
+  personality: string
+  answers: any
+
+  likedUsers: mongoose.Types.ObjectId[]
+  matchedUsers: mongoose.Types.ObjectId[]
+}
+export default mongoose.model<IUser>("User", userSchema)
