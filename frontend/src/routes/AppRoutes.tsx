@@ -15,7 +15,7 @@ import LikesSent from "../pages/LikesSent"
 import TestBackend from "../pages/TestBackend"
 
 import Hero from "../components/Hero"
-import Navbar from "../components/Navbar"
+
 import WhyLCMT from "../components/WhyLCMT"
 import HowItWorks from "../components/HowItWorks"
 import Safety from "../components/Safety"
