@@ -132,15 +132,56 @@ export async function getInbox(
     })
 
 
-    res.json(messages)
+    const conversations:any = {}
 
 
-  } catch (error) {
+    messages.forEach((message:any)=>{
+
+
+      const otherUser =
+        message.sender._id.toString() === userId
+
+        ?
+
+        message.receiver
+
+        :
+
+        message.sender
+
+
+
+      conversations[
+        otherUser._id
+      ] = {
+
+        user: otherUser,
+
+        lastMessage:
+          message.text,
+
+        time:
+          message.createdAt
+
+      }
+
+
+    })
+
+
+
+    res.json(
+      Object.values(conversations)
+    )
+
+
+  } catch(error){
 
     console.log(error)
 
     res.status(500).json({
-      message: "Server error",
+      message:"Server error"
     })
+
   }
 }
