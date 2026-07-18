@@ -6,19 +6,19 @@ function App() {
 
   const location = useLocation()
 
-  const hideNavbarRoutes = [
+  const publicRoutes = [
+    "/",
     "/login",
     "/signup"
   ]
 
-  const shouldShowNavbar = !hideNavbarRoutes.includes(
-    location.pathname
-  )
+  const isPublicPage =
+    publicRoutes.includes(location.pathname)
 
 
   return (
     <>
-      {shouldShowNavbar && <Navbar />}
+      {!isPublicPage && <Navbar />}
 
       <AppRoutes />
     </>
