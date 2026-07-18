@@ -13,23 +13,32 @@ export async function getCommunityPosts(
 
   try {
 
-    const posts = await Post.find({
-      community: req.params.id
-    })
-    .populate({
-      path:"user",
-      select:"name image"
-    })
-    .populate({
-      path:"comments.user",
-      select:"name image"
-    })
-    .sort({
-      createdAt:-1
-    })
+
+    const communityId =
+      String(req.params.id)
+
+
+
+    const posts =
+      await Post.find({
+        community: communityId
+      })
+      .populate({
+        path: "user",
+        select: "name image"
+      })
+      .populate({
+        path: "comments.user",
+        select: "name image"
+      })
+      .sort({
+        createdAt: -1
+      })
+
 
 
     return res.json(posts)
+
 
 
   } catch(error) {
@@ -39,13 +48,17 @@ export async function getCommunityPosts(
 
 
     return res.status(500).json({
+
       message:"Server error"
+
     })
 
 
   }
 
 }
+
+
 
 
 
@@ -67,48 +80,69 @@ export async function createCommunityPost(
     if(!userId){
 
       return res.status(401).json({
+
         message:"Unauthorized"
+
       })
 
     }
+
+
+
+    const communityId =
+      String(req.params.id)
 
 
 
     const community =
       await Community.findById(
-        req.params.id
+        communityId
       )
+
 
 
     if(!community){
 
       return res.status(404).json({
+
         message:"Community not found"
+
       })
 
     }
+
+
 
 
 
     const post =
       await Post.create({
 
-        community:req.params.id,
+        community: communityId,
 
-        user:userId,
+        user: userId,
 
-        content:req.body.content
+        content: req.body.content
 
       })
 
 
 
+
+
     const populatedPost =
-      await Post.findById(post._id)
-      .populate(
-        "user",
-        "name image"
+      await Post.findById(
+        post._id
       )
+      .populate({
+
+        path:"user",
+
+        select:"name image"
+
+      })
+
+
 
 
 
@@ -116,9 +150,11 @@ export async function createCommunityPost(
 
       message:"Post created",
 
-      post:populatedPost
+      post: populatedPost
 
     })
+
+
 
 
   } catch(error){
@@ -127,8 +163,11 @@ export async function createCommunityPost(
     console.log(error)
 
 
+
     return res.status(500).json({
+
       message:"Server error"
+
     })
 
 
