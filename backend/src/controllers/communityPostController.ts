@@ -27,6 +27,7 @@ export async function getCommunityPosts(
       )
     })
       .populate("user", "name image")
+      .populate("comments.user", "name image")
       .sort({ createdAt: -1 })
 
     return res.json(posts)
@@ -81,14 +82,142 @@ export async function createCommunityPost(
 
     const populatedPost = await Post.findById(
       post._id
-    ).populate(
-      "user",
-      "name image"
     )
+      .populate("user", "name image")
+      .populate("comments.user", "name image")
 
     return res.json({
       message: "Post created successfully",
       post: populatedPost
+    })
+
+  } catch (error) {
+
+    console.log(error)
+
+    return res.status(500).json({
+      message: "Server error"
+    })
+
+  }
+}
+
+export async function toggleLike(
+  req: AuthRequest,
+  res: Response
+) {
+  try {
+
+    const userId =
+      req.userId || req.body.userId
+
+    if (!userId) {
+      return res.status(401).json({
+        message: "Unauthorized"
+      })
+    }
+
+    const post = await Post.findById(
+      req.params.postId
+    )
+
+    if (!post) {
+      return res.status(404).json({
+        message: "Post not found"
+      })
+    }
+
+    const alreadyLiked =
+      post.likes.some(
+        (id: any) => id.toString() === userId
+      )
+
+    if (alreadyLiked) {
+
+      post.likes = post.likes.filter(
+        (id: any) =>
+          id.toString() !== userId
+      )
+
+    } else {
+
+      post.likes.push(
+        new mongoose.Types.ObjectId(userId)
+      )
+
+    }
+
+    await post.save()
+
+    const updatedPost =
+      await Post.findById(post._id)
+        .populate("user", "name image")
+        .populate("comments.user", "name image")
+
+    return res.json({
+      message: alreadyLiked
+        ? "Post unliked"
+        : "Post liked",
+      post: updatedPost
+    })
+
+  } catch (error) {
+
+    console.log(error)
+
+    return res.status(500).json({
+      message: "Server error"
+    })
+
+  }
+}
+
+export async function addComment(
+  req: AuthRequest,
+  res: Response
+) {
+  try {
+
+    const userId =
+      req.userId || req.body.userId
+
+    if (!userId) {
+      return res.status(401).json({
+        message: "Unauthorized"
+      })
+    }
+
+    const post = await Post.findById(
+      req.params.postId
+    )
+
+    if (!post) {
+      return res.status(404).json({
+        message: "Post not found"
+      })
+    }
+
+    post.comments.push({
+
+      user: new mongoose.Types.ObjectId(userId),
+
+      text: req.body.text
+
+    } as any)
+
+    await post.save()
+
+    const updatedPost =
+      await Post.findById(post._id)
+        .populate("user", "name image")
+        .populate("comments.user", "name image")
+
+    return res.json({
+
+      message: "Comment added",
+
+      post: updatedPost
+
     })
 
   } catch (error) {
