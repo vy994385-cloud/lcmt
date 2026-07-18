@@ -9,6 +9,7 @@ import profileRoutes from "./routes/profileRoutes"
 import userRoutes from "./routes/userRoutes"
 import chatRoutes from "./routes/chatRoutes"
 import communityRoutes from "./routes/communityRoutes"
+import communityPostRoutes from "./routes/communityPostRoutes"
 
 import User from "./models/User"
 
@@ -45,7 +46,7 @@ app.use(
 
     },
 
-    credentials:true,
+    credentials: true,
 
   })
 )
@@ -59,10 +60,12 @@ app.use(express.json())
 
 // Routes
 
+
 app.use(
   "/api/auth",
   authRoutes
 )
+
 
 
 app.use(
@@ -71,10 +74,12 @@ app.use(
 )
 
 
+
 app.use(
   "/api/users",
   userRoutes
 )
+
 
 
 app.use(
@@ -83,6 +88,9 @@ app.use(
 )
 
 
+
+// Communities
+
 app.use(
   "/api/communities",
   communityRoutes
@@ -90,13 +98,22 @@ app.use(
 
 
 
+// Community posts
+
+app.use(
+  "/api/communities",
+  communityPostRoutes
+)
 
 
-// Status
+
+
+
+// Status route
 
 app.get(
   "/api/status",
-  (_req,res)=>{
+  (_req, res)=>{
 
     res.json({
 
@@ -110,6 +127,7 @@ app.get(
 
   }
 )
+
 
 
 
@@ -141,7 +159,10 @@ app.get(
         "/api/chat/:id",
         "/api/chat/send/:id",
 
-        "/api/communities"
+        "/api/communities",
+        "/api/communities/:id/join",
+
+        "/api/communities/:id/posts"
 
       ]
 
@@ -156,7 +177,6 @@ app.get(
 
 
 // Temporary test route
-// Remove later
 
 app.get(
   "/api/test-users",
@@ -179,6 +199,7 @@ app.get(
 
       console.log(error)
 
+
       res.status(500)
       .json({
         message:"Error"
@@ -188,6 +209,8 @@ app.get(
 
   }
 )
+
+
 
 
 
