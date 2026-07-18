@@ -6,82 +6,48 @@ import "./Communities.css"
 
 function Communities() {
 
-
   const [communities, setCommunities] = useState<any[]>([])
 
-  const [user, setUser] = useState<any>(null)
+
+  const user =
+    JSON.parse(
+      localStorage.getItem("user") || "{}"
+    )
 
 
 
-  useEffect(() => {
-
-
-    const storedUser =
-      JSON.parse(
-        localStorage.getItem("user") || "null"
-      )
-
-
-    setUser(storedUser)
-
-
-
-    async function fetchCommunities() {
-
-
-      try {
-
-
-        const response =
-          await axios.get(
-            "https://lcmt-backend.onrender.com/api/communities"
-          )
-
-
-        setCommunities(
-          response.data
-        )
-
-
-      } catch(error) {
-
-
-        console.log(error)
-
-
-      }
-
-
-    }
-
-
-    fetchCommunities()
-
-
-  }, [])
-
-
-
-
-
-  async function joinCommunity(
-    id:string
-  ) {
-
+  async function fetchCommunities() {
 
     try {
 
-
-      if(!user?._id){
-
-        alert(
-          "Please login first"
+      const response =
+        await axios.get(
+          "https://lcmt-backend.onrender.com/api/communities"
         )
 
-        return
+      setCommunities(response.data)
 
-      }
+    } catch(error){
 
+      console.log(error)
+
+    }
+
+  }
+
+
+
+  useEffect(()=>{
+
+    fetchCommunities()
+
+  },[])
+
+
+
+  async function joinCommunity(id:string){
+
+    try {
 
 
       await axios.post(
@@ -95,110 +61,30 @@ function Communities() {
       )
 
 
+      alert("Joined Community 🎉")
 
-      setCommunities(
-        prev =>
-
-        prev.map(
-          community => {
-
-
-            if(
-              community._id === id
-            ){
-
-
-              const alreadyJoined =
-                community.members?.some(
-                  (member:any)=>
-                    member._id === user._id
-                )
-
-
-
-              if(alreadyJoined){
-
-                return community
-
-              }
-
-
-
-              return {
-
-                ...community,
-
-                members:[
-                  ...(community.members || []),
-
-                  {
-                    _id:user._id,
-                    name:user.name,
-                    image:user.image
-                  }
-
-                ]
-
-              }
-
-
-            }
-
-
-            return community
-
-
-          }
-
-        )
-
-      )
-
+      fetchCommunities()
 
 
     } catch(error:any){
 
-
       console.log(
-        error.response?.data ||
-        error.message
+        error.response?.data || error.message
       )
-
 
       alert(
         error.response?.data?.message ||
         "Join failed"
       )
 
-
     }
 
-
   }
-
-
-
-
-
-  function isJoined(
-    community:any
-  ){
-
-
-    return community.members?.some(
-      (member:any)=>
-        member._id === user?._id
-    )
-
-
-  }
-
 
 
 
 
   return (
-
 
     <Layout>
 
@@ -206,9 +92,7 @@ function Communities() {
       <main className="communities-page">
 
 
-
         <section className="community-header">
-
 
           <h1>
             🌍 Student Communities
@@ -225,21 +109,17 @@ function Communities() {
 
 
 
-
-
         <div className="community-grid">
 
 
           {
-            communities.map(
-              (community)=>(
+            communities.map((community)=>(
 
 
               <div
                 className="community-card"
                 key={community._id}
               >
-
 
 
                 <div className="community-icon">
@@ -250,62 +130,65 @@ function Communities() {
 
 
 
+                <span className="category">
 
-
-                <h2>
-
-                  {community.name}
-
-                </h2>
-
-
-
-
-
-                <p>
-
-                  {community.description}
-
-                </p>
-
-
-
-
-
-                <span>
-
-                  👥 {community.members?.length || 0} Students
+                  {community.category}
 
                 </span>
 
 
 
+                <h2>
+                  {community.name}
+                </h2>
 
 
-                <button
 
-                  disabled={
-                    isJoined(community)
-                  }
-
-                  onClick={()=>
-                    joinCommunity(
-                      community._id
-                    )
-                  }
-
-                >
-
-                  {
-                    isJoined(community)
-                    ?
-                    "✓ Joined"
-                    :
-                    "Join Community"
-                  }
+                <p>
+                  {community.description}
+                </p>
 
 
-                </button>
+
+                <div className="members">
+
+                  👥 {community.members?.length || 0}
+                  {" "}Students
+
+                </div>
+
+
+
+
+                {
+                  community.members?.some(
+                    (member:any)=>
+                    member._id === user._id
+                  )
+
+                  ?
+
+                  <button className="joined">
+
+                    ✓ Joined
+
+                  </button>
+
+                  :
+
+                  <button
+                    onClick={()=>
+                      joinCommunity(
+                        community._id
+                      )
+                    }
+                  >
+
+                    Join Community
+
+                  </button>
+
+                }
 
 
 
@@ -313,13 +196,10 @@ function Communities() {
 
 
             ))
-
           }
 
 
-
         </div>
-
 
 
       </main>
@@ -327,12 +207,9 @@ function Communities() {
 
     </Layout>
 
-
   )
 
-
 }
-
 
 
 export default Communities
