@@ -6,26 +6,51 @@ import "./Communities.css"
 
 function Communities() {
 
+
   const [communities, setCommunities] = useState<any[]>([])
+
+  const [user, setUser] = useState<any>(null)
+
 
 
   useEffect(() => {
 
+
+    const storedUser =
+      JSON.parse(
+        localStorage.getItem("user") || "null"
+      )
+
+
+    setUser(storedUser)
+
+
+
     async function fetchCommunities() {
+
 
       try {
 
-        const response = await axios.get(
-          "https://lcmt-backend.onrender.com/api/communities"
+
+        const response =
+          await axios.get(
+            "https://lcmt-backend.onrender.com/api/communities"
+          )
+
+
+        setCommunities(
+          response.data
         )
 
-        setCommunities(response.data)
 
-      } catch (error) {
+      } catch(error) {
+
 
         console.log(error)
 
+
       }
+
 
     }
 
@@ -37,14 +62,26 @@ function Communities() {
 
 
 
-  async function joinCommunity(id: string) {
+
+
+  async function joinCommunity(
+    id:string
+  ) {
+
 
     try {
 
-      const user =
-        JSON.parse(
-          localStorage.getItem("user") || "{}"
+
+      if(!user?._id){
+
+        alert(
+          "Please login first"
         )
+
+        return
+
+      }
+
 
 
       await axios.post(
@@ -52,23 +89,79 @@ function Communities() {
         `https://lcmt-backend.onrender.com/api/communities/${id}/join`,
 
         {
-          userId: user._id
+          userId:user._id
         }
 
       )
 
 
-      alert("Joined Community 🎉")
+
+      setCommunities(
+        prev =>
+
+        prev.map(
+          community => {
 
 
-      window.location.reload()
+            if(
+              community._id === id
+            ){
 
 
-    } catch(error:any) {
+              const alreadyJoined =
+                community.members?.some(
+                  (member:any)=>
+                    member._id === user._id
+                )
+
+
+
+              if(alreadyJoined){
+
+                return community
+
+              }
+
+
+
+              return {
+
+                ...community,
+
+                members:[
+                  ...(community.members || []),
+
+                  {
+                    _id:user._id,
+                    name:user.name,
+                    image:user.image
+                  }
+
+                ]
+
+              }
+
+
+            }
+
+
+            return community
+
+
+          }
+
+        )
+
+      )
+
+
+
+    } catch(error:any){
 
 
       console.log(
-        error.response?.data || error.message
+        error.response?.data ||
+        error.message
       )
 
 
@@ -77,18 +170,41 @@ function Communities() {
         "Join failed"
       )
 
+
     }
+
 
   }
 
 
 
+
+
+  function isJoined(
+    community:any
+  ){
+
+
+    return community.members?.some(
+      (member:any)=>
+        member._id === user?._id
+    )
+
+
+  }
+
+
+
+
+
   return (
+
 
     <Layout>
 
 
       <main className="communities-page">
+
 
 
         <section className="community-header">
@@ -110,11 +226,13 @@ function Communities() {
 
 
 
+
         <div className="community-grid">
 
 
           {
-            communities.map((community)=>(
+            communities.map(
+              (community)=>(
 
 
               <div
@@ -123,11 +241,14 @@ function Communities() {
               >
 
 
+
                 <div className="community-icon">
 
                   {community.icon}
 
                 </div>
+
+
 
 
 
@@ -139,11 +260,15 @@ function Communities() {
 
 
 
+
+
                 <p>
 
                   {community.description}
 
                 </p>
+
+
 
 
 
@@ -155,15 +280,30 @@ function Communities() {
 
 
 
+
+
                 <button
-                  onClick={() =>
+
+                  disabled={
+                    isJoined(community)
+                  }
+
+                  onClick={()=>
                     joinCommunity(
                       community._id
                     )
                   }
+
                 >
 
-                  Join Community
+                  {
+                    isJoined(community)
+                    ?
+                    "✓ Joined"
+                    :
+                    "Join Community"
+                  }
+
 
                 </button>
 
@@ -173,6 +313,7 @@ function Communities() {
 
 
             ))
+
           }
 
 
@@ -180,14 +321,18 @@ function Communities() {
         </div>
 
 
+
       </main>
 
 
     </Layout>
 
+
   )
 
+
 }
+
 
 
 export default Communities
