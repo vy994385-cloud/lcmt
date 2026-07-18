@@ -187,19 +187,22 @@ export async function addComment(
       })
     }
 
-    if (
-      !mongoose.Types.ObjectId.isValid(
-        req.params.postId
-      )
-    ) {
-      return res.status(400).json({
-        message: "Invalid post id"
-      })
-    }
+    const postId = req.params.postId as string
 
-    const post = await Post.findById(
-      req.params.postId
-    )
+
+if (
+  !mongoose.Types.ObjectId.isValid(postId)
+) {
+  return res.status(400).json({
+    message: "Invalid post id"
+  })
+}
+
+
+const post = await Post.findById(
+  postId
+)
+    
 
     if (!post) {
       return res.status(404).json({
