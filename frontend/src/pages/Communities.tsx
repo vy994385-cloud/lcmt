@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react"
 import axios from "axios"
+import { useNavigate } from "react-router-dom"
+
 import Layout from "../components/Layout"
 import "./Communities.css"
+
 
 
 function Communities() {
@@ -16,10 +19,15 @@ function Communities() {
 
 
 
+  const navigate = useNavigate()
+
+
+
   const user =
     JSON.parse(
       localStorage.getItem("user") || "{}"
     )
+
 
 
 
@@ -46,11 +54,16 @@ function Communities() {
 
 
 
+
+
   useEffect(()=>{
 
     fetchCommunities()
 
   },[])
+
+
+
 
 
 
@@ -131,6 +144,8 @@ function Communities() {
 
 
 
+
+
   return (
 
     <Layout>
@@ -159,17 +174,34 @@ function Communities() {
 
 
 
+
+
         <div className="community-grid">
 
 
         {
+
           communities.map((community)=>(
 
 
             <div
+
               className="community-card"
+
               key={community._id}
+
+
+              onClick={()=>{
+
+                navigate(
+                  `/communities/${community._id}`
+                )
+
+              }}
+
             >
+
+
 
 
 
@@ -178,6 +210,8 @@ function Communities() {
                 {community.icon}
 
               </div>
+
+
 
 
 
@@ -192,6 +226,8 @@ function Communities() {
 
 
 
+
+
               <h2>
 
                 {community.name}
@@ -201,11 +237,17 @@ function Communities() {
 
 
 
+
+
+
               <p>
 
                 {community.description}
 
               </p>
+
+
+
 
 
 
@@ -221,17 +263,36 @@ function Communities() {
 
 
 
+
+
+
               {
+
                 community.members?.some(
+
                   (member:any)=>
+
                   member._id === user._id
+
                 )
+
 
                 ?
 
+
+
                 <button
+
                   className="joined"
+
                   disabled
+
+                  onClick={(e)=>{
+
+                    e.stopPropagation()
+
+                  }}
+
                 >
 
                   ✓ Joined
@@ -239,25 +300,40 @@ function Communities() {
                 </button>
 
 
+
                 :
 
 
+
                 <button
+
 
                   disabled={
                     loadingId === community._id
                   }
 
 
-                  onClick={()=>
+
+                  onClick={(e)=>{
+
+
+                    e.stopPropagation()
+
+
+
                     joinCommunity(
                       community._id
                     )
-                  }
+
+
+                  }}
+
 
                 >
 
+
                   {
+
                     loadingId === community._id
 
                     ?
@@ -268,12 +344,16 @@ function Communities() {
 
                     "Join Community"
 
+
                   }
 
 
                 </button>
 
+
               }
+
+
 
 
 
@@ -281,7 +361,9 @@ function Communities() {
 
 
           ))
+
         }
+
 
 
         </div>

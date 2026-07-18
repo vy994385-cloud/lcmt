@@ -15,21 +15,26 @@ import LikesSent from "../pages/LikesSent"
 import TestBackend from "../pages/TestBackend"
 import Home from "../pages/Home"
 import Communities from "../pages/Communities"
+import CommunityDetails from "../pages/CommunityDetails"
 
 import Hero from "../components/Hero"
 import ThoughtFirst from "../components/ThoughtFirst"
-
 import WhyLCMT from "../components/WhyLCMT"
 import HowItWorks from "../components/HowItWorks"
 import Safety from "../components/Safety"
 import JoinLCMT from "../components/JoinLCMT"
 import Footer from "../components/Footer"
+
 import ChatInbox from "../pages/ChatInbox"
 
 
+
 function LandingPage() {
+
   return (
+
     <>
+
       <Hero />
 
       <ThoughtFirst />
@@ -43,59 +48,140 @@ function LandingPage() {
       <JoinLCMT />
 
       <Footer />
+
     </>
+
   )
+
 }
 
+
+
+
+
 export default function AppRoutes() {
+
+
   return (
+
     <Routes>
 
-      <Route path="/" element={<LandingPage />} />
-
-      <Route path="/test-backend" element={<TestBackend />} />
-
-      <Route path="/login" element={<Login />} />
-
-      <Route path="/signup" element={<Signup />} />
-
-      <Route path="/onboarding" element={<Onboarding />} />
-
-      <Route path="/discover" element={<Discover />} />
-
-      <Route path="/profile" element={<Profile />} />
-
-      <Route path="/matches" element={<Matches />} />
-
-      
-      <Route path="/settings" element={<Settings />} />
-
-      <Route path="/notifications" element={<Notifications />} />
-
-      <Route path="/edit-profile" element={<EditProfile />} />
-
-      <Route path="/likes-received" element={<LikesReceived />} />
-
-      <Route path="/likes-sent" element={<LikesSent />} /> 
-
-      <Route path="/home" element={<Home />} />
 
       <Route 
-  path="/chat"
-  element={<ChatInbox />}
-/>
+        path="/" 
+        element={<LandingPage />} 
+      />
 
-<Route 
-  path="/chat/:id"
-  element={<Chat />}
-/>
-<Route 
-  path="/communities" 
-  element={<Communities />} 
-/>
 
-      
+      <Route 
+        path="/test-backend" 
+        element={<TestBackend />} 
+      />
+
+
+      <Route 
+        path="/login" 
+        element={<Login />} 
+      />
+
+
+      <Route 
+        path="/signup" 
+        element={<Signup />} 
+      />
+
+
+      <Route 
+        path="/onboarding" 
+        element={<Onboarding />} 
+      />
+
+
+      <Route 
+        path="/discover" 
+        element={<Discover />} 
+      />
+
+
+      <Route 
+        path="/profile" 
+        element={<Profile />} 
+      />
+
+
+      <Route 
+        path="/matches" 
+        element={<Matches />} 
+      />
+
+
+      <Route 
+        path="/settings" 
+        element={<Settings />} 
+      />
+
+
+      <Route 
+        path="/notifications" 
+        element={<Notifications />} 
+      />
+
+
+      <Route 
+        path="/edit-profile" 
+        element={<EditProfile />} 
+      />
+
+
+      <Route 
+        path="/likes-received" 
+        element={<LikesReceived />} 
+      />
+
+
+      <Route 
+        path="/likes-sent" 
+        element={<LikesSent />} 
+      />
+
+
+      <Route 
+        path="/home" 
+        element={<Home />} 
+      />
+
+
+
+      <Route
+        path="/chat"
+        element={<ChatInbox />}
+      />
+
+
+      <Route
+        path="/chat/:id"
+        element={<Chat />}
+      />
+
+
+
+      {/* Communities */}
+
+      <Route
+        path="/communities"
+        element={<Communities />}
+      />
+
+
+      <Route
+        path="/communities/:id"
+        element={<CommunityDetails />}
+      />
+
+
 
     </Routes>
+
   )
+
 }

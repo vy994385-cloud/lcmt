@@ -1,0 +1,92 @@
+.community-details{
+
+  padding:40px;
+
+}
+
+
+.create-post{
+
+  background:white;
+
+  padding:20px;
+
+  border-radius:15px;
+
+  margin-bottom:30px;
+
+}
+
+
+
+.create-post textarea{
+
+  width:100%;
+
+  min-height:100px;
+
+  padding:15px;
+
+  border-radius:10px;
+
+  border:1px solid #ddd;
+
+}
+
+
+
+.create-post button{
+
+  margin-top:15px;
+
+  padding:12px 25px;
+
+  border:none;
+
+  border-radius:20px;
+
+  background:#ff4d8d;
+
+  color:white;
+
+  cursor:pointer;
+
+}
+
+
+
+.post-card{
+
+  background:white;
+
+  padding:20px;
+
+  border-radius:15px;
+
+  margin-bottom:20px;
+
+}
+
+
+
+.post-user{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:12px;
+
+}
+
+
+
+.post-user img{
+
+  width:45px;
+
+  height:45px;
+
+  border-radius:50%;
+
+}

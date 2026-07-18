@@ -1,68 +1,53 @@
 import mongoose, { Schema } from "mongoose"
 
-
 const PostSchema = new Schema(
-
   {
-
     community: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Community",
-      required: true
+      required: true,
     },
-
 
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true
+      required: true,
     },
-
 
     content: {
       type: String,
       required: true,
-      trim: true
+      trim: true,
     },
-
 
     likes: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
-      }
+        ref: "User",
+      },
     ],
-
 
     comments: [
       {
         user: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "User"
+          ref: "User",
         },
 
         text: {
-          type: String
+          type: String,
         },
 
         createdAt: {
           type: Date,
-          default: Date.now
-        }
-
-      }
-    ]
-
+          default: Date.now,
+        },
+      },
+    ],
   },
-
   {
-    timestamps:true
+    timestamps: true,
   }
-
 )
 
-
-export default mongoose.model(
-  "Post",
-  PostSchema
-)
+export default mongoose.model("Post", PostSchema)
