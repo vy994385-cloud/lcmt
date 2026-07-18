@@ -6,13 +6,10 @@ import "./Communities.css"
 
 function Communities() {
 
-
   const [communities, setCommunities] = useState<any[]>([])
 
 
-
   useEffect(() => {
-
 
     async function fetchCommunities() {
 
@@ -22,9 +19,7 @@ function Communities() {
           "https://lcmt-backend.onrender.com/api/communities"
         )
 
-
         setCommunities(response.data)
-
 
       } catch (error) {
 
@@ -46,43 +41,43 @@ function Communities() {
 
     try {
 
+      const user =
+        JSON.parse(
+          localStorage.getItem("user") || "{}"
+        )
 
-  const user =
-    JSON.parse(
-      localStorage.getItem("user") || "{}"
-    )
+
+      await axios.post(
+
+        `https://lcmt-backend.onrender.com/api/communities/${id}/join`,
+
+        {
+          userId: user._id
+        }
+
+      )
 
 
-  await axios.post(
+      alert("Joined Community 🎉")
 
-    `https://lcmt-backend.onrender.com/api/communities/${id}/join`
 
-    {
-      userId: user._id
+      window.location.reload()
+
+
+    } catch(error:any) {
+
+
+      console.log(
+        error.response?.data || error.message
+      )
+
+
+      alert(
+        error.response?.data?.message ||
+        "Join failed"
+      )
+
     }
-
-  )
-
-
-  alert("Joined Community 🎉")
-
-
-  window.location.reload()
-
-
-
-} catch(error:any) {
-
-  console.log(
-    error.response?.data || error.message
-  )
-
-  alert(
-    error.response?.data?.message ||
-    "Join failed"
-  )
-
-}
 
   }
 
@@ -128,13 +123,11 @@ function Communities() {
               >
 
 
-
                 <div className="community-icon">
 
                   {community.icon}
 
                 </div>
-
 
 
 
@@ -146,7 +139,6 @@ function Communities() {
 
 
 
-
                 <p>
 
                   {community.description}
@@ -155,13 +147,11 @@ function Communities() {
 
 
 
-
                 <span>
 
                   👥 {community.members?.length || 0} Students
 
                 </span>
-
 
 
 
