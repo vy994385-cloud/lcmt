@@ -187,6 +187,16 @@ export async function addComment(
       })
     }
 
+    if (
+      !mongoose.Types.ObjectId.isValid(
+        req.params.postId
+      )
+    ) {
+      return res.status(400).json({
+        message: "Invalid post id"
+      })
+    }
+
     const post = await Post.findById(
       req.params.postId
     )
@@ -198,11 +208,8 @@ export async function addComment(
     }
 
     post.comments.push({
-
       user: new mongoose.Types.ObjectId(userId),
-
       text: req.body.text
-
     } as any)
 
     await post.save()
@@ -213,11 +220,8 @@ export async function addComment(
         .populate("comments.user", "name image")
 
     return res.json({
-
       message: "Comment added",
-
       post: updatedPost
-
     })
 
   } catch (error) {
