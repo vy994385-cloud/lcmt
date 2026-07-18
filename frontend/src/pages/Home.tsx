@@ -8,17 +8,20 @@ function Home() {
     {
       name: "Aditi",
       course: "CSE AI-ML",
-      interest: "Artificial Intelligence"
+      interest: "Artificial Intelligence",
+      thought: "Kindness matters more than popularity."
     },
     {
       name: "Rahul",
       course: "B.Tech CSE",
-      interest: "Web Development"
+      interest: "Web Development",
+      thought: "Build things that solve real problems."
     },
     {
       name: "Sneha",
       course: "Design",
-      interest: "UI/UX"
+      interest: "UI/UX",
+      thought: "Good design starts with empathy."
     }
   ]
 
@@ -45,8 +48,6 @@ function Home() {
       <main className="home-page">
 
 
-        {/* Welcome */}
-
         <section className="welcome-card">
 
           <h1>
@@ -54,15 +55,28 @@ function Home() {
           </h1>
 
           <p>
-            Find your people, build connections,
-            and grow together with LCMT.
+            Your next meaningful connection
+            can start with a thought.
           </p>
+
+
+          <div className="quick-actions">
+
+            <Link to="/discover">
+              🔍 Discover People
+            </Link>
+
+            <Link to="/communities">
+              🌍 Explore Communities
+            </Link>
+
+          </div>
+
 
         </section>
 
 
 
-        {/* Question */}
 
         <section className="home-section">
 
@@ -70,59 +84,125 @@ function Home() {
             💭 Question of the Day
           </h2>
 
+
           <div className="question-card">
 
             <p>
-              "What skill are you learning right now?"
+              "What quality instantly makes you respect someone?"
             </p>
 
+
             <button>
-              Answer
+              Share Your Thought ✨
             </button>
 
+
           </div>
+
 
         </section>
 
 
 
 
-        {/* Students */}
 
         <section className="home-section">
 
           <h2>
-            👥 Students You May Know
+            ❤️ Thought Feed
+          </h2>
+
+
+          <div className="thought-feed">
+
+
+          {
+            students.map((student,index)=>(
+
+              <div
+                className="thought-card"
+                key={index}
+              >
+
+                <h3>
+                  ❤️ {student.name}
+                </h3>
+
+
+                <p>
+                  "{student.thought}"
+                </p>
+
+
+                <div>
+
+                  ❤️ {120 + index * 80}
+
+                  {"  "}
+
+                  💬 Comment
+
+                </div>
+
+
+              </div>
+
+            ))
+          }
+
+
+          </div>
+
+
+        </section>
+
+
+
+
+
+        <section className="home-section">
+
+
+          <h2>
+            👥 People You May Connect With
           </h2>
 
 
           <div className="student-grid">
 
 
-            {
-              students.map((student,index)=>(
+          {
+            students.map((student,index)=>(
 
-                <div
-                  className="student-card"
-                  key={index}
-                >
+              <div
+                className="student-card"
+                key={index}
+              >
 
-                  <h3>
-                    {student.name}
-                  </h3>
+                <h3>
+                  {student.name}
+                </h3>
 
-                  <p>
-                    🎓 {student.course}
-                  </p>
 
-                  <span>
-                    ✨ {student.interest}
-                  </span>
+                <p>
+                  🎓 {student.course}
+                </p>
 
-                </div>
 
-              ))
-            }
+                <span>
+                  ✨ {student.interest}
+                </span>
+
+
+                <button>
+                  Connect ❤️
+                </button>
+
+
+              </div>
+
+            ))
+          }
 
 
           </div>
@@ -133,7 +213,6 @@ function Home() {
 
 
 
-        {/* Communities */}
 
         <section className="home-section">
 
@@ -144,47 +223,23 @@ function Home() {
 
           <div className="tag-container">
 
-{
- communities.map((item,index)=>(
 
-   <Link
-    to="/communities"
-    className="tag"
-    key={index}
-   >
-    {item}
-   </Link>
+          {
+            communities.map((item,index)=>(
 
- ))
-}
+              <Link
+                to="/communities"
+                className="tag"
+                key={index}
+              >
 
-</div>
+                {item}
 
-        </section>
+              </Link>
 
+            ))
+          }
 
-
-
-        {/* Events */}
-
-        <section className="home-section">
-
-          <h2>
-            🎉 Upcoming Events
-          </h2>
-
-
-          <div className="event-card">
-
-            {
-              events.map((event,index)=>(
-
-                <p key={index}>
-                  📅 {event}
-                </p>
-
-              ))
-            }
 
           </div>
 
@@ -194,24 +249,57 @@ function Home() {
 
 
 
-        {/* Opportunities */}
+
+        <section className="home-section">
+
+
+          <h2>
+            🎉 Upcoming Events
+          </h2>
+
+
+          <div className="event-card">
+
+
+          {
+            events.map((event,index)=>(
+
+              <p key={index}>
+                📅 {event}
+              </p>
+
+            ))
+          }
+
+
+          </div>
+
+
+        </section>
+
+
+
+
 
         <section className="home-section">
 
           <h2>
-            🚀 Opportunities
+            🚀 Student Opportunities
           </h2>
 
 
           <div className="opportunity-card">
 
-            <p>
-              Looking for React Developer for a student project
-            </p>
 
             <p>
-              AI Hackathon Team Formation
+              💻 React Developer needed for student project
             </p>
+
+
+            <p>
+              🤖 AI Hackathon Team Formation
+            </p>
+
 
           </div>
 
