@@ -6,7 +6,14 @@ import "./Communities.css"
 
 function Communities() {
 
-  const [communities, setCommunities] = useState<any[]>([])
+
+  const [communities, setCommunities] =
+    useState<any[]>([])
+
+
+  const [loadingId, setLoadingId] =
+    useState<string | null>(null)
+
 
 
   const user =
@@ -25,7 +32,9 @@ function Communities() {
           "https://lcmt-backend.onrender.com/api/communities"
         )
 
+
       setCommunities(response.data)
+
 
     } catch(error){
 
@@ -45,41 +54,79 @@ function Communities() {
 
 
 
+
   async function joinCommunity(id:string){
+
 
     try {
 
 
-      await axios.post(
+      setLoadingId(id)
 
-        `https://lcmt-backend.onrender.com/api/communities/${id}/join`,
 
-        {
-          userId:user._id
-        }
 
-      )
+      const response =
+        await axios.post(
+
+          `https://lcmt-backend.onrender.com/api/communities/${id}/join`,
+
+          {
+            userId:user._id
+          }
+
+        )
+
 
 
       alert("Joined Community 🎉")
 
-      fetchCommunities()
 
 
-    } catch(error:any){
+      setCommunities(prev =>
+
+        prev.map((community)=>
+
+          community._id === id
+
+          ?
+
+          response.data.community
+
+          :
+
+          community
+
+        )
+
+      )
+
+
+
+    }
+    catch(error:any){
+
 
       console.log(
         error.response?.data || error.message
       )
+
 
       alert(
         error.response?.data?.message ||
         "Join failed"
       )
 
+
+    }
+    finally{
+
+      setLoadingId(null)
+
     }
 
+
   }
+
 
 
 
@@ -92,7 +139,9 @@ function Communities() {
       <main className="communities-page">
 
 
+
         <section className="community-header">
+
 
           <h1>
             🌍 Student Communities
@@ -109,94 +158,130 @@ function Communities() {
 
 
 
+
         <div className="community-grid">
 
 
-          {
-            communities.map((community)=>(
+        {
+          communities.map((community)=>(
 
 
-              <div
-                className="community-card"
-                key={community._id}
-              >
-
-
-                <div className="community-icon">
-
-                  {community.icon}
-
-                </div>
+            <div
+              className="community-card"
+              key={community._id}
+            >
 
 
 
-                <span className="category">
+              <div className="community-icon">
 
-                  {community.category}
-
-                </span>
-
-
-
-                <h2>
-                  {community.name}
-                </h2>
-
-
-
-                <p>
-                  {community.description}
-                </p>
-
-
-
-                <div className="members">
-
-                  👥 {community.members?.length || 0}
-                  {" "}Students
-
-                </div>
-
-
-
-
-                {
-                  community.members?.some(
-                    (member:any)=>
-                    member._id === user._id
-                  )
-
-                  ?
-
-                  <button className="joined">
-
-                    ✓ Joined
-
-                  </button>
-
-                  :
-
-                  <button
-                    onClick={()=>
-                      joinCommunity(
-                        community._id
-                      )
-                    }
-                  >
-
-                    Join Community
-
-                  </button>
-
-                }
-
-
+                {community.icon}
 
               </div>
 
 
-            ))
-          }
+
+
+              <span className="category">
+
+                {community.category}
+
+              </span>
+
+
+
+
+
+              <h2>
+
+                {community.name}
+
+              </h2>
+
+
+
+
+              <p>
+
+                {community.description}
+
+              </p>
+
+
+
+
+              <div className="members">
+
+                👥 {community.members?.length || 0}
+                {" "}Students
+
+              </div>
+
+
+
+
+
+              {
+                community.members?.some(
+                  (member:any)=>
+                  member._id === user._id
+                )
+
+                ?
+
+                <button
+                  className="joined"
+                  disabled
+                >
+
+                  ✓ Joined
+
+                </button>
+
+
+                :
+
+
+                <button
+
+                  disabled={
+                    loadingId === community._id
+                  }
+
+
+                  onClick={()=>
+                    joinCommunity(
+                      community._id
+                    )
+                  }
+
+                >
+
+                  {
+                    loadingId === community._id
+
+                    ?
+
+                    "Joining..."
+
+                    :
+
+                    "Join Community"
+
+                  }
+
+
+                </button>
+
+              }
+
+
+
+            </div>
+
+
+          ))
+        }
 
 
         </div>
