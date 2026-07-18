@@ -19,7 +19,7 @@ function Communities() {
       try {
 
         const response = await axios.get(
-          "http://localhost:5000/api/communities"
+          "https://lcmt-backend.onrender.com/api/communities"
         )
 
 
@@ -55,7 +55,7 @@ function Communities() {
 
   await axios.post(
 
-    `http://localhost:5000/api/communities/${id}/join`,
+    `https://lcmt-backend.onrender.com/api/communities/${id}/join`
 
     {
       userId: user._id
