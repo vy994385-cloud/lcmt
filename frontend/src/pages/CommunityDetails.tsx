@@ -6,34 +6,29 @@ import Layout from "../components/Layout"
 import "./CommunityDetails.css"
 
 
-
 function CommunityDetails() {
 
-
   const { id } = useParams()
-
 
 
   const [posts, setPosts] =
     useState<any[]>([])
 
 
-
   const [content, setContent] =
     useState("")
 
+
+  const [commentText, setCommentText] =
+    useState<Record<string,string>>({})
 
 
   const [loading, setLoading] =
     useState(false)
 
 
-
   const [fetching, setFetching] =
     useState(true)
-
-
-
 
 
   const user =
@@ -43,19 +38,11 @@ function CommunityDetails() {
 
 
 
-
-
-
-
-
   async function fetchPosts(){
 
-
-    try {
-
+    try{
 
       setFetching(true)
-
 
 
       const response =
@@ -64,14 +51,6 @@ function CommunityDetails() {
           `https://lcmt-backend.onrender.com/api/communities/${id}/posts`
 
         )
-
-
-
-      console.log(
-        "COMMUNITY POSTS:",
-        response.data
-      )
-
 
 
       setPosts(
@@ -89,10 +68,8 @@ function CommunityDetails() {
       )
 
 
-
     }
     catch(error:any){
-
 
       console.log(
         error.response?.data ||
@@ -102,7 +79,6 @@ function CommunityDetails() {
 
       setPosts([])
 
-
     }
     finally{
 
@@ -110,17 +86,11 @@ function CommunityDetails() {
 
     }
 
-
   }
 
 
 
-
-
-
-
   useEffect(()=>{
-
 
     if(id){
 
@@ -128,13 +98,7 @@ function CommunityDetails() {
 
     }
 
-
   },[id])
-
-
-
-
-
 
 
 
@@ -150,44 +114,26 @@ function CommunityDetails() {
     }
 
 
-
-
-    try {
+    try{
 
 
       setLoading(true)
 
 
-
       const response =
         await axios.post(
 
-
           `https://lcmt-backend.onrender.com/api/communities/${id}/posts`,
 
-
           {
-
             content,
-
             userId:user._id
-
           }
-
 
         )
 
 
-
-      console.log(
-  JSON.stringify(response.data, null, 2)
-)
-
-
-
-
-
-      setPosts(prev => [
+      setPosts(prev=>[
 
         response.data.post,
 
@@ -196,44 +142,163 @@ function CommunityDetails() {
       ])
 
 
-
-
       setContent("")
-
 
 
     }
     catch(error:any){
 
-
       console.log(
-
         error.response?.data ||
         error.message
-
       )
 
 
-      alert(
-        "Post failed"
-      )
-
+      alert("Post failed")
 
     }
     finally{
 
-
       setLoading(false)
 
-
     }
-
 
   }
 
 
 
 
+
+  async function toggleLike(
+    postId:string
+  ){
+
+    try{
+
+
+      const response =
+        await axios.post(
+
+          `https://lcmt-backend.onrender.com/api/communities/posts/${postId}/like`,
+
+          {
+            userId:user._id
+          }
+
+        )
+
+
+      setPosts(prev=>
+
+        prev.map(post=>
+
+          post._id === postId
+
+          ?
+
+          response.data.post
+
+          :
+
+          post
+
+        )
+
+      )
+
+
+    }
+    catch(error:any){
+
+      console.log(
+        error.response?.data ||
+        error.message
+      )
+
+    }
+
+  }
+
+
+
+
+
+  async function addComment(
+    postId:string
+  ){
+
+
+    const text =
+      commentText[postId]
+
+
+    if(!text?.trim()){
+
+      return
+
+    }
+
+
+
+    try{
+
+
+      const response =
+        await axios.post(
+
+          `https://lcmt-backend.onrender.com/api/communities/posts/${postId}/comment`,
+
+          {
+            userId:user._id,
+            text
+          }
+
+        )
+
+
+
+      setPosts(prev=>
+
+        prev.map(post=>
+
+          post._id === postId
+
+          ?
+
+          response.data.post
+
+          :
+
+          post
+
+        )
+
+      )
+
+
+
+      setCommentText(prev=>({
+
+        ...prev,
+
+        [postId]:""
+
+      }))
+
+
+
+    }
+    catch(error:any){
+
+      console.log(
+        error.response?.data ||
+        error.message
+      )
+
+    }
+
+
+  }
 
 
 
@@ -248,9 +313,6 @@ function CommunityDetails() {
 
 
 
-
-
-
         <section className="feed-header">
 
 
@@ -260,45 +322,33 @@ function CommunityDetails() {
 
 
 
-
-
           <textarea
 
-
-            placeholder=
-            "Share something with your community..."
-
+            placeholder="Share something with your community..."
 
             value={content}
 
-
             onChange={(e)=>
+
               setContent(
                 e.target.value
               )
-            }
 
+            }
 
           />
 
 
 
-
-
-
           <button
-
 
             onClick={createPost}
 
-
             disabled={loading}
-
 
           >
 
             {
-
               loading
 
               ?
@@ -308,7 +358,6 @@ function CommunityDetails() {
               :
 
               "Post 🚀"
-
             }
 
 
@@ -323,11 +372,7 @@ function CommunityDetails() {
 
 
 
-
-
-
         <section className="posts">
-
 
 
         {
@@ -341,9 +386,7 @@ function CommunityDetails() {
           </p>
 
 
-
           :
-
 
 
           posts.length === 0
@@ -351,34 +394,24 @@ function CommunityDetails() {
 
           ?
 
-
           <p>
             No posts yet. Start the conversation!
           </p>
 
 
-
           :
 
 
-
           posts.map((post:any)=>(
-
 
 
             <div
 
               className="post-card"
 
-              key={
-                post?._id ||
-                Math.random()
-              }
+              key={post._id}
 
             >
-
-
-
 
 
 
@@ -387,39 +420,186 @@ function CommunityDetails() {
 
                 <img
 
-
                   src={
-
                     post?.user?.image ||
-
                     "https://picsum.photos/50"
+                  }
 
+                  alt="profile"
+
+                />
+
+
+                <strong>
+
+                  {
+                    post?.user?.name ||
+                    "Student"
+                  }
+
+                </strong>
+
+
+              </div>
+
+
+
+
+
+              <p>
+
+                {
+                  post.content
+                }
+
+              </p>
+
+
+
+
+
+
+              <button
+
+                onClick={()=>
+
+                  toggleLike(
+                    post._id
+                  )
+
+                }
+
+              >
+
+
+                {
+                  post.likes?.some(
+
+                    (like:any)=>
+
+                      like.toString() === user._id
+
+                  )
+
+                  ?
+
+                  "❤️"
+
+                  :
+
+                  "🤍"
+
+                }
+
+
+                {" "}
+
+
+                {
+                  post.likes?.length || 0
+                }
+
+
+              </button>
+
+
+
+
+
+
+
+              <div className="comments">
+
+
+                <input
+
+
+                  placeholder="Write a comment..."
+
+
+                  value={
+                    commentText[post._id] || ""
                   }
 
 
-                  alt="profile"
+                  onChange={(e)=>
+
+                    setCommentText(prev=>({
+
+                      ...prev,
+
+                      [post._id]:
+                      e.target.value
+
+                    }))
+
+                  }
 
 
                 />
 
 
 
+                <button
 
+                  onClick={()=>
 
-                <strong>
-
-
-                  {
-
-                    post?.user?.name ||
-
-                    "Student"
+                    addComment(
+                      post._id
+                    )
 
                   }
 
+                >
 
-                </strong>
+                  Comment 💬
 
+                </button>
+
+
+
+
+                {
+
+                  post.comments?.map(
+
+                    (comment:any)=>(
+
+
+                      <p
+
+                        key={
+                          comment._id
+                        }
+
+                      >
+
+                        <strong>
+
+                          {
+                            comment.user?.name ||
+                            "Student"
+                          }
+
+                        </strong>
+
+
+                        {" "}
+
+
+                        {
+                          comment.text
+                        }
+
+
+                      </p>
+
+
+                    )
+
+                  )
+
+                }
 
 
               </div>
@@ -430,55 +610,22 @@ function CommunityDetails() {
 
 
 
-
-              <p>
-
-
-                {
-
-                  post?.content ||
-
-                  "No content"
-
-                }
-
-
-              </p>
-
-
-
-
-
-
-
-
               {
 
-                post?.createdAt &&
+                post.createdAt &&
 
 
                 <small>
 
-
                   {
-
                     new Date(
-
                       post.createdAt
-
-                    )
-                    .toLocaleString()
-
-
+                    ).toLocaleString()
                   }
-
 
                 </small>
 
-
               }
-
-
 
 
 
@@ -486,23 +633,15 @@ function CommunityDetails() {
             </div>
 
 
-
           ))
 
         }
 
 
-
-
-
         </section>
 
 
-
-
-
       </main>
-
 
 
     </Layout>
@@ -510,7 +649,6 @@ function CommunityDetails() {
   )
 
 }
-
 
 
 export default CommunityDetails
