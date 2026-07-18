@@ -91,7 +91,7 @@ function Onboarding() {
 
 
 
-      navigate("/discover")
+      navigate("/home")
 
 
     } catch(error) {

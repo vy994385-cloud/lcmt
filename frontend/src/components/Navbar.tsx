@@ -9,7 +9,7 @@ function Navbar() {
 
 
       <NavLink 
-        to="/discover" 
+        to="/home" 
         className="logo"
       >
 
@@ -26,6 +26,30 @@ function Navbar() {
 
 
       <div className="nav-links">
+
+
+        <NavLink 
+          to="/home"
+          className={({isActive}) =>
+            isActive ? "active" : ""
+          }
+        >
+
+          Home
+
+        </NavLink>
+
+<NavLink 
+  to="/communities"
+  className={({isActive}) =>
+    isActive ? "active" : ""
+  }
+>
+
+  Communities
+
+</NavLink>
+
 
 
         <NavLink 

@@ -13,8 +13,11 @@ import EditProfile from "../pages/EditProfile"
 import LikesReceived from "../pages/LikesReceived"
 import LikesSent from "../pages/LikesSent"
 import TestBackend from "../pages/TestBackend"
+import Home from "../pages/Home"
+import Communities from "../pages/Communities"
 
 import Hero from "../components/Hero"
+import ThoughtFirst from "../components/ThoughtFirst"
 
 import WhyLCMT from "../components/WhyLCMT"
 import HowItWorks from "../components/HowItWorks"
@@ -27,18 +30,22 @@ import ChatInbox from "../pages/ChatInbox"
 function LandingPage() {
   return (
     <>
-     <>
-  <Hero />
-  <WhyLCMT />
-  <HowItWorks />
-  <Safety />
-  <JoinLCMT />
-  <Footer />
-</>
+      <Hero />
+
+      <ThoughtFirst />
+
+      <WhyLCMT />
+
+      <HowItWorks />
+
+      <Safety />
+
+      <JoinLCMT />
+
+      <Footer />
     </>
   )
 }
-
 
 export default function AppRoutes() {
   return (
@@ -69,7 +76,9 @@ export default function AppRoutes() {
 
       <Route path="/likes-received" element={<LikesReceived />} />
 
-      <Route path="/likes-sent" element={<LikesSent />} />
+      <Route path="/likes-sent" element={<LikesSent />} /> 
+
+      <Route path="/home" element={<Home />} />
 
       <Route 
   path="/chat"
@@ -79,6 +88,10 @@ export default function AppRoutes() {
 <Route 
   path="/chat/:id"
   element={<Chat />}
+/>
+<Route 
+  path="/communities" 
+  element={<Communities />} 
 />
 
       

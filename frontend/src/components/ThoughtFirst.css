@@ -1,0 +1,243 @@
+.thought-section{
+
+    padding:120px 20px;
+
+    background:
+    linear-gradient(
+        180deg,
+        #ffffff,
+        #fff8fc,
+        #f7f4ff
+    );
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+
+}
+
+
+
+.thought-header{
+
+    max-width:800px;
+
+    text-align:center;
+
+    margin-bottom:70px;
+
+}
+
+
+
+.thought-tag{
+
+    display:inline-block;
+
+    padding:10px 22px;
+
+    border-radius:30px;
+
+    background:#f3e8ff;
+
+    color:#7c3aed;
+
+    font-weight:700;
+
+    margin-bottom:25px;
+
+}
+
+
+
+.thought-header h2{
+
+    font-size:58px;
+
+    line-height:1.1;
+
+    font-weight:900;
+
+    color:#171717;
+
+}
+
+
+
+.thought-header h2 span{
+
+    display:block;
+
+    background:
+    linear-gradient(
+        90deg,
+        #ff3d8d,
+        #8b5cf6
+    );
+
+    -webkit-background-clip:text;
+
+    color:transparent;
+
+}
+
+
+
+.thought-header p{
+
+    max-width:700px;
+
+    margin:30px auto 0;
+
+    font-size:21px;
+
+    line-height:1.7;
+
+    color:#555;
+
+}
+
+
+
+
+
+.thought-card{
+
+    width:100%;
+
+    max-width:760px;
+
+    background:white;
+
+    border-radius:35px;
+
+    padding:45px;
+
+    box-shadow:
+    0 25px 60px rgba(0,0,0,.08);
+
+    transition:.35s;
+
+}
+
+
+
+.thought-card:hover{
+
+    transform:translateY(-8px);
+
+}
+
+
+
+.question{
+
+    display:inline-block;
+
+    padding:8px 18px;
+
+    border-radius:25px;
+
+    background:#fff0f7;
+
+    color:#ff3d8d;
+
+    font-weight:700;
+
+    margin-bottom:25px;
+
+}
+
+
+
+.thought-card h3{
+
+    font-size:32px;
+
+    line-height:1.4;
+
+    color:#171717;
+
+    margin-bottom:35px;
+
+}
+
+
+
+.answer{
+
+    background:#faf7ff;
+
+    border-left:5px solid #8b5cf6;
+
+    padding:25px;
+
+    border-radius:18px;
+
+}
+
+
+
+.answer strong{
+
+    color:#8b5cf6;
+
+}
+
+
+
+.answer p{
+
+    margin-top:15px;
+
+    font-size:19px;
+
+    color:#555;
+
+    line-height:1.6;
+
+}
+
+
+
+.likes{
+
+    margin-top:30px;
+
+    color:#666;
+
+    font-weight:700;
+
+    font-size:18px;
+
+}
+
+
+
+@media(max-width:900px){
+
+.thought-header h2{
+
+    font-size:42px;
+
+}
+
+.thought-header p{
+
+    font-size:18px;
+
+}
+
+.thought-card{
+
+    padding:30px;
+
+}
+
+.thought-card h3{
+
+    font-size:26px;
+
+}
+
+}
