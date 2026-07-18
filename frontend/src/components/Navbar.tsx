@@ -1,137 +1,111 @@
-import { NavLink } from "react-router-dom"
+import {
+  Home,
+  Users,
+  Search,
+  Heart,
+  MessageCircle,
+  Bell,
+  User
+} from "lucide-react"
+
+import { Link } from "react-router-dom"
+
 import "./Navbar.css"
 
-function Navbar() {
 
-  return (
+function Navbar(){
 
-    <nav className="navbar">
+return (
 
+<>
 
-      <NavLink 
-        to="/home" 
-        className="logo"
-      >
+<nav className="desktop-nav">
 
-        <span>
-          ❤️
-        </span>
-
-        LCMT
-
-      </NavLink>
+<h2>
+❤️ LCMT
+</h2>
 
 
+<Link to="/">
+<Home size={20}/>
+<span>Home</span>
+</Link>
 
 
-
-      <div className="nav-links">
-
-
-        <NavLink 
-          to="/home"
-          className={({isActive}) =>
-            isActive ? "active" : ""
-          }
-        >
-
-          Home
-
-        </NavLink>
-
-<NavLink 
-  to="/communities"
-  className={({isActive}) =>
-    isActive ? "active" : ""
-  }
->
-
-  Communities
-
-</NavLink>
+<Link to="/communities">
+<Users size={20}/>
+<span>Communities</span>
+</Link>
 
 
+<Link to="/discover">
+<Search size={20}/>
+<span>Discover</span>
+</Link>
 
-        <NavLink 
-          to="/discover"
-          className={({isActive}) =>
-            isActive ? "active" : ""
-          }
-        >
 
-          Discover
+<Link to="/matches">
+<Heart size={20}/>
+<span>Matches</span>
+</Link>
 
-        </NavLink>
+
+<Link to="/chat">
+<MessageCircle size={20}/>
+<span>Chat</span>
+</Link>
+
+
+<Link to="/notifications">
+<Bell size={20}/>
+<span>Notifications</span>
+</Link>
+
+
+<Link to="/profile">
+<User size={20}/>
+<span>Profile</span>
+</Link>
+
+
+</nav>
 
 
 
+<nav className="mobile-nav">
 
 
-        <NavLink 
-          to="/matches"
-          className={({isActive}) =>
-            isActive ? "active" : ""
-          }
-        >
-
-          Matches
-
-        </NavLink>
+<Link to="/">
+<Home/>
+</Link>
 
 
+<Link to="/communities">
+<Users/>
+</Link>
 
 
-
-        <NavLink 
-          to="/chat"
-          className={({isActive}) =>
-            isActive ? "active" : ""
-          }
-        >
-
-          Chat
-
-        </NavLink>
+<Link to="/discover">
+<Search/>
+</Link>
 
 
+<Link to="/chat">
+<MessageCircle/>
+</Link>
 
 
-
-        <NavLink 
-          to="/notifications"
-          className={({isActive}) =>
-            isActive ? "active" : ""
-          }
-        >
-
-          Notifications
-
-        </NavLink>
+<Link to="/profile">
+<User/>
+</Link>
 
 
+</nav>
 
 
+</>
 
-        <NavLink 
-          to="/profile"
-          className={({isActive}) =>
-            isActive ? "active" : ""
-          }
-        >
-
-          Profile
-
-        </NavLink>
-
-
-
-      </div>
-
-
-
-    </nav>
-
-  )
+)
 
 }
 

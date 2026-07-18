@@ -68,10 +68,13 @@ export default function AppRoutes() {
 
 
       <Route 
-        path="/" 
-        element={<LandingPage />} 
-      />
-
+  path="/" 
+  element={
+    localStorage.getItem("user")
+      ? <Home />
+      : <LandingPage />
+  }
+/>
 
       <Route 
         path="/test-backend" 
