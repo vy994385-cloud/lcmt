@@ -1,92 +1,331 @@
-.community-details{
-
-  padding:40px;
-
-}
-
-
-.create-post{
-
-  background:white;
-
-  padding:20px;
-
-  border-radius:15px;
-
-  margin-bottom:30px;
-
-}
-
-
-
-.create-post textarea{
+.community-feed {
 
   width:100%;
 
-  min-height:100px;
+  max-width:900px;
 
-  padding:15px;
-
-  border-radius:10px;
-
-  border:1px solid #ddd;
-
-}
-
-
-
-.create-post button{
-
-  margin-top:15px;
-
-  padding:12px 25px;
-
-  border:none;
-
-  border-radius:20px;
-
-  background:#ff4d8d;
-
-  color:white;
-
-  cursor:pointer;
-
-}
-
-
-
-.post-card{
-
-  background:white;
+  margin:auto;
 
   padding:20px;
 
-  border-radius:15px;
+
+}
+
+
+
+
+.feed-header {
+
+
+  background:white;
+
+
+  padding:25px;
+
+
+  border-radius:25px;
+
+
+  box-shadow:
+  0 15px 35px rgba(0,0,0,0.08);
+
+
+  margin-bottom:25px;
+
+
+}
+
+
+
+
+.feed-header h1 {
+
 
   margin-bottom:20px;
 
+
+  font-size:32px;
+
+
 }
 
 
 
-.post-user{
+
+.feed-header textarea {
+
+
+  width:100%;
+
+
+  min-height:120px;
+
+
+  resize:none;
+
+
+  padding:15px;
+
+
+  border-radius:18px;
+
+
+  border:1px solid #eee;
+
+
+  font-size:16px;
+
+
+  outline:none;
+
+
+}
+
+
+
+
+.feed-header textarea:focus {
+
+
+  border-color:#ff3d8d;
+
+
+}
+
+
+
+
+.feed-header button {
+
+
+  margin-top:15px;
+
+
+  padding:12px 25px;
+
+
+  border:none;
+
+
+  border-radius:25px;
+
+
+  background:
+
+  linear-gradient(
+    90deg,
+    #ff3d8d,
+    #8b5cf6
+  );
+
+
+  color:white;
+
+
+  font-weight:600;
+
+
+  cursor:pointer;
+
+
+}
+
+
+
+
+.posts {
+
 
   display:flex;
 
-  align-items:center;
+  flex-direction:column;
 
-  gap:12px;
+  gap:20px;
+
 
 }
 
 
 
-.post-user img{
+
+.post-card {
+
+
+  background:white;
+
+
+  padding:22px;
+
+
+  border-radius:25px;
+
+
+  box-shadow:
+
+  0 10px 30px rgba(0,0,0,0.08);
+
+
+}
+
+
+
+
+.post-user {
+
+
+  display:flex;
+
+
+  align-items:center;
+
+
+  gap:12px;
+
+
+  margin-bottom:15px;
+
+
+}
+
+
+
+
+.post-user img {
+
 
   width:45px;
 
   height:45px;
 
   border-radius:50%;
+
+
+  object-fit:cover;
+
+
+}
+
+
+
+
+.post-card p {
+
+
+  font-size:17px;
+
+
+  line-height:1.5;
+
+
+  margin:15px 0;
+
+
+}
+
+
+
+
+.post-card button {
+
+
+  border:none;
+
+
+  background:#fff1f7;
+
+
+  padding:8px 15px;
+
+
+  border-radius:20px;
+
+
+  cursor:pointer;
+
+
+}
+
+
+
+
+.post-card small {
+
+
+  display:block;
+
+
+  margin-top:12px;
+
+
+  color:#777;
+
+
+}
+
+
+
+
+
+/* MOBILE */
+
+
+@media(max-width:700px){
+
+
+.community-feed {
+
+
+  padding:12px;
+
+
+}
+
+
+
+.feed-header {
+
+
+  padding:18px;
+
+
+  border-radius:20px;
+
+
+}
+
+
+
+.feed-header h1 {
+
+
+  font-size:24px;
+
+
+}
+
+
+
+.post-card {
+
+
+  padding:18px;
+
+
+  border-radius:20px;
+
+
+}
+
+
+
+.post-card p {
+
+
+  font-size:15px;
+
+
+}
+
+
 
 }
