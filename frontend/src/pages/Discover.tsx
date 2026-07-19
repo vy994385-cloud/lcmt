@@ -106,89 +106,19 @@ function calculateCompatibility(
 
 
   // Thought answer compatibility
-  if(
-    currentUser.answers?.respect &&
-    user.answers?.respect
-  ){
+    if(
+  currentUser.answers?.respect &&
+  user.answers?.respect &&
+  currentUser.answers.respect === user.answers.respect
+){
 
-    score += 20
+  score += 20
 
-  }
-
-
-
+}
 
   return score > 100 ? 100 : score
 
 }
-  let score = 30
-
-
-  if(
-    currentUser.college &&
-    currentUser.college === user.college
-  ){
-    score += 20
-  }
-
-
-  if(
-    currentUser.course &&
-    currentUser.course === user.course
-  ){
-    score += 20
-  }
-
-
-  const commonInterests =
-    currentUser.interests?.filter(
-      (item:string)=>
-        user.interests?.includes(item)
-    ) || []
-
-
-  score += commonInterests.length * 10
-
-
-
-  const commonValues =
-    currentUser.values?.filter(
-      (item:string)=>
-        user.values?.includes(item)
-    ) || []
-
-
-  score += commonValues.length * 10
-
-
-
-  if(
-    currentUser.personality &&
-    user.personality &&
-    currentUser.personality === user.personality
-  ){
-    score += 15
-  }
-
-
-
-  if(
-    currentUser.lookingFor &&
-    user.lookingFor &&
-    currentUser.lookingFor === user.lookingFor
-  ){
-    score += 15
-  }
-
-
-
-  return score > 100 ? 100 : score
-
-}
-
-
-
-
 function getCommonInterests(
   currentUser:any,
   user:any
