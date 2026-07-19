@@ -9,6 +9,118 @@ function calculateCompatibility(
   user:any
 ){
 
+  let score = 0
+
+
+  // Same college
+  if(
+    currentUser.college &&
+    currentUser.college === user.college
+  ){
+    score += 20
+  }
+
+
+  // Same course
+  if(
+    currentUser.course &&
+    currentUser.course === user.course
+  ){
+    score += 20
+  }
+
+
+
+  // Common interests
+  const commonInterests =
+    currentUser.interests?.filter(
+      (item:string)=>
+        user.interests?.includes(item)
+    ) || []
+
+
+  score += commonInterests.length * 10
+
+
+
+
+  // Shared values
+  const commonValues =
+    currentUser.values?.filter(
+      (item:string)=>
+        user.values?.includes(item)
+    ) || []
+
+
+  score += commonValues.length * 10
+
+
+
+
+
+  // Looking for similarity
+  if(
+    currentUser.lookingFor &&
+    user.lookingFor &&
+    currentUser.lookingFor.toLowerCase()
+    .includes(
+      user.lookingFor.toLowerCase()
+    )
+  ){
+
+    score += 15
+
+  }
+
+
+
+
+
+  // Personality similarity
+  if(
+    currentUser.personality &&
+    user.personality
+  ){
+
+    const words =
+      currentUser.personality
+      .toLowerCase()
+      .split(" ")
+
+
+    const match =
+      words.filter(
+        (word:string)=>
+          user.personality
+          .toLowerCase()
+          .includes(word)
+      )
+
+
+    score += match.length * 5
+
+  }
+
+
+
+
+
+  // Thought answer compatibility
+  if(
+    currentUser.answers?.respect &&
+    user.answers?.respect
+  ){
+
+    score += 20
+
+  }
+
+
+
+
+  return score > 100 ? 100 : score
+
+}
   let score = 30
 
 
