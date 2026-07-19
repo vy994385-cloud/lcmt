@@ -9,7 +9,7 @@ function calculateCompatibility(
   user:any
 ){
 
-  let score = 0
+  let score = 30
 
 
   if(
@@ -47,6 +47,26 @@ function calculateCompatibility(
 
 
   score += commonValues.length * 10
+
+
+
+  if(
+    currentUser.personality &&
+    user.personality &&
+    currentUser.personality === user.personality
+  ){
+    score += 15
+  }
+
+
+
+  if(
+    currentUser.lookingFor &&
+    user.lookingFor &&
+    currentUser.lookingFor === user.lookingFor
+  ){
+    score += 15
+  }
 
 
 
