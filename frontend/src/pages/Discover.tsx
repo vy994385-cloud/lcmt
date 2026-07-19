@@ -132,17 +132,22 @@ users.filter(
 
 user.id !== currentUser._id &&
 
+user.college &&
+user.course &&
+user.personality &&
+user.interests &&
+user.interests.length > 0 &&
+
 !matches.some(
 (match)=>match.id===user.id
-)&&
+)
+&&
 
 !passedUsers.some(
 (passed)=>passed.id===user.id
 )
 
 )
-
-
 
 return (
 
