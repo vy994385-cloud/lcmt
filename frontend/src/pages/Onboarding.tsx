@@ -11,18 +11,20 @@ function Onboarding() {
 
   const [form, setForm] = useState({
 
-    age: "",
-    gender: "",
-    college: "",
-    course: "",
-    year: "",
-    bio: "",
-    interests: "",
-    lookingFor: "",
-    values: "",
-    personality: "",
+  age: "",
+  gender: "",
+  college: "",
+  course: "",
+  year: "",
+  bio: "",
+  interests: "",
+  lookingFor: "",
+  values: "",
+  personality: "",
 
-  })
+  answers: ""
+
+})
 
 
 
@@ -84,7 +86,11 @@ function Onboarding() {
     .filter(Boolean),
 
 
-  personality:form.personality,
+  personality: form.personality,
+
+answers: {
+  respect: form.answers
+},
 
 
 })
@@ -315,6 +321,18 @@ localStorage.setItem(
             onChange={handleChange}
 
           />
+
+          <textarea
+
+name="answers"
+
+placeholder="What quality instantly makes you respect someone?"
+
+value={form.answers}
+
+onChange={handleChange}
+
+/>
 
 
 
