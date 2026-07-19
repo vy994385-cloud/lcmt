@@ -108,14 +108,46 @@ function calculateCompatibility(
   // Thought answer compatibility
     if(
   currentUser.answers?.respect &&
-  user.answers?.respect &&
-  currentUser.answers.respect === user.answers.respect
+  user.answers?.respect
 ){
 
-  score += 20
+  const a =
+  currentUser.answers.respect
+  .toLowerCase()
+
+
+  const b =
+  user.answers.respect
+  .toLowerCase()
+
+
+  const stopWords = [
+  "i",
+  "a",
+  "the",
+  "is",
+  "and",
+  "to",
+  "of",
+  "my",
+  "with"
+]
+
+
+const commonWords = [
+  ...new Set(
+    a.split(" ").filter(
+      (word: string) =>
+        word.length > 3 &&
+        !stopWords.includes(word) &&
+        b.includes(word)
+    )
+  ),
+]
+
+score += commonWords.length * 5
 
 }
-
   return score > 100 ? 100 : score
 
 }
