@@ -7,10 +7,9 @@ function App() {
   const location = useLocation()
 
   const publicRoutes = [
-    "/",
-    "/login",
-    "/signup"
-  ]
+  "/login",
+  "/signup"
+]
 
   const isPublicPage =
     publicRoutes.includes(location.pathname)
