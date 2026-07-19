@@ -57,7 +57,29 @@ function LandingPage() {
 
 
 
+function checkProfileComplete(){
 
+  const user = JSON.parse(
+    localStorage.getItem("user") || "{}"
+  )
+
+
+  if(!user._id){
+    return false
+  }
+
+
+  return Boolean(
+
+    user.college &&
+    user.course &&
+    user.personality &&
+    user.interests &&
+    user.interests.length > 0
+
+  )
+
+}
 
 export default function AppRoutes() {
 
@@ -67,15 +89,30 @@ export default function AppRoutes() {
     <Routes>
 
 
-      <Route 
-  path="/" 
-  element={
-    localStorage.getItem("user")
-      ? <Home />
-      : <LandingPage />
-  }
-/>
+      <Route
+path="/"
+element={
 
+localStorage.getItem("user")
+
+?
+
+checkProfileComplete()
+
+?
+
+<Home />
+
+:
+
+<Onboarding />
+
+:
+
+<LandingPage />
+
+}
+/>
       <Route 
         path="/test-backend" 
         element={<TestBackend />} 
