@@ -52,42 +52,48 @@ function Onboarding() {
     try {
 
 
-      await api.put("/profile", {
+      const response = await api.put("/profile", {
 
 
-        age:Number(form.age),
+  age:Number(form.age),
 
-        gender:form.gender,
+  gender:form.gender,
 
-        college:form.college,
+  college:form.college,
 
-        course:form.course,
+  course:form.course,
 
-        year:Number(form.year),
+  year:Number(form.year),
 
+  bio:form.bio,
 
-        bio:form.bio,
-
-
-        interests:
-          form.interests
-          .split(",")
-          .map(item=>item.trim()),
-
-
-        lookingFor:form.lookingFor,
+  interests:
+    form.interests
+    .split(",")
+    .map(item=>item.trim())
+    .filter(Boolean),
 
 
-        values:
-          form.values
-          .split(",")
-          .map(item=>item.trim()),
+  lookingFor:form.lookingFor,
 
 
-        personality:form.personality,
+  values:
+    form.values
+    .split(",")
+    .map(item=>item.trim())
+    .filter(Boolean),
 
 
-      })
+  personality:form.personality,
+
+
+})
+
+
+localStorage.setItem(
+  "user",
+  JSON.stringify(response.data)
+)
 
 
 
