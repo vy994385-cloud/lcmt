@@ -6,6 +6,7 @@ import Layout from "../components/Layout"
 import "./Home.css"
 
 
+
 function Home() {
 
 
@@ -13,8 +14,13 @@ function Home() {
     useState<any[]>([])
 
 
+  const [suggestions, setSuggestions] =
+    useState<any[]>([])
+
+
   const [loading, setLoading] =
     useState(true)
+
 
 
 
@@ -28,9 +34,21 @@ function Home() {
 
 
         const response =
-          await axios.get(
-            "https://lcmt-backend.onrender.com/api/feed"
-          )
+  await axios.get(
+
+    "https://lcmt-backend.onrender.com/api/feed",
+
+    {
+      headers:{
+
+        Authorization:
+
+        `Bearer ${localStorage.getItem("token")}`
+
+      }
+    }
+
+  )
 
 
         setPosts(
@@ -53,8 +71,10 @@ function Home() {
 
 
         console.log(
+
           error.response?.data ||
           error.message
+
         )
 
 
@@ -71,7 +91,78 @@ function Home() {
     }
 
 
+
+
+
+    async function fetchSuggestions(){
+
+
+      try {
+
+
+        const response =
+          await axios.get(
+
+
+            "https://lcmt-backend.onrender.com/api/users/discover",
+
+
+            {
+
+              headers:{
+
+                Authorization:
+
+                `Bearer ${localStorage.getItem("token")}`
+
+              }
+
+            }
+
+
+          )
+
+
+
+        setSuggestions(
+
+          Array.isArray(response.data)
+
+          ?
+
+          response.data
+
+          :
+
+          []
+
+        )
+
+
+      }
+      catch(error:any){
+
+
+        console.log(
+
+          error.response?.data ||
+          error.message
+
+        )
+
+
+      }
+
+
+    }
+
+
+
+
     fetchFeed()
+
+    fetchSuggestions()
+
 
 
   },[])
@@ -79,7 +170,11 @@ function Home() {
 
 
 
+
+
+
   const communities = [
+
 
     "AI & ML",
 
@@ -89,12 +184,15 @@ function Home() {
 
     "Photography"
 
+
   ]
 
 
 
 
+
   const events = [
+
 
     "AI Hackathon 2026",
 
@@ -102,7 +200,11 @@ function Home() {
 
     "Startup Workshop"
 
+
   ]
+
+
+
 
 
 
@@ -115,6 +217,9 @@ function Home() {
 
 
       <main className="home-page">
+
+
+
 
 
 
@@ -150,6 +255,7 @@ function Home() {
 
 
 
+
             <Link to="/communities">
 
               🌍 Explore Communities
@@ -157,11 +263,15 @@ function Home() {
             </Link>
 
 
+
           </div>
 
 
 
         </section>
+
+
+
 
 
 
@@ -176,6 +286,7 @@ function Home() {
             💭 Question of the Day
 
           </h2>
+
 
 
 
@@ -223,14 +334,18 @@ function Home() {
 
 
 
+
           <div className="thought-feed">
 
 
           {
 
+
             loading
 
+
             ?
+
 
             <p>
 
@@ -243,10 +358,13 @@ function Home() {
             :
 
 
+
             posts.length === 0
 
 
+
             ?
+
 
 
             <p>
@@ -324,6 +442,7 @@ function Home() {
 
             ))
 
+
           }
 
 
@@ -352,34 +471,116 @@ function Home() {
 
 
 
+
           <div className="student-grid">
 
 
-            <div className="student-card">
+
+          {
 
 
-              <h3>
-
-                Coming Soon 🚀
-
-              </h3>
+            suggestions.length === 0
 
 
-              <p>
 
-                AI powered friend suggestions
-
-              </p>
+            ?
 
 
-              <span>
 
-                Based on interests & thoughts
+            <p>
 
-              </span>
+              No suggestions available 🚀
+
+            </p>
 
 
-            </div>
+
+            :
+
+
+
+            suggestions.map((user:any)=>(
+
+
+
+              <div
+
+                className="student-card"
+
+                key={user._id}
+
+              >
+
+
+
+                <img
+
+                  src={
+
+                    user.image ||
+
+                    "https://picsum.photos/100"
+
+                  }
+
+                  alt="profile"
+
+                />
+
+
+
+
+                <h3>
+
+                  {user.name}
+
+                </h3>
+
+
+
+
+                <p>
+
+                  🎓 {user.course || "Student"}
+
+                </p>
+
+
+
+
+                <span>
+
+                  ✨ {
+
+                    user.interests?.join(", ")
+
+                    ||
+
+                    "LCMT Member"
+
+                  }
+
+                </span>
+
+
+
+
+                <button>
+
+                  Connect ❤️
+
+                </button>
+
+
+
+              </div>
+
+
+
+            ))
+
+
+          }
 
 
 
@@ -412,8 +613,8 @@ function Home() {
           <div className="tag-container">
 
 
-
           {
+
 
             communities.map((item,index)=>(
 
@@ -432,7 +633,6 @@ function Home() {
 
 
               </Link>
-
 
 
             ))
@@ -468,10 +668,12 @@ function Home() {
 
 
 
+
           <div className="event-card">
 
 
           {
+
 
             events.map((event,index)=>(
 
@@ -483,7 +685,6 @@ function Home() {
 
 
               </p>
-
 
 
             ))
@@ -530,6 +731,7 @@ function Home() {
 
 
 
+
             <p>
 
               🤖 AI Hackathon Team Formation
@@ -548,6 +750,7 @@ function Home() {
 
 
 
+
       </main>
 
 
@@ -558,6 +761,8 @@ function Home() {
   )
 
 }
+
+
 
 
 export default Home
