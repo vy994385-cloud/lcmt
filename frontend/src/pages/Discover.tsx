@@ -15,9 +15,7 @@ function calculateCompatibility(
     currentUser.college &&
     currentUser.college === user.college
   ) {
-
     score += 20
-
   }
 
 
@@ -25,9 +23,7 @@ function calculateCompatibility(
     currentUser.course &&
     currentUser.course === user.course
   ) {
-
     score += 20
-
   }
 
 
@@ -53,10 +49,8 @@ function calculateCompatibility(
 
 
 
-  if(score > 100){
-
+  if (score > 100) {
     score = 100
-
   }
 
 
@@ -74,7 +68,7 @@ function getCommonInterests(
   return (
     currentUser.interests?.filter(
       (item:string)=>
-      user.interests?.includes(item)
+        user.interests?.includes(item)
     ) || []
   )
 
@@ -90,7 +84,7 @@ function getCommonValues(
   return (
     currentUser.values?.filter(
       (item:string)=>
-      user.values?.includes(item)
+        user.values?.includes(item)
     ) || []
   )
 
@@ -98,7 +92,88 @@ function getCommonValues(
 
 
 
+function getCompatibilityReasons(
+  currentUser:any,
+  user:any
+){
+
+  const reasons:string[] = []
+
+
+  if(
+    currentUser.college &&
+    currentUser.college === user.college
+  ){
+
+    reasons.push(
+      "Same College 🎓"
+    )
+
+  }
+
+
+
+  if(
+    currentUser.course &&
+    currentUser.course === user.course
+  ){
+
+    reasons.push(
+      "Same Course 💻"
+    )
+
+  }
+
+
+
+  const interests =
+    getCommonInterests(
+      currentUser,
+      user
+    )
+
+
+  if(
+    interests.length > 0
+  ){
+
+    reasons.push(
+      `${interests.length} Common Interests ✨`
+    )
+
+  }
+
+
+
+  const values =
+    getCommonValues(
+      currentUser,
+      user
+    )
+
+
+  if(
+    values.length > 0
+  ){
+
+    reasons.push(
+      `${values.length} Shared Values ❤️`
+    )
+
+  }
+
+
+
+  return reasons
+
+}
+
+
+
+
+
 function Discover(){
+
 
   const {
     users,
@@ -120,13 +195,19 @@ function Discover(){
   const availableUsers =
     users.filter(
       (user)=>
+
         user.id !== currentUser._id &&
+
         !matches.some(
-          (match)=>match.id === user.id
+          (match)=>
+            match.id === user.id
         ) &&
+
         !passedUsers.some(
-          (passed)=>passed.id === user.id
+          (passed)=>
+            passed.id === user.id
         )
+
     )
 
 
@@ -135,11 +216,14 @@ function Discover(){
 
     <Layout>
 
+
       <main className="discover-page">
 
 
         <h1 className="discover-title">
+
           Discover Meaningful Connections ❤️
+
         </h1>
 
 
@@ -147,21 +231,26 @@ function Discover(){
         {
           availableUsers.length === 0
 
+
           ?
+
 
           <p>
             No more profiles available ❤️
           </p>
 
 
+
           :
+
 
 
           <div className="discover-grid">
 
 
           {
-            availableUsers.map((user)=>(
+            availableUsers.map(
+              (user)=>(
 
 
               <div
@@ -192,17 +281,52 @@ function Discover(){
                   <div className="image-overlay">
 
 
+                    <div className="match-section">
 
-                    <div className="match-badge">
 
-                      ❤️ {
-                        calculateCompatibility(
-                          currentUser,
-                          user
-                        )
-                      }% Compatible
+                      <div className="match-badge">
+
+                        ❤️ {
+                          calculateCompatibility(
+                            currentUser,
+                            user
+                          )
+                        }% Compatible
+
+
+                      </div>
+
+
+
+                      <div className="match-reasons">
+
+
+                        {
+                          getCompatibilityReasons(
+                            currentUser,
+                            user
+                          )
+                          .map(
+                            (reason:string)=>(
+
+                              <span
+                                key={reason}
+                              >
+
+                                ✓ {reason}
+
+                              </span>
+
+                            )
+                          )
+                        }
+
+
+                      </div>
+
 
                     </div>
+
 
 
 
@@ -239,6 +363,7 @@ function Discover(){
                       </p>
 
 
+
                     </div>
 
 
@@ -252,6 +377,7 @@ function Discover(){
 
 
 
+
                 <div className="profile-content">
 
 
@@ -259,9 +385,12 @@ function Discover(){
                   {
                     user.personality &&
 
+
                     <div className="personality-box">
 
+
                       💭 {user.personality}
+
 
                     </div>
 
@@ -270,8 +399,11 @@ function Discover(){
 
 
 
+
+
                   {
                     user.bio &&
+
 
                     <p className="info">
 
@@ -295,9 +427,11 @@ function Discover(){
 
                     <div>
 
+
                       <h4>
                         Common Interests ✨
                       </h4>
+
 
 
                       <div className="interests">
@@ -307,17 +441,19 @@ function Discover(){
                         getCommonInterests(
                           currentUser,
                           user
-                        ).map(
+                        )
+                        .map(
                           (interest:string)=>(
 
-                            <span
-                              key={interest}
-                              className="interest"
-                            >
+                          <span
+                            key={interest}
+                            className="interest"
+                          >
 
-                              {interest}
+                            {interest}
 
-                            </span>
+                          </span>
+
 
                           )
                         )
@@ -330,6 +466,7 @@ function Discover(){
                     </div>
 
                   }
+
 
 
 
@@ -345,9 +482,11 @@ function Discover(){
 
                     <div>
 
+
                       <h4>
                         Shared Values ❤️
                       </h4>
+
 
 
                       <div className="interests">
@@ -357,17 +496,19 @@ function Discover(){
                         getCommonValues(
                           currentUser,
                           user
-                        ).map(
+                        )
+                        .map(
                           (value:string)=>(
 
-                            <span
-                              key={value}
-                              className="interest"
-                            >
+                          <span
+                            key={value}
+                            className="interest"
+                          >
 
-                              {value}
+                            {value}
 
-                            </span>
+                          </span>
+
 
                           )
                         )
@@ -379,7 +520,9 @@ function Discover(){
 
                     </div>
 
+
                   }
+
 
 
 
@@ -393,13 +536,14 @@ function Discover(){
 
                       className="pass-btn"
 
-                      onClick={()=>
+                      onClick={() =>
                         passUser(user)
                       }
 
                     >
 
                       ❌ Pass
+
 
                     </button>
 
@@ -410,7 +554,7 @@ function Discover(){
 
                       className="like-btn"
 
-                      onClick={()=>
+                      onClick={() =>
                         likeUser(user)
                       }
 
@@ -418,8 +562,8 @@ function Discover(){
 
                       ❤️ Connect
 
-                    </button>
 
+                    </button>
 
 
                   </div>
@@ -433,12 +577,12 @@ function Discover(){
               </div>
 
 
-            ))
+              )
+            )
           }
 
 
           </div>
-
 
         }
 
@@ -452,6 +596,7 @@ function Discover(){
   )
 
 }
+
 
 
 export default Discover
