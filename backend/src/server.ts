@@ -9,9 +9,11 @@ import profileRoutes from "./routes/profileRoutes"
 import userRoutes from "./routes/userRoutes"
 import chatRoutes from "./routes/chatRoutes"
 import communityRoutes from "./routes/communityRoutes"
+import postRoutes from "./routes/postRoutes"
 import communityPostRoutes from "./routes/communityPostRoutes"
 
 import User from "./models/User"
+import feedRoutes from "./routes/feedRoutes"
 
 
 dotenv.config()
@@ -96,6 +98,7 @@ app.use(
   communityRoutes
 )
 
+app.use("/api/posts", postRoutes)
 
 
 // Community posts
@@ -105,6 +108,7 @@ app.use(
   communityPostRoutes
 )
 
+app.use("/api/feed", feedRoutes)
 
 
 

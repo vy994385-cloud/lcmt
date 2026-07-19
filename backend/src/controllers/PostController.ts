@@ -174,3 +174,50 @@ export async function createCommunityPost(
   }
 
 }
+
+export async function getAllPosts(
+  req: AuthRequest,
+  res: Response
+) {
+
+  try {
+
+    const posts =
+      await Post.find()
+
+      .populate({
+        path:"user",
+        select:"name image"
+      })
+
+      .populate({
+        path:"comments.user",
+        select:"name image"
+      })
+
+      .populate({
+        path:"community",
+        select:"name"
+      })
+
+      .sort({
+        createdAt:-1
+      })
+
+
+    return res.json(posts)
+
+
+  } catch(error) {
+
+    console.log(error)
+
+    return res.status(500).json({
+
+      message:"Server error"
+
+    })
+
+  }
+
+}

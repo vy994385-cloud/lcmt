@@ -4,7 +4,14 @@ import axios from "axios"
 
 import Layout from "../components/Layout"
 import "./CommunityDetails.css"
-
+import ThreeDotMenu from "../components/ThreeDotMenu"
+import {
+  Image,
+  Video,
+  Mic,
+  BarChart3,
+  Send
+} from "lucide-react"
 
 function CommunityDetails() {
 
@@ -311,66 +318,82 @@ function CommunityDetails() {
 
       <main className="community-feed">
 
+  <h1 className="feed-title">
+    Community Feed 🌍
+  </h1>
 
+  <section className="feed-header">
 
-        <section className="feed-header">
+    <div className="composer-top">
 
+      <img
+        src={
+          user.image ||
+          "https://picsum.photos/60"
+        }
+        alt="Profile"
+        className="composer-avatar"
+      />
 
-          <h1>
-            Community Feed 🌍
-          </h1>
+      <div className="composer-input">
 
+        <h3>
+          What's on your mind, {user.name || "Student"}?
+        </h3>
 
+        <textarea
+          placeholder="Share something with your community..."
+          value={content}
+          onChange={(e)=>
+            setContent(e.target.value)
+          }
+        />
 
-          <textarea
+      </div>
 
-            placeholder="Share something with your community..."
+    </div>
 
-            value={content}
+    <div className="composer-actions">
 
-            onChange={(e)=>
+      <div className="composer-icons">
 
-              setContent(
-                e.target.value
-              )
+        <button type="button">
+          <Image size={18}/>
+          <span>Photo</span>
+        </button>
 
-            }
+        <button type="button">
+          <Video size={18}/>
+          <span>Video</span>
+        </button>
 
-          />
+        <button type="button">
+          <Mic size={18}/>
+          <span>Voice</span>
+        </button>
 
+        <button type="button">
+          <BarChart3 size={18}/>
+          <span>Poll</span>
+        </button>
 
+      </div>
 
-          <button
+      <button
+        className="post-btn"
+        onClick={createPost}
+        disabled={loading}
+      >
 
-            onClick={createPost}
+        <Send size={18}/>
 
-            disabled={loading}
+        {loading ? "Posting..." : "Post"}
 
-          >
+      </button>
 
-            {
-              loading
+    </div>
 
-              ?
-
-              "Posting..."
-
-              :
-
-              "Post 🚀"
-            }
-
-
-          </button>
-
-
-
-        </section>
-
-
-
-
-
+  </section>
 
         <section className="posts">
 
@@ -415,32 +438,60 @@ function CommunityDetails() {
 
 
 
-              <div className="post-user">
+              <div className="post-header">
 
+  <div className="post-user">
 
-                <img
+    <img
+      src={
+        post?.user?.image ||
+        "https://picsum.photos/50"
+      }
+      alt="profile"
+    />
 
-                  src={
-                    post?.user?.image ||
-                    "https://picsum.photos/50"
-                  }
+    <strong>
+      {
+        post?.user?.name ||
+        "Student"
+      }
+    </strong>
 
-                  alt="profile"
+  </div>
 
-                />
+  <ThreeDotMenu
+    items={[
+      {
+        label: "💾 Save Post",
+        onClick: () => {
+          alert("Coming Soon")
+        }
+      },
+      {
+        label: "🔗 Copy Link",
+        onClick: () => {
+          navigator.clipboard.writeText(
+            `${window.location.origin}/communities/${id}`
+          )
+          alert("Link copied")
+        }
+      },
+      {
+        label: "📤 Share",
+        onClick: () => {
+          alert("Coming Soon")
+        }
+      },
+      {
+        label: "🚩 Report",
+        onClick: () => {
+          alert("Reported")
+        }
+      }
+    ]}
+  />
 
-
-                <strong>
-
-                  {
-                    post?.user?.name ||
-                    "Student"
-                  }
-
-                </strong>
-
-
-              </div>
+</div>
 
 
 
