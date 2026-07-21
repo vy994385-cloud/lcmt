@@ -1,34 +1,23 @@
-import express from "express"
+import { Router } from "express"
 
 import {
-  getCommunities,
-  joinCommunity
+ getCommunities,
+ joinCommunity
 } from "../controllers/communityController"
 
 
-const router = express.Router()
+const router = Router()
 
 
 router.get(
-  "/",
-  getCommunities
+ "/",
+ getCommunities
 )
 
 
 router.post(
-  "/:id/join",
-  (req,res,next)=>{
-
-    console.log(
-      "JOIN REQUEST RECEIVED",
-      req.params.id,
-      req.body
-    )
-
-    next()
-
-  },
-  joinCommunity
+ "/:id/join",
+ joinCommunity
 )
 
 
