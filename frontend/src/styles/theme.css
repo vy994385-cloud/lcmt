@@ -1,80 +1,269 @@
 :root{
 
+  /* ===========================
+     COLORS
+  =========================== */
+
   --primary:#FF4D8D;
+  --primary-light:#FF7AA8;
   --primary-dark:#E63E78;
 
   --secondary:#8B5CF6;
-
-  --background:#F8F9FC;
-
-  --card:#FFFFFF;
-
-  --text:#111827;
-
-  --text-light:#6B7280;
-
-  --border:#E5E7EB;
+  --secondary-light:#A78BFA;
 
   --success:#10B981;
-
+  --warning:#F59E0B;
   --danger:#EF4444;
+  --info:#3B82F6;
 
-  --shadow:0 10px 30px rgba(0,0,0,.08);
+  /* ===========================
+     BACKGROUNDS
+  =========================== */
 
-  --radius:20px;
+  --background:#F8F9FC;
+  --surface:#FFFFFF;
+  --surface-hover:#F4F6FB;
+  --card:#FFFFFF;
 
-  --glass:rgba(255,255,255,.7);
+  /* ===========================
+     TEXT
+  =========================== */
 
---gradient:
-linear-gradient(
-135deg,
-#FF4D8D,
-#FF7AA8
-);
+  --text:#111827;
+  --text-light:#6B7280;
+  --text-muted:#9CA3AF;
+  --text-white:#FFFFFF;
 
---transition:.3s ease;
+  /* ===========================
+     BORDERS
+  =========================== */
+
+  --border:#E5E7EB;
+  --border-dark:#D1D5DB;
+
+  /* ===========================
+     GRADIENTS
+  =========================== */
+
+  --gradient:
+    linear-gradient(
+      135deg,
+      #FF4D8D,
+      #FF7AA8
+    );
+
+  --gradient-purple:
+    linear-gradient(
+      135deg,
+      #8B5CF6,
+      #A78BFA
+    );
+
+  --gradient-blue:
+    linear-gradient(
+      135deg,
+      #3B82F6,
+      #60A5FA
+    );
+
+  /* ===========================
+     GLASS
+  =========================== */
+
+  --glass-bg:rgba(255,255,255,.72);
+  --glass-border:rgba(255,255,255,.35);
+  --blur:18px;
+
+  /* ===========================
+     TYPOGRAPHY
+  =========================== */
+
+  --font-family:"Poppins",sans-serif;
+
+  --h1:42px;
+  --h2:34px;
+  --h3:28px;
+  --h4:22px;
+
+  --body:16px;
+  --small:14px;
+  --tiny:12px;
+
+  /* ===========================
+     SPACING
+  =========================== */
+
+  --space-xs:8px;
+  --space-sm:12px;
+  --space-md:16px;
+  --space-lg:24px;
+  --space-xl:32px;
+  --space-2xl:48px;
+  --space-3xl:64px;
+
+  /* ===========================
+     BORDER RADIUS
+  =========================== */
+
+  --radius-xs:8px;
+  --radius-sm:12px;
+  --radius-md:16px;
+  --radius-lg:20px;
+  --radius-xl:28px;
+  --radius-round:999px;
+
+  /* ===========================
+     SHADOWS
+  =========================== */
+
+  --shadow-sm:
+    0 4px 12px rgba(0,0,0,.05);
+
+  --shadow-md:
+    0 10px 30px rgba(0,0,0,.08);
+
+  --shadow-lg:
+    0 18px 45px rgba(0,0,0,.12);
+
+  --shadow-xl:
+    0 30px 70px rgba(0,0,0,.16);
+
+  /* ===========================
+     TRANSITIONS
+  =========================== */
+
+  --transition-fast:.18s ease;
+  --transition:.30s ease;
+  --transition-slow:.45s ease;
+
+  /* ===========================
+     Z INDEX
+  =========================== */
+
+  --z-dropdown:100;
+  --z-sticky:500;
+  --z-overlay:900;
+  --z-modal:1000;
+  --z-toast:1100;
+
+  /* ===========================
+     CHAT
+  =========================== */
+
+  --sent-message:#FF4D8D;
+  --received-message:#ECECEC;
+
+  /* ===========================
+     DARK MODE PREP
+  =========================== */
+
+  --background-dark:#111827;
+  --surface-dark:#1F2937;
+  --text-dark:#F9FAFB;
 
 }
+
+
+
+/* ===========================
+   RESET
+=========================== */
 
 *{
 
   margin:0;
-
   padding:0;
-
   box-sizing:border-box;
 
 }
 
+
+
+/* ===========================
+   HTML
+=========================== */
+
+html{
+
+  scroll-behavior:smooth;
+
+}
+
+
+
+/* ===========================
+   BODY
+=========================== */
+
 body{
 
-  font-family:"Poppins",sans-serif;
+  font-family:var(--font-family);
 
   background:var(--background);
 
   color:var(--text);
 
+  line-height:1.6;
+
+  -webkit-font-smoothing:antialiased;
+
+  -moz-osx-font-smoothing:grayscale;
+
 }
+
+
+
+/* ===========================
+   LINKS
+=========================== */
+
+a{
+
+  color:inherit;
+
+  text-decoration:none;
+
+}
+
+
+
+/* ===========================
+   IMAGES
+=========================== */
+
+img{
+
+  display:block;
+
+  max-width:100%;
+
+}
+
+
+
+/* ===========================
+   BUTTONS
+=========================== */
 
 button{
 
-  cursor:pointer;
-
   border:none;
 
-  border-radius:12px;
+  cursor:pointer;
 
-  padding:12px 22px;
+  border-radius:var(--radius-sm);
 
   background:var(--primary);
 
   color:white;
 
+  padding:12px 22px;
+
   font-size:15px;
 
   font-weight:600;
 
-  transition:.25s;
+  transition:var(--transition);
 
 }
 
@@ -84,54 +273,110 @@ button:hover{
 
   transform:translateY(-2px);
 
+  box-shadow:var(--shadow-sm);
+
 }
 
-input,textarea,select{
+button:active{
+
+  transform:scale(.98);
+
+}
+
+
+
+/* ===========================
+   INPUTS
+=========================== */
+
+input,
+textarea,
+select{
 
   width:100%;
 
-  padding:14px;
-
-  border-radius:12px;
+  padding:14px 16px;
 
   border:1px solid var(--border);
+
+  border-radius:var(--radius-sm);
+
+  background:white;
 
   outline:none;
 
   font-size:15px;
 
+  transition:var(--transition);
+
 }
+
+input:focus,
+textarea:focus,
+select:focus{
+
+  border-color:var(--primary);
+
+  box-shadow:
+  0 0 0 4px
+  rgba(255,77,141,.12);
+
+}
+
+
+
+/* ===========================
+   CARD
+=========================== */
 
 .card{
 
-  background:white;
+  background:var(--card);
 
-  border-radius:20px;
+  border-radius:var(--radius-lg);
 
-  box-shadow:var(--shadow);
+  box-shadow:var(--shadow-md);
 
   padding:20px;
 
 }
 
-a{
 
-text-decoration:none;
 
-color:inherit;
+/* ===========================
+   SELECTION
+=========================== */
 
-}
+::selection{
 
-img{
+  background:var(--primary);
 
-display:block;
-
-max-width:100%;
+  color:white;
 
 }
 
-html{
 
-scroll-behavior:smooth;
+
+/* ===========================
+   SCROLLBAR
+=========================== */
+
+::-webkit-scrollbar{
+
+  width:8px;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+  background:#d7d7d7;
+
+  border-radius:20px;
+
+}
+
+::-webkit-scrollbar-thumb:hover{
+
+  background:#bdbdbd;
 
 }

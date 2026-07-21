@@ -1,4 +1,7 @@
 import express from "express"
+import http from "http"
+import { Server } from "socket.io"
+
 import cors from "cors"
 import dotenv from "dotenv"
 
@@ -14,12 +17,16 @@ import communityPostRoutes from "./routes/communityPostRoutes"
 
 import User from "./models/User"
 import feedRoutes from "./routes/feedRoutes"
-
+import { setIO } from "./socket"
+import socialRoutes from "./routes/socialRoutes"
+import friendRoutes from "./routes/friendRoutes"
 
 dotenv.config()
 
 
 const app = express()
+
+const server = http.createServer(app)
 
 const PORT = process.env.PORT || 5000
 
@@ -28,18 +35,19 @@ const PORT = process.env.PORT || 5000
 app.use(
   cors({
 
-    origin(origin, callback) {
+    origin(origin, callback){
 
-      if (
+      if(
         !origin ||
         origin.startsWith("http://localhost:") ||
         origin === "https://lcmt.vercel.app" ||
         origin === "https://lcmt1.vercel.app"
-      ) {
+      ){
 
-        callback(null, true)
+        callback(null,true)
 
-      } else {
+      }
+      else{
 
         callback(
           new Error("Not allowed by CORS")
@@ -49,7 +57,7 @@ app.use(
 
     },
 
-    credentials: true,
+    credentials:true,
 
     allowedHeaders:[
       "Content-Type",
@@ -68,7 +76,42 @@ app.use(
 )
 
 
-app.use(express.json())
+
+const io = new Server(
+  server,
+  {
+
+    cors:{
+
+      origin:[
+        "http://localhost:5173",
+        "http://localhost:5174",
+        "https://lcmt.vercel.app",
+        "https://lcmt1.vercel.app"
+      ],
+
+      methods:[
+        "GET",
+        "POST"
+      ],
+
+      credentials:true
+
+    }
+
+  }
+)
+
+
+
+setIO(io)
+
+
+
+app.use(
+  express.json()
+)
+
 
 
 
@@ -96,6 +139,10 @@ app.use(
 )
 
 
+app.use(
+  "/api/social",
+  socialRoutes
+)
 
 app.use(
   "/api/chat",
@@ -104,33 +151,48 @@ app.use(
 
 
 
-// Communities
-
 app.use(
   "/api/communities",
   communityRoutes
 )
 
-app.use("/api/posts", postRoutes)
 
 
-// Community posts
+app.use(
+  "/api/posts",
+  postRoutes
+)
+
+
 
 app.use(
   "/api/communities",
   communityPostRoutes
 )
 
-app.use("/api/feed", feedRoutes)
+
+
+app.use(
+  "/api/feed",
+  feedRoutes
+)
+
+app.use(
+"/api/friends",
+friendRoutes
+)
 
 
 
 
-// Status route
+
+
+
+// Status
 
 app.get(
   "/api/status",
-  (_req, res)=>{
+  (_req,res)=>{
 
     res.json({
 
@@ -150,6 +212,7 @@ app.get(
 
 
 
+
 // Available routes
 
 app.get(
@@ -158,30 +221,40 @@ app.get(
 
     res.json({
 
-      routes:[
+      
 
-        "/api/status",
+       routes: [
 
-        "/api/auth/signup",
-        "/api/auth/login",
+  "/api/status",
 
-        "/api/profile",
-        "/api/profile/me",
+  "/api/auth/signup",
+  "/api/auth/login",
 
-        "/api/users/discover",
-        "/api/users/like/:id",
-        "/api/users/matches",
+  "/api/profile",
+  "/api/profile/me",
 
-        "/api/chat",
-        "/api/chat/:id",
-        "/api/chat/send/:id",
+  "/api/users/discover",
 
-        "/api/communities",
-        "/api/communities/:id/join",
+  "/api/social/follow/:id",
+  "/api/social/unfollow/:id",
+  "/api/social/followers/:id",
+  "/api/social/following/:id",
+  "/api/social/friends/:id",
+  "/api/social/friend-request/:id",
 
-        "/api/communities/:id/posts"
+  "/api/chat",
+  "/api/chat/:id",
+  "/api/chat/send/:id",
 
-      ]
+  "/api/communities",
+  "/api/communities/:id/join",
+
+  "/api/communities/:id/posts"
+
+]
+      
+
+      
 
     })
 
@@ -193,7 +266,9 @@ app.get(
 
 
 
-// Temporary test route
+
+
+// Test users
 
 app.get(
   "/api/test-users",
@@ -216,7 +291,6 @@ app.get(
 
       console.log(error)
 
-
       res.status(500)
       .json({
         message:"Error"
@@ -234,21 +308,188 @@ app.get(
 
 
 
+// Socket
+
+io.on(
+  "connection",
+  (socket)=>{
+
+
+    console.log(
+      "🟢 User connected:",
+      socket.id
+    )
+
+
+
+
+
+    // Join user room
+
+    socket.on(
+      "join",
+      async(userId:string)=>{
+
+
+        socket.join(
+          userId
+        )
+
+
+        socket.data.userId =
+          userId
+
+
+
+        await User.findByIdAndUpdate(
+          userId,
+          {
+            isOnline:true
+          }
+        )
+
+
+
+        console.log(
+          `👤 ${userId} joined room`
+        )
+
+
+
+        io.emit(
+          "user-online",
+          userId
+        )
+
+
+      }
+    )
+
+
+
+
+
+
+
+    // Typing indicator
+
+    socket.on(
+      "typing",
+      (data)=>{
+
+
+        io.to(
+          data.receiver
+        )
+        .emit(
+          "typing",
+          {
+            sender:data.sender
+          }
+        )
+
+
+      }
+    )
+
+
+
+
+
+
+
+
+    // Disconnect
+
+    socket.on(
+      "disconnect",
+      async()=>{
+
+
+        const userId =
+          socket.data.userId
+
+
+
+        if(userId){
+
+
+          await User.findByIdAndUpdate(
+            userId,
+            {
+
+              isOnline:false,
+
+              lastSeen:new Date()
+
+            }
+          )
+
+
+
+          console.log(
+            `🔴 ${userId} offline`
+          )
+
+
+
+          io.emit(
+            "user-offline",
+            {
+
+              userId,
+
+              lastSeen:new Date()
+
+            }
+          )
+
+
+        }
+
+
+
+        console.log(
+          "🔴 User disconnected:",
+          socket.id
+        )
+
+
+      }
+    )
+
+
+
+  }
+)
+
+
+
+
+
+
+
+
 async function startServer(){
+
 
   await connectDatabase()
 
 
-  app.listen(
+
+  server.listen(
     PORT,
     ()=>{
+
 
       console.log(
         `🚀 LCMT Backend running on port ${PORT}`
       )
 
+
     }
   )
+
 
 }
 

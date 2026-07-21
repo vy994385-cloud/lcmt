@@ -1,0 +1,55 @@
+.avatar-wrapper{
+
+    position:relative;
+
+    display:inline-block;
+
+    cursor:pointer;
+
+}
+
+.avatar{
+
+    width:100%;
+
+    height:100%;
+
+    border-radius:50%;
+
+    object-fit:cover;
+
+    border:3px solid white;
+
+    box-shadow:var(--shadow-sm);
+
+}
+
+.status-dot{
+
+    position:absolute;
+
+    width:14px;
+
+    height:14px;
+
+    border-radius:50%;
+
+    border:2px solid white;
+
+    right:2px;
+
+    bottom:2px;
+
+}
+
+.online{
+
+    background:var(--success);
+
+}
+
+.offline{
+
+    background:#9CA3AF;
+
+}

@@ -1,0 +1,41 @@
+.input-ui{
+
+    width:100%;
+
+    padding:14px 18px;
+
+    border-radius:var(--radius-md);
+
+    border:1px solid var(--border);
+
+    background:var(--card);
+
+    font-size:15px;
+
+    transition:var(--transition);
+
+}
+
+.input-ui:focus{
+
+    outline:none;
+
+    border-color:var(--primary);
+
+    box-shadow:0 0 0 4px rgba(255,77,141,.15);
+
+}
+
+.input-ui::placeholder{
+
+    color:var(--text-light);
+
+}
+
+.input-ui:disabled{
+
+    opacity:.6;
+
+    cursor:not-allowed;
+
+}

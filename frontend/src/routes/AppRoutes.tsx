@@ -3,9 +3,10 @@ import { Routes, Route } from "react-router-dom"
 import Login from "../pages/Login"
 import Signup from "../pages/Signup"
 import Onboarding from "../pages/Onboarding"
-import Discover from "../pages/Discover"
+import Explore from "../pages/Explore"
+import Circle from "../pages/Circle"
 import Profile from "../pages/Profile"
-import Matches from "../pages/Matches"
+
 import Chat from "../pages/Chat"
 import Settings from "../pages/Settings"
 import Notifications from "../pages/Notifications"
@@ -27,6 +28,10 @@ import Footer from "../components/Footer"
 
 import ChatInbox from "../pages/ChatInbox"
 
+import NewChat from "../pages/NewChat"
+import Followers from "../pages/Followers"
+import Following from "../pages/Following"
+import Friends from "../pages/Friends"
 
 
 function LandingPage() {
@@ -137,23 +142,30 @@ checkProfileComplete()
       />
 
 
-      <Route 
-        path="/discover" 
-        element={<Discover />} 
-      />
+      <Route
+  path="/explore"
+  element={<Explore />}
+/>
+
+<Route
+path="/circle"
+element={<Circle />}
+/>
 
 
-      <Route 
-        path="/profile" 
-        element={<Profile />} 
-      />
+      <Route
+  path="/profile"
+  element={<Profile />}
+/>
+
+<Route
+  path="/profile/:id"
+  element={<Profile />}
+/>
 
 
-      <Route 
-        path="/matches" 
-        element={<Matches />} 
-      />
 
+      
 
       <Route 
         path="/settings" 
@@ -217,6 +229,30 @@ checkProfileComplete()
         path="/communities/:id"
         element={<CommunityDetails />}
       />
+
+      <Route
+path="/followers"
+element={<Followers />}
+/>
+
+
+<Route
+path="/following"
+element={<Following />}
+/>
+
+
+<Route
+path="/friends"
+element={<Friends />}
+/>
+
+    
+
+<Route
+path="/new-chat"
+element={<NewChat/>}
+/>
 
 
 

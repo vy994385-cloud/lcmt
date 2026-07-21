@@ -1,106 +1,283 @@
+import { 
+  useState 
+} from "react"
+
 import {
   Home,
-  Users,
-  Search,
-  Heart,
+  Compass,
+  UsersRound,
   MessageCircle,
   Bell,
-  User
+  User,
+  MoreVertical
 } from "lucide-react"
 
-import { Link } from "react-router-dom"
+import {
+  Link,
+  useLocation
+} from "react-router-dom"
+
+import MoreMenu from "./MoreMenu"
 
 import "./Navbar.css"
 
 
+
 function Navbar(){
+
+const location = useLocation()
+
+
+
+const isActive = (path:string)=>{
+
+  if(path === "/"){
+    return location.pathname === "/"
+  }
+
+  return location.pathname.startsWith(path)
+
+}
+
+
+
+const [
+  menuOpen,
+  setMenuOpen
+]=useState(false)
+
+
+
+const navItems = [
+
+{
+path:"/",
+icon:<Home size={20}/>,
+label:"Home"
+},
+
+{
+path:"/explore",
+icon:<Compass size={20}/>,
+label:"Explore"
+},
+
+{
+path:"/circle",
+icon:<UsersRound size={20}/>,
+label:"Circle"
+},
+
+{
+path:"/communities",
+icon:<UsersRound size={20}/>,
+label:"Communities"
+},
+
+{
+path:"/chat",
+icon:<MessageCircle size={20}/>,
+label:"Messages"
+},
+
+{
+path:"/notifications",
+icon:
+<div className="notification-icon">
+
+<Bell size={20}/>
+
+<span>
+3
+</span>
+
+</div>,
+label:"Notifications"
+},
+
+{
+path:"/profile",
+icon:<User size={20}/>,
+label:"Profile"
+}
+
+]
+
+
 
 return (
 
 <>
 
+
 <nav className="desktop-nav">
 
-<h2>
-❤️ LCMT
-</h2>
 
 
-<Link to="/">
-<Home size={20}/>
-<span>Home</span>
+<div className="logo">
+
+<span>
+❤️
+</span>
+
+
+<div>
+
+<strong>
+LCMT
+</strong>
+
+
+<small>
+Ideas • People • Communities
+</small>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div className="nav-links">
+
+
+{
+navItems.map(
+
+(item)=>(
+
+
+<Link
+
+key={item.path}
+
+to={item.path}
+
+className={
+isActive(item.path)
+?
+"active-nav"
+:
+""
+}
+
+>
+
+
+{item.icon}
+
+
+<span>
+{item.label}
+</span>
+
+
 </Link>
 
 
-<Link to="/communities">
-<Users size={20}/>
-<span>Communities</span>
-</Link>
+)
+
+)
+
+}
 
 
-<Link to="/discover">
-<Search size={20}/>
-<span>Discover</span>
-</Link>
+</div>
 
 
-<Link to="/matches">
-<Heart size={20}/>
-<span>Matches</span>
-</Link>
 
 
-<Link to="/chat">
-<MessageCircle size={20}/>
-<span>Chat</span>
-</Link>
+
+<div
+
+className="more-wrapper"
+
+role="button"
+
+aria-label="Open menu"
+
+onClick={() =>
+setMenuOpen(!menuOpen)
+}
+
+>
 
 
-<Link to="/notifications">
-<Bell size={20}/>
-<span>Notifications</span>
-</Link>
+<MoreVertical size={24}/>
 
 
-<Link to="/profile">
-<User size={20}/>
-<span>Profile</span>
-</Link>
+
+{
+
+menuOpen &&
+
+<MoreMenu/>
+
+}
+
+
+
+</div>
+
 
 
 </nav>
+
+
+
+
 
 
 
 <nav className="mobile-nav">
 
 
-<Link to="/">
-<Home/>
+{
+
+navItems
+.slice(0,5)
+.map(
+
+(item)=>(
+
+
+<Link
+
+key={item.path}
+
+to={item.path}
+
+className={
+isActive(item.path)
+?
+"active-mobile"
+:
+""
+}
+
+>
+
+
+{item.icon}
+
+
 </Link>
 
 
-<Link to="/communities">
-<Users/>
-</Link>
+)
 
+)
 
-<Link to="/discover">
-<Search/>
-</Link>
-
-
-<Link to="/chat">
-<MessageCircle/>
-</Link>
-
-
-<Link to="/profile">
-<User/>
-</Link>
+}
 
 
 </nav>
+
+
 
 
 </>

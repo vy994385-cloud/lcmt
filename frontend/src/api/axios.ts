@@ -1,25 +1,39 @@
 import axios from "axios"
 
-const API = axios.create({
-  baseURL: "https://lcmt-backend.onrender.com/api",
+
+const api = axios.create({
+
+  baseURL:
+    import.meta.env.VITE_API_URL,
+
 })
 
 
-API.interceptors.request.use(
-  (config) => {
+api.interceptors.request.use(
 
-    const token = localStorage.getItem("token")
+  (config)=>{
 
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`
+    const token =
+      localStorage.getItem("token")
+
+
+    if(token){
+
+      config.headers.Authorization =
+        `Bearer ${token}`
+
     }
 
+
     return config
+
   },
-  (error) => {
-    return Promise.reject(error)
-  }
+
+
+  (error)=>
+    Promise.reject(error)
+
 )
 
 
-export default API
+export default api

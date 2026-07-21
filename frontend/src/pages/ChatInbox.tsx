@@ -2,6 +2,90 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import api from "../api/axios"
 
+function formatChatTime(dateString: string) {
+
+  const date = new Date(dateString)
+
+  const now = new Date()
+
+  const diff =
+    now.getTime() - date.getTime()
+
+  const oneDay =
+    1000 * 60 * 60 * 24
+
+
+  if (
+    date.toDateString() ===
+    now.toDateString()
+  ) {
+
+    return date.toLocaleTimeString(
+      [],
+      {
+        hour: "2-digit",
+        minute: "2-digit",
+      }
+    )
+
+  }
+
+
+  const yesterday = new Date()
+
+  yesterday.setDate(
+    yesterday.getDate() - 1
+  )
+
+  if (
+    date.toDateString() ===
+    yesterday.toDateString()
+  ) {
+
+    return "Yesterday"
+
+  }
+
+
+  if (diff < oneDay * 7) {
+
+    return date.toLocaleDateString(
+      [],
+      {
+        weekday: "long",
+      }
+    )
+
+  }
+
+
+  if (
+    date.getFullYear() ===
+    now.getFullYear()
+  ) {
+
+    return date.toLocaleDateString(
+      [],
+      {
+        day: "numeric",
+        month: "short",
+      }
+    )
+
+  }
+
+
+  return date.toLocaleDateString(
+    [],
+    {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    }
+  )
+
+}
+
 
 function ChatInbox() {
 
@@ -11,34 +95,35 @@ function ChatInbox() {
 
   async function loadChats() {
 
-    try {
+  try {
 
-      const response = await api.get("/chat")
+    const response = await api.get("/chat")
 
-      setChats(response.data)
+    console.log("API Response:", response.data)
 
-    } catch (error) {
+    setChats(response.data)
 
-      console.log(
-        "Failed loading chats",
-        error
-      )
+  } catch (error) {
 
-    }
+    console.log(
+      "Failed loading chats",
+      error
+    )
 
   }
+
+}
 
 
   useEffect(() => {
 
-    loadChats()
+  loadChats()
 
-  }, [])
+}, [])
 
+console.log("Chats State:", chats)
 
-
-  return (
-
+return (
     <main
       style={{
         padding:"40px"
@@ -77,22 +162,84 @@ function ChatInbox() {
               }
 
               style={{
-                padding:"20px",
-                border:"1px solid #ddd",
-                borderRadius:"15px",
-                marginTop:"15px",
-                cursor:"pointer"
-              }}
+  padding: "18px",
+  borderRadius: "18px",
+  marginTop: "15px",
+  cursor: "pointer",
+  background: "#fff",
+  border: "1px solid #eee",
+  boxShadow: "0 4px 12px rgba(0,0,0,.05)",
+  transition: "0.2s"
+}}
             >
 
-              <h3>
-                {chat.user.name}
-              </h3>
+              <div
+  style={{
+    display: "flex",
+    alignItems: "center",
+    gap: "15px"
+  }}
+>
 
+  <img
+    src={
+      chat.user.image ||
+      "https://picsum.photos/100"
+    }
+    alt={chat.user.name}
+    style={{
+      width: "60px",
+      height: "60px",
+      borderRadius: "50%",
+      objectFit: "cover"
+    }}
+  />
 
-              <p>
-                {chat.lastMessage}
-              </p>
+  <div
+    style={{
+      flex: 1
+    }}
+  >
+
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center"
+      }}
+    >
+
+      <h3
+        style={{
+          margin: 0
+        }}
+      >
+        {chat.user.name}
+      </h3>
+
+      <small
+  style={{
+    color: "#888",
+    fontSize: "13px"
+  }}
+>
+  {formatChatTime(chat.time)}
+</small>
+
+    </div>
+
+    <p
+      style={{
+        marginTop: "8px",
+        color: "#666"
+      }}
+    >
+      {chat.lastMessage}
+    </p>
+
+  </div>
+
+</div>
 
 
             </div>

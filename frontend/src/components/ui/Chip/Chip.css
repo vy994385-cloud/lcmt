@@ -1,0 +1,45 @@
+.chip-ui{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:10px 16px;
+
+    border:none;
+
+    border-radius:999px;
+
+    background:#eef2ff;
+
+    color:#3730a3;
+
+    font-size:.9rem;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.chip-ui:hover{
+
+    background:#4f46e5;
+
+    color:white;
+
+    transform:translateY(-2px);
+
+}
+
+.chip-ui.active{
+
+    background:#2563eb;
+
+    color:white;
+
+}

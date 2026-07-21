@@ -7,7 +7,10 @@ export async function updateProfile(
   res: Response
 ) {
   try {
+    console.log("USER ID:", req.userId)
+console.log("BODY:", req.body)
     const {
+      
   age,
   gender,
   college,
@@ -61,6 +64,7 @@ export async function getMyProfile(
   res: Response
 ) {
   try {
+    
     const user = await User.findById(req.userId).select("-password")
 
     res.status(200).json(user)
@@ -210,4 +214,39 @@ export async function getMatches(
       message: "Server Error",
     })
   }
+}
+
+export async function getProfileById(
+  req:AuthRequest,
+  res:Response
+){
+
+  try{
+
+    const user = await User.findById(
+      req.params.id
+    )
+    .select("-password")
+
+
+    if(!user){
+
+      return res.status(404).json({
+        message:"User not found"
+      })
+
+    }
+
+
+    res.json(user)
+
+  }
+  catch(error){
+
+    res.status(500).json({
+      message:"Profile fetch failed"
+    })
+
+  }
+
 }

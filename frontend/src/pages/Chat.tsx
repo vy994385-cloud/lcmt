@@ -1,19 +1,278 @@
-import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import {
+  useEffect,
+  useState,
+  useRef
+} from "react"
+
+import {
+  useParams,
+  useNavigate
+} from "react-router-dom"
+
 import api from "../api/axios"
+import socket from "../socket"
 
+import EmojiPicker from "emoji-picker-react"
 
-function Chat() {
+import "./Chat.css"
+
+import Avatar from "../components/ui/Avatar/Avatar"
+import Button from "../components/ui/Button/Button"
+import Input from "../components/ui/Input/Input"
+
+interface ChatUser{
+  _id:string
+  name:string
+  image?:string
+  isOnline?:boolean
+  lastSeen?:string
+}
+
+interface Message{
+
+  _id:string
+
+  text:string
+
+  createdAt:string
+
+  sender:string | {
+    _id:string
+  }
+
+  receiver:string | {
+    _id:string
+  }
+
+}
+
+function Chat(){
 
   const { id } = useParams()
 
-  const [messages, setMessages] = useState<any[]>([])
-  const [text, setText] = useState("")
-
+  const navigate = useNavigate()
 
   const currentUser = JSON.parse(
     localStorage.getItem("user") || "{}"
   )
+
+  const [messages,setMessages] =
+    useState<Message[]>([])
+
+  const [chatUser,setChatUser] =
+    useState<ChatUser | null>(null)
+
+  const [text,setText] =
+    useState("")
+
+  const [showEmoji,setShowEmoji] =
+    useState(false)
+
+  const [showMenu,setShowMenu] =
+    useState(false)
+
+  const [isTyping,setIsTyping] =
+    useState(false)
+
+  const bottomRef =
+    useRef<HTMLDivElement>(null)
+
+  const emojiRef =
+    useRef<HTMLDivElement>(null)
+
+  function getSenderId(message:any){
+
+    return typeof message.sender === "object"
+
+      ? message.sender._id
+
+      : message.sender
+
+  }
+
+  useEffect(()=>{
+
+    function closeEmoji(event:any){
+
+      if(
+        emojiRef.current &&
+        !emojiRef.current.contains(event.target)
+      ){
+
+        setShowEmoji(false)
+
+      }
+
+    }
+
+    document.addEventListener(
+      "mousedown",
+      closeEmoji
+    )
+
+    return ()=>{
+
+      document.removeEventListener(
+        "mousedown",
+        closeEmoji
+      )
+
+    }
+
+  },[])
+
+  useEffect(()=>{
+
+  if(!currentUser?._id)
+    return
+
+  socket.emit(
+    "join",
+    currentUser._id
+  )
+
+  return ()=>{
+
+    socket.emit(
+      "leave",
+      currentUser._id
+    )
+
+  }
+
+},[
+  currentUser._id
+])
+
+    useEffect(()=>{
+
+    function receiveMessage(
+      message:any
+    ){
+
+      const sender =
+
+        typeof message.sender === "object"
+
+          ? message.sender._id
+
+          : message.sender
+
+      const receiver =
+
+        typeof message.receiver === "object"
+
+          ? message.receiver._id
+
+          : message.receiver
+
+      const isCurrentChat =
+
+        (
+          sender === currentUser._id &&
+          receiver === id
+        )
+
+        ||
+
+        (
+          sender === id &&
+          receiver === currentUser._id
+        )
+
+      if(!isCurrentChat)
+        return
+
+      setMessages(prev=>{
+
+        const exists = prev.some(
+  m =>
+    m._id === message._id ||
+    (
+      m.text === message.text &&
+      m.sender === message.sender
+    )
+)
+        if(exists)
+          return prev
+
+        return [
+          ...prev,
+          message
+        ]
+
+      })
+
+    }
+
+    socket.on(
+      "receive-message",
+      receiveMessage
+    )
+
+    return ()=>{
+
+      socket.off(
+        "receive-message",
+        receiveMessage
+      )
+
+    }
+
+  },[
+    id,
+    currentUser._id
+  ])
+
+
+
+  useEffect(()=>{
+
+  function typingHandler(
+    data:any
+  ){
+
+    const sender =
+      typeof data.sender === "object"
+      ?
+      data.sender._id
+      :
+      data.sender
+
+
+    if(sender !== id)
+      return
+
+
+    setIsTyping(true)
+
+
+    setTimeout(()=>{
+
+      setIsTyping(false)
+
+    },1500)
+
+  }
+
+
+  socket.on(
+    "typing",
+    typingHandler
+  )
+
+
+  
+    return ()=>{
+
+      socket.off(
+        "typing",
+        typingHandler
+      )
+
+    }
+
+  },[id])
 
 
 
@@ -21,13 +280,31 @@ function Chat() {
 
     try{
 
-      const response = await api.get(
-        `/chat/${id}`
-      )
+      const response =
+        await api.get(
+          `/chat/${id}`
+        )
 
-      setMessages(response.data)
+      if(response.data.messages){
+
+        setMessages(
+          response.data.messages
+        )
+
+        setChatUser(
+          response.data.user
+        )
+
+      }else{
+
+        setMessages(
+          response.data
+        )
+
+      }
 
     }
+
     catch(error){
 
       console.log(
@@ -41,39 +318,43 @@ function Chat() {
 
 
 
-
   async function sendMessage(){
 
-    if(!text.trim()) return
+  if(!text.trim())
+    return
 
+  const messageText = text
 
-    try{
+  setText("")
 
-      await api.post(
-        `/chat/send/${id}`,
-        {
-          text
-        }
-      )
+  try{
 
+    const response = await api.post(
+      `/chat/send/${id}`,
+      {
+        text: messageText
+      }
+    )
 
-      setText("")
+    const newMessage = response.data.message || response.data
 
-      loadMessages()
-
-
-    }
-    catch(error){
-
-      console.log(
-        "Sending message failed",
-        error
-      )
-
-    }
+    setMessages(prev=>[
+      ...prev,
+      newMessage
+    ])
 
   }
 
+  catch(error){
+
+    console.log(
+      "Sending failed",
+      error
+    )
+
+  }
+
+}
 
 
 
@@ -85,196 +366,378 @@ function Chat() {
 
 
 
+  useEffect(()=>{
 
-  return (
+    bottomRef.current?.scrollIntoView({
 
-    <main
-      style={{
-        padding:"30px",
-        maxWidth:"700px",
-        margin:"auto"
-      }}
-    >
+      behavior:"smooth"
+
+    })
+
+  },[messages])
+
+    return (
+
+    <main className="chat-page">
+
+      {/* ================= HEADER ================= */}
+
+      <header className="chat-header">
+
+        <div className="chat-user">
+
+          <Avatar
+
+            src={chatUser?.image}
+
+            size={58}
+
+            online={chatUser?.isOnline}
+
+            onClick={()=>{
+
+              if(chatUser?._id){
+
+                navigate(
+                  `/profile/${chatUser._id}`
+                )
+
+              }
+
+            }}
+
+          />
+
+          <div>
+
+            <h2 className="chat-name">
+
+              {chatUser?.name || "Chat"}
+
+            </h2>
+
+            <p className="chat-status">
+
+              {
+
+                isTyping
+
+                ?
+
+                "✍️ Typing..."
+
+                :
+
+                chatUser?.isOnline
+
+                ?
+
+                "🟢 Online"
+
+                :
+
+                chatUser?.lastSeen
+
+                ?
+
+                `Last seen ${new Date(
+                  chatUser.lastSeen
+                ).toLocaleString()}`
+
+                :
+
+                "Offline"
+
+              }
+
+            </p>
+
+          </div>
+
+        </div>
 
 
-      <h1>
-        Chat ❤️
-      </h1>
 
+        <div className="chat-menu">
 
+          <button
 
-      <div
-        style={{
-          height:"500px",
-          overflowY:"auto",
-          border:"1px solid #ddd",
-          borderRadius:"20px",
-          padding:"20px",
-          background:"#fafafa"
-        }}
-      >
+            className="icon-btn"
 
+            onClick={()=>{
 
-      {
-        messages.map(
-          (message)=>(
+              setShowMenu(!showMenu)
 
+            }}
 
-            <div
-              key={message._id}
+          >
 
-              style={{
-                display:"flex",
+            ⋮
 
-                justifyContent:
-message.sender.toString() === currentUser._id
-?
-"flex-end"
-:
-"flex-start",
+          </button>
 
-                marginBottom:"15px"
-              }}
+          {
 
-            >
+            showMenu &&
 
+            <div className="menu-dropdown">
 
-              <div
+              <button
 
-              style={{
+                onClick={()=>{
 
-                maxWidth:"70%",
+                  navigate(`/profile/${id}`)
 
-                padding:"12px 18px",
-
-                borderRadius:"20px",
-
-                background:
-message.sender.toString() === currentUser._id
-?
-"#ff4d88"
-:
-"#e5e5e5",
-
-                color:
-message.sender.toString() === currentUser._id
-?
-"white"
-:
-"black"
-
-              }}
+                }}
 
               >
 
+                👤 View Profile
 
-                <p
-                style={{
-                  margin:0
-                }}
-                >
-                  {message.text}
-                </p>
+              </button>
 
+              <button>
 
-                <small>
+                👥 Create Group
 
-                  {
-                    new Date(
-                      message.createdAt
-                    ).toLocaleTimeString(
-                      [],
-                      {
-                        hour:"2-digit",
-                        minute:"2-digit"
-                      }
-                    )
-                  }
+              </button>
 
-                </small>
+              <button>
 
+                🚫 Block
 
-              </div>
-
+              </button>
 
             </div>
 
+          }
 
-          )
-        )
-      }
+        </div>
 
-
-      </div>
+      </header>
 
 
 
-      <div
-      style={{
-        display:"flex",
-        gap:"10px",
-        marginTop:"20px"
-      }}
-      >
+      {/* ================= CHAT BODY ================= */}
+
+      <section className="chat-body">
+
+        {
+
+          messages.map(message=>{
+
+            const mine =
+
+              getSenderId(message) ===
+
+              currentUser._id
+
+            return(
+
+              <div
+
+                key={message._id}
+
+                className={
+
+                  mine
+
+                  ?
+
+                  "message-row mine"
+
+                  :
+
+                  "message-row"
+
+                }
+
+              >
+
+                <div
+
+                  className={
+
+                    mine
+
+                    ?
+
+                    "message-bubble mine"
+
+                    :
+
+                    "message-bubble"
+
+                  }
+
+                >
+
+                  <p>
+
+                    {message.text}
+
+                  </p>
+
+                  <span>
+
+                    {
+
+                      new Date(
+
+                        message.createdAt
+
+                      ).toLocaleTimeString(
+
+                        [],
+
+                        {
+
+                          hour:"2-digit",
+
+                          minute:"2-digit"
+
+                        }
+
+                      )
+
+                    }
+
+                  </span>
+
+                </div>
+
+              </div>
+
+            )
+
+          })
+
+        }
+
+        <div ref={bottomRef} />
+
+      </section>
+
+            {/* ================= INPUT BAR ================= */}
+
+      <footer className="chat-footer">
+
+        {
+
+          showEmoji &&
+
+          <div
+
+            ref={emojiRef}
+
+            className="emoji-picker"
+
+          >
+
+            <EmojiPicker
+
+              onEmojiClick={(emoji)=>{
+
+                setText(
+
+                  prev=>prev + emoji.emoji
+
+                )
+
+              }}
+
+            />
+
+          </div>
+
+        }
 
 
-        <input
+
+        <button
+
+          className="emoji-btn"
+
+          onClick={()=>{
+
+            setShowEmoji(
+
+              prev=>!prev
+
+            )
+
+          }}
+
+        >
+
+          😊
+
+        </button>
+
+
+
+        <Input
 
           value={text}
 
-          onChange={
-            (e)=>
-            setText(e.target.value)
-          }
+          placeholder="Type a message..."
 
-          onKeyDown={
-            (e)=>{
+          onChange={(e)=>{
 
-              if(e.key==="Enter"){
-                sendMessage()
+            setText(
+
+              e.target.value
+
+            )
+
+
+
+            socket.emit(
+
+              "typing",
+
+              {
+
+                sender:currentUser._id,
+
+                receiver:id
+
               }
 
+            )
+
+          }}
+
+          onKeyDown={(e)=>{
+
+            if(e.key==="Enter"){
+
+              sendMessage()
+
             }
-          }
 
-          placeholder="Type message..."
-
-          style={{
-            flex:1,
-            padding:"14px",
-            borderRadius:"15px",
-            border:"1px solid #ccc"
           }}
 
         />
 
 
 
-        <button
+        <Button
 
           onClick={sendMessage}
-
-          style={{
-            padding:"0 25px",
-            borderRadius:"15px",
-            cursor:"pointer"
-          }}
 
         >
 
           Send ❤️
 
-        </button>
+        </Button>
 
-
-      </div>
-
+      </footer>
 
     </main>
 
   )
 
 }
-
 
 export default Chat

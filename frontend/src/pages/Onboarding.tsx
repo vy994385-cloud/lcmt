@@ -94,11 +94,9 @@ answers: {
 
 
 })
-
-
 localStorage.setItem(
   "user",
-  JSON.stringify(response.data)
+  JSON.stringify(response.data.user)
 )
 
 

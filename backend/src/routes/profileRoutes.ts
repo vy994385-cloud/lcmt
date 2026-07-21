@@ -3,11 +3,11 @@ import express from "express"
 import {
   updateProfile,
   getMyProfile,
+  getProfileById,
   getUsers,
   likeUser,
   getMatches,
 } from "../controllers/profileController"
-
 import { protect } from "../middleware/authMiddleware"
 
 
@@ -29,6 +29,11 @@ router.get(
   getMyProfile
 )
 
+router.get(
+  "/profile/:id",
+  protect,
+  getProfileById
+)
 
 
 router.get(
@@ -50,12 +55,6 @@ router.get(
 )
 
 
-// Like a user
-router.post(
-  "/users/:userId/like",
-  protect,
-  likeUser
-)
 
 
 

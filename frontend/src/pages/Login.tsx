@@ -1,8 +1,9 @@
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import axios from "axios"
+
 import { useApp } from "../context/AppContext"
 import "./Login.css"
+import api from "../api/axios"
 
 function Login() {
 
@@ -38,18 +39,13 @@ function Login() {
     try {
 
 
-      const response = await axios.post(
-
-        "https://lcmt-backend.onrender.com/api/auth/login",
-
-        {
-          email,
-          password,
-        }
-
-      )
-
-
+      const response = await api.post(
+  "/auth/login",
+  {
+    email,
+    password,
+  }
+)
 
       localStorage.setItem(
         "token",

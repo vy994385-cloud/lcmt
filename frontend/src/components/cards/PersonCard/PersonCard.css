@@ -1,0 +1,238 @@
+.person-card {
+
+  background: white;
+
+  border-radius: 20px;
+
+  padding: 22px;
+
+  border: 1px solid #e8e8e8;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 16px;
+
+  transition: 0.3s ease;
+
+}
+
+
+.person-card:hover {
+
+  transform: translateY(-5px);
+
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+
+}
+
+
+
+
+
+.person-top {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 14px;
+
+}
+
+
+
+.person-avatar {
+
+  width: 65px;
+
+  height: 65px;
+
+  border-radius: 50%;
+
+  object-fit: cover;
+
+}
+
+
+
+
+
+.person-top h3 {
+
+  margin: 0;
+
+  font-size: 18px;
+
+}
+
+
+
+.username {
+
+  color: #777;
+
+  font-size: 14px;
+
+  margin-top: 4px;
+
+}
+
+
+
+
+
+.similarity {
+
+  background: linear-gradient(
+    135deg,
+    #fff1f2,
+    #ffe4e6
+  );
+
+  color: #e11d48;
+
+  padding: 10px 14px;
+
+  border-radius: 12px;
+
+  font-weight: 600;
+
+  width: fit-content;
+
+}
+
+
+
+
+
+.person-info p {
+
+  margin: 5px 0;
+
+  color: #555;
+
+}
+
+
+
+
+
+.bio {
+
+  color: #444;
+
+  line-height: 1.5;
+
+  font-size: 14px;
+
+}
+
+
+
+
+
+.interests {
+
+  display:flex;
+
+  flex-wrap:wrap;
+
+  gap:8px;
+
+}
+
+
+
+.interests span {
+
+  background:#f3f4f6;
+
+  padding:6px 12px;
+
+  border-radius:20px;
+
+  font-size:13px;
+
+}
+
+
+
+
+
+.stats {
+
+  display:flex;
+
+  gap:35px;
+
+  border-top:1px solid #eee;
+
+  border-bottom:1px solid #eee;
+
+  padding:12px 0;
+
+}
+
+
+
+.stats div {
+
+  display:flex;
+
+  flex-direction:column;
+
+  font-size:13px;
+
+  color:#777;
+
+}
+
+
+
+.stats strong {
+
+  color:#111;
+
+  font-size:18px;
+
+}
+
+
+
+
+
+.status {
+
+  background:#f8fafc;
+
+  padding:10px;
+
+  border-radius:12px;
+
+  font-size:14px;
+
+}
+
+
+
+
+
+.person-actions {
+
+  display:flex;
+
+  gap:10px;
+
+}
+
+
+
+
+
+.person-actions button {
+
+  flex:1;
+
+}

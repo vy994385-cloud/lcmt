@@ -2,9 +2,18 @@ import mongoose, { Document } from "mongoose"
 
 const userSchema = new mongoose.Schema(
   {
+    // Authentication
+
     name: {
       type: String,
       required: true,
+    },
+
+    username: {
+      type: String,
+      unique: true,
+      sparse: true,
+      default: "",
     },
 
     email: {
@@ -18,7 +27,7 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
 
-    // Basic Profile
+    // Profile
 
     age: {
       type: Number,
@@ -45,16 +54,14 @@ const userSchema = new mongoose.Schema(
       default: 1,
     },
 
-    // About User
-
-    bio: {
+    headline: {
       type: String,
       default: "",
     },
 
-    interests: {
-      type: [String],
-      default: [],
+    bio: {
+      type: String,
+      default: "",
     },
 
     image: {
@@ -62,11 +69,26 @@ const userSchema = new mongoose.Schema(
       default: "",
     },
 
-    // LCMT Compatibility System
-
-    lookingFor: {
+    coverImage: {
       type: String,
       default: "",
+    },
+
+    location: {
+      type: String,
+      default: "",
+    },
+
+    website: {
+      type: String,
+      default: "",
+    },
+
+    // Interests
+
+    interests: {
+      type: [String],
+      default: [],
     },
 
     values: {
@@ -84,13 +106,90 @@ const userSchema = new mongoose.Schema(
       default: {},
     },
 
-    // Dating System
+    // Social Graph
+
+    followers: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+
+    following: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+
+    friends: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+
+    friendRequestsReceived: [
+  {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
+],
+
+friendRequestsSent: [
+  {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
+],
+
+    communities: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Community",
+      },
+    ],
+
+    savedPosts: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Post",
+      },
+    ],
+
+    blockedUsers: [
+  {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
+],
+
+verified: {
+  type: Boolean,
+  default: false,
+},
+
+profileVisibility: {
+  type: String,
+  enum: [
+    "public",
+    "friends",
+    "private",
+  ],
+  default: "public",
+},
+
+    // Temporary (keep until controllers are migrated)
+
+    lookingFor: {
+      type: String,
+      default: "",
+    },
 
     likedUsers: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-        default: [],
       },
     ],
 
@@ -98,16 +197,29 @@ const userSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-        default: [],
       },
     ],
+
+    // Chat
+
+    isOnline: {
+      type: Boolean,
+      default: false,
+    },
+
+    lastSeen: {
+      type: Date,
+      default: Date.now,
+    },
   },
   {
     timestamps: true,
   }
 )
-interface IUser extends Document {
+
+export interface IUser extends Document {
   name: string
+  username: string
   email: string
   password: string
 
@@ -117,16 +229,38 @@ interface IUser extends Document {
   course: string
   year: number
 
+  headline: string
   bio: string
-  interests: string[]
   image: string
+  coverImage: string
+  location: string
+  website: string
 
-  lookingFor: string
+  interests: string[]
   values: string[]
   personality: string
   answers: any
 
+  followers: mongoose.Types.ObjectId[]
+  following: mongoose.Types.ObjectId[]
+  friends: mongoose.Types.ObjectId[]
+  friendRequestsReceived: mongoose.Types.ObjectId[]
+friendRequestsSent: mongoose.Types.ObjectId[]
+  communities: mongoose.Types.ObjectId[]
+  savedPosts: mongoose.Types.ObjectId[]
+  blockedUsers: mongoose.Types.ObjectId[]
+
+verified: boolean
+
+profileVisibility: string
+
+  // Temporary
+  lookingFor: string
   likedUsers: mongoose.Types.ObjectId[]
   matchedUsers: mongoose.Types.ObjectId[]
+
+  isOnline: boolean
+  lastSeen: Date
 }
+
 export default mongoose.model<IUser>("User", userSchema)

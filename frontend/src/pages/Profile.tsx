@@ -1,216 +1,352 @@
+import {
+  Edit,
+  Share2
+} from "lucide-react"
+
+import {
+  Link
+} from "react-router-dom"
+
 import "./Profile.css"
 
-function Profile() {
 
-  const user = JSON.parse(
-    localStorage.getItem("user") || "{}"
-  )
 
+function Profile(){
 
-  return (
 
-    <main className="profile-page">
+const user = JSON.parse(
+  localStorage.getItem("user") || "{}"
+)
 
 
-      <section className="profile-card">
 
+return (
 
-        <div className="profile-cover"></div>
+<main className="profile-page">
 
 
+<section className="profile-cover">
 
-        <img
-          className="profile-image"
-          src={
-            user.image ||
-            "https://picsum.photos/300/300"
-          }
-          alt="Profile"
-        />
+</section>
 
 
 
 
-        <div className="profile-header">
 
+<section className="profile-header">
 
-          <h1>
-            {user.name || "LCMT User"}, {user.age || ""}
-          </h1>
 
 
-          <p>
-            {user.bio || "No bio added yet ❤️"}
-          </p>
+<img
 
+src={
+user.image ||
+"https://i.pravatar.cc/200"
+}
 
-        </div>
+className="profile-avatar"
 
+alt="profile"
 
+/>
 
 
 
+<h1>
 
+{user.name || "Aryan Kumar"}
 
-        <div className="profile-details">
+<span>
+✓
+</span>
 
+</h1>
 
 
-          <div className="detail-box">
 
-            <span>
-              🎓
-            </span>
+<p className="username">
 
-            <h3>
-              College
-            </h3>
+@{user.username || "user"}
 
-            <p>
-              {user.college || "Not added"}
-            </p>
+</p>
 
-          </div>
 
 
+<p className="bio">
 
+AI enthusiast | Politics | Startups | Coding
 
+</p>
 
-          <div className="detail-box">
 
-            <span>
-              💻
-            </span>
 
-            <h3>
-              Course
-            </h3>
 
-            <p>
-              {user.course || "Not added"}
-            </p>
 
-          </div>
+<div className="profile-stats">
 
 
+<Link to="/followers">
 
-        </div>
+<div>
 
+<strong>
+245
+</strong>
 
+<span>
+Followers
+</span>
 
+</div>
 
+</Link>
 
 
 
-        <div className="section">
 
 
-          <h2>
-            ✨ Interests
-          </h2>
+<Link to="/following">
 
+<div>
 
-          <div className="chips">
+<strong>
+180
+</strong>
 
+<span>
+Following
+</span>
 
-            {
-              user.interests?.length ?
+</div>
 
-              user.interests.map(
-                (item:string)=>(
-                  <span key={item}>
-                    {item}
-                  </span>
-                )
-              )
+</Link>
 
-              :
 
-              <p>
-                No interests added
-              </p>
-            }
 
 
-          </div>
 
+<Link to="/friends">
 
-        </div>
+<div>
 
+<strong>
+42
+</strong>
 
+<span>
+Friends
+</span>
 
+</div>
 
+</Link>
 
 
 
+</div>
 
-        <div className="section">
 
 
-          <h2>
-            💎 Values
-          </h2>
 
 
-          <div className="chips">
+<div className="profile-actions">
 
 
-            {
-              user.values?.length ?
+<button>
 
-              user.values.map(
-                (item:string)=>(
-                  <span key={item}>
-                    {item}
-                  </span>
-                )
-              )
+<Edit size={16}/>
 
-              :
+Edit Profile
 
-              <p>
-                No values added
-              </p>
+</button>
 
-            }
 
 
-          </div>
 
 
-        </div>
+<button>
 
+<Share2 size={16}/>
 
+Share
 
+</button>
 
 
+</div>
 
-        <div className="personality-box">
 
+</section>
 
-          <h2>
-            🧠 Personality
-          </h2>
 
 
-          <p>
-            {user.personality || 
-            "Tell people about yourself"}
-          </p>
 
 
-        </div>
 
 
+<nav className="profile-tabs">
 
 
-      </section>
+<span className="active">
+Posts
+</span>
 
 
+<span>
+Communities
+</span>
 
-    </main>
 
-  )
+<span>
+About
+</span>
+
+
+</nav>
+
+
+
+
+
+
+
+<section className="profile-section">
+
+
+<h2>
+💭 Thoughts
+</h2>
+
+
+<div className="profile-card">
+
+
+Technology should empower people and create meaningful change.
+
+</div>
+
+
+</section>
+
+
+
+
+
+
+
+<section className="profile-section">
+
+
+<h2>
+🔥 Interests
+</h2>
+
+
+<div className="interest-list">
+
+
+<span>
+AI
+</span>
+
+
+<span>
+Politics
+</span>
+
+
+<span>
+Startups
+</span>
+
+
+<span>
+Programming
+</span>
+
+
+<span>
+Cricket
+</span>
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+
+
+<section className="profile-section">
+
+
+<h2>
+🌍 Communities Joined
+</h2>
+
+
+<div className="profile-card">
+
+
+AI Builders
+
+<br/>
+
+Political Discussions
+
+<br/>
+
+Startup Network
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+
+
+<section className="profile-section">
+
+
+<h2>
+📌 Recent Activity
+</h2>
+
+
+<div className="profile-card">
+
+
+Created AI discussion
+
+<br/>
+
+Joined Political Debate community
+
+<br/>
+
+Followed new creators
+
+
+</div>
+
+
+</section>
+
+
+
+
+</main>
+
+)
 
 }
 

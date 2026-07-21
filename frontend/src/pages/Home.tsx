@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react"
-import axios from "axios"
+import api from "../api/axios"
 import { Link } from "react-router-dom"
 
 import Layout from "../components/Layout"
+import HomeHeader from "../components/Home/HomeHeader/HomeHeader"
 import "./Home.css"
 
 
@@ -33,22 +34,7 @@ function Home() {
       try {
 
 
-        const response =
-  await axios.get(
-
-    "https://lcmt-backend.onrender.com/api/feed",
-
-    {
-      headers:{
-
-        Authorization:
-
-        `Bearer ${localStorage.getItem("token")}`
-
-      }
-    }
-
-  )
+        const response = await api.get("/feed")
 
 
         setPosts(
@@ -100,27 +86,7 @@ function Home() {
       try {
 
 
-        const response =
-          await axios.get(
-
-
-            "https://lcmt-backend.onrender.com/api/users/discover",
-
-
-            {
-
-              headers:{
-
-                Authorization:
-
-                `Bearer ${localStorage.getItem("token")}`
-
-              }
-
-            }
-
-
-          )
+        const response = await api.get("/users/discover")
 
 
 
@@ -217,6 +183,9 @@ function Home() {
 
 
       <main className="home-page">
+
+
+        <HomeHeader />
 
 
 

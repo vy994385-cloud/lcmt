@@ -1,48 +1,191 @@
-function Settings() {
-  return (
-    <main style={{ padding: "40px", maxWidth: "700px", margin: "auto" }}>
-      <h1>⚙️ Settings</h1>
+import {
+  User,
+  Shield,
+  Bell,
+  Ban,
+  HelpCircle,
+  Info,
+  LogOut
+} from "lucide-react"
 
-      <div style={{ marginTop: "30px" }}>
-        <button>Edit Profile</button>
-      </div>
+import {
+  Link,
+  useNavigate
+} from "react-router-dom"
 
-      <div style={{ marginTop: "20px" }}>
-        <button>Privacy Settings</button>
-      </div>
+import Layout from "../components/Layout"
 
-      <div style={{ marginTop: "20px" }}>
-        <button>Notification Preferences</button>
-      </div>
+import "./Settings.css"
 
-      <div style={{ marginTop: "20px" }}>
-        <button>Blocked Users</button>
-      </div>
 
-      <div style={{ marginTop: "20px" }}>
-        <button>Help & Support</button>
-      </div>
 
-      <div style={{ marginTop: "20px" }}>
-        <button>About LCMT</button>
-      </div>
+function Settings(){
 
-      <div style={{ marginTop: "40px" }}>
-        <button
-          style={{
-            background: "#ff4d4f",
-            color: "white",
-            padding: "12px 20px",
-            border: "none",
-            borderRadius: "10px",
-            cursor: "pointer",
-          }}
-        >
-          Logout
-        </button>
-      </div>
-    </main>
-  )
+
+const navigate = useNavigate()
+
+
+
+function logout(){
+
+  localStorage.removeItem("user")
+
+  localStorage.removeItem("token")
+
+  navigate("/login")
+
 }
+
+
+
+
+const settings = [
+
+{
+title:"Edit Profile",
+icon:<User size={22}/>,
+path:"/profile/edit"
+},
+
+{
+title:"Privacy Settings",
+icon:<Shield size={22}/>,
+path:"/privacy"
+},
+
+{
+title:"Notification Preferences",
+icon:<Bell size={22}/>,
+path:"/notification-settings"
+},
+
+{
+title:"Blocked Users",
+icon:<Ban size={22}/>,
+path:"/blocked"
+},
+
+{
+title:"Help & Support",
+icon:<HelpCircle size={22}/>,
+path:"/help"
+},
+
+{
+title:"About LCMT",
+icon:<Info size={22}/>,
+path:"/about"
+}
+
+]
+
+
+
+return (
+
+<Layout>
+
+<main className="settings-page">
+
+
+<h1>
+⚙️ Settings
+</h1>
+
+
+
+<div className="settings-container">
+
+
+{
+settings.map(
+
+(item)=>(
+
+
+<Link
+
+to={item.path}
+
+className="settings-option"
+
+key={item.title}
+
+>
+
+
+<div className="settings-icon">
+
+{item.icon}
+
+</div>
+
+
+
+
+<div className="settings-text">
+
+<h3>
+{item.title}
+</h3>
+
+
+<p>
+Manage your LCMT experience
+</p>
+
+
+</div>
+
+
+
+<span>
+›
+</span>
+
+
+
+</Link>
+
+
+)
+
+)
+
+}
+
+
+
+<button
+
+className="logout-button"
+
+onClick={logout}
+
+>
+
+
+<LogOut size={20}/>
+
+
+Logout
+
+
+</button>
+
+
+
+</div>
+
+
+</main>
+
+
+</Layout>
+
+)
+
+}
+
 
 export default Settings
