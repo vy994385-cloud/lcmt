@@ -1,0 +1,37 @@
+.feed-tabs{
+
+display:flex;
+
+gap:12px;
+
+margin:20px 0;
+
+overflow-x:auto;
+
+}
+
+
+
+.feed-tabs button{
+
+padding:10px 20px;
+
+border:none;
+
+border-radius:25px;
+
+background:#eee;
+
+cursor:pointer;
+
+}
+
+
+
+.feed-tabs .active{
+
+background:#ff3d8d;
+
+color:white;
+
+}

@@ -1,115 +1,134 @@
+import { useState } from "react"
+
 import Section from "../components/ui/Section/Section"
+import UniversalSearch from "../components/search/UniversalSearch"
+import CategoryChips from "../components/explore/CategoryChips"
+import FeedTabs from "../components/explore/FeedTabs"
+import TrendingTopics from "../components/explore/TrendingTopics"
+
 import PostCard from "../components/cards/PostCard/PostCard"
+import CommunityCard from "../components/community/CommunityCard"
+
 import posts from "../mock/posts"
+import communities from "../mock/communities"
 
 import "./Explore.css"
+import MyCommunities from "../components/community/MyCommunities/MyCommunities"
 
+function Explore() {
 
-function Explore(){
+  const [feed, setFeed] = useState("For You")
 
+  return (
 
-return (
+    <main className="explore-page">
 
-<main className="explore-page">
+      <div className="explore-header">
 
+        <h1>
+          Explore
+        </h1>
 
-<div className="explore-header">
+        <p>
+          Discover conversations, ideas, communities and people from every interest.
+        </p>
 
-<h1>
-Explore LCMT
-</h1>
+        <UniversalSearch />
 
-<p>
-Discover students, ideas and communities
-</p>
+        <MyCommunities />
 
+      </div>
 
-<input
-placeholder="Search discussions, students..."
+      <CategoryChips />
+
+      <FeedTabs
+        active={feed}
+        setActive={setFeed}
+      />
+
+      <Section
+        title="🔥 Trending Discussions"
+        subtitle="The conversations everyone is talking about"
+      >
+
+        <div className="featured-posts">
+
+          {
+            posts.map(post => (
+
+              <PostCard
+                key={post.id}
+                post={post}
+              />
+
+            ))
+          }
+
+        </div>
+
+      </Section>
+
+      <Section
+        title="👥 People You May Like"
+        subtitle="Interesting people worth following"
+      >
+
+        <div className="coming-card">
+
+          Smart recommendations coming soon
+
+        </div>
+
+      </Section>
+
+      <Section
+        title="🔥 Trending Topics"
+        subtitle="See what people across LCMT are discussing right now"
+      >
+
+        <TrendingTopics />
+
+      </Section>
+
+      <Section
+        title="🌍 Popular Communities"
+        subtitle="Find your people and join the conversations"
+      >
+
+        <div className="community-grid">
+
+          {
+
+            communities.map(c => (
+
+              <CommunityCard
+
+key={c.id}
+
+id={c.id}
+
+name={c.name}
+
+icon={c.icon}
+
+members={c.members}
+
+posts={c.posts}
+
 />
 
+            ))
 
-</div>
+          }
 
+        </div>
 
+      </Section>
 
-<Section
-title="🔥 Trending Discussions"
-subtitle="What's happening around students"
->
+    </main>
 
-
-<div className="featured-posts">
-
-
-{
-posts.map(post=>(
-
-<PostCard
-key={post.id}
-post={post}
-/>
-
-))
-}
-
-
-</div>
-
-
-</Section>
-
-
-
-
-<Section
-
-title="👥 Students You May Know"
-
-subtitle="Connect with people who share your interests"
-
->
-
-
-<div className="coming-card">
-
-More student recommendations coming soon
-
-</div>
-
-
-</Section>
-
-
-
-
-
-<Section
-
-title="🏫 Popular Communities"
-
-subtitle="Join conversations you care about"
-
->
-
-
-<div className="coming-card">
-
-Engineering • AI • Startups • Gaming • Sports
-
-</div>
-
-
-</Section>
-
-
-
-</main>
-
-
-)
+  )
 
 }
-
 
 export default Explore

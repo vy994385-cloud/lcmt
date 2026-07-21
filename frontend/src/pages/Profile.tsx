@@ -1,14 +1,14 @@
-import {
-  Edit,
-  Share2
-} from "lucide-react"
+import { Link } from "react-router-dom"
+import { useEffect, useState } from "react"
+
+import Layout from "../components/Layout"
 
 import {
-  Link
-} from "react-router-dom"
+  getConnections
+} from "../utils/connections"
 
 import "./Profile.css"
-
+import ProfileSections from "../components/profile/ProfileSections/ProfileSections"
 
 
 function Profile(){
@@ -20,31 +20,87 @@ const user = JSON.parse(
 
 
 
+const [stats,setStats] = useState({
+
+followers:0,
+following:0,
+friends:0
+
+})
+
+
+
+
+
+useEffect(()=>{
+
+
+const connections = getConnections()
+
+
+
+const friends =
+connections.filter(
+(item:any)=>
+item.status==="accepted"
+)
+
+
+
+const following =
+connections.filter(
+(item:any)=>
+item.from===user._id
+)
+
+
+
+const followers =
+connections.filter(
+(item:any)=>
+item.to===user._id
+)
+
+
+
+
+setStats({
+
+followers:followers.length,
+
+following:following.length,
+
+friends:friends.length
+
+})
+
+
+},[user._id])
+
+
+
+
+
+
+
 return (
+
+<Layout>
+
 
 <main className="profile-page">
 
 
-<section className="profile-cover">
 
-</section>
-
-
-
-
-
-<section className="profile-header">
-
+<section className="profile-card">
 
 
 <img
 
 src={
 user.image ||
-"https://i.pravatar.cc/200"
+"https://picsum.photos/300"
 }
-
-className="profile-avatar"
 
 alt="profile"
 
@@ -52,52 +108,81 @@ alt="profile"
 
 
 
+<div className="profile-info">
+
+
 <h1>
 
-{user.name || "Aryan Kumar"}
-
-<span>
-✓
-</span>
+{user.name || "LCMT Student"}
 
 </h1>
 
 
 
-<p className="username">
+<p>
 
-@{user.username || "user"}
-
-</p>
-
-
-
-<p className="bio">
-
-AI enthusiast | Politics | Startups | Coding
+🎓 {user.college || "College Student"}
 
 </p>
 
 
 
+<p>
+
+💻 {user.course || "Student"}
+
+</p>
 
 
-<div className="profile-stats">
+
+<p>
+
+✨ {user.bio || "Building meaningful connections"}
+
+</p>
+
+
+
+
+<Link
+
+className="edit-btn"
+
+to="/edit-profile"
+
+>
+
+Edit Profile
+
+</Link>
+
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+
+
+
+<section className="profile-stats">
+
 
 
 <Link to="/followers">
 
-<div>
-
 <strong>
-245
+
+{stats.followers}
+
 </strong>
 
-<span>
 Followers
-</span>
-
-</div>
 
 </Link>
 
@@ -107,17 +192,13 @@ Followers
 
 <Link to="/following">
 
-<div>
-
 <strong>
-180
+
+{stats.following}
+
 </strong>
 
-<span>
 Following
-</span>
-
-</div>
 
 </Link>
 
@@ -127,50 +208,45 @@ Following
 
 <Link to="/friends">
 
-<div>
-
 <strong>
-42
+
+{stats.friends}
+
 </strong>
 
-<span>
 Friends
-</span>
-
-</div>
 
 </Link>
 
 
 
-</div>
+</section>
 
 
 
 
 
-<div className="profile-actions">
-
-
-<button>
-
-<Edit size={16}/>
-
-Edit Profile
-
-</button>
 
 
 
+<section className="profile-section">
 
 
-<button>
+<h2>
 
-<Share2 size={16}/>
+🌍 My Communities
 
-Share
+</h2>
 
-</button>
+
+<div className="profile-box">
+
+
+<Link to="/communities">
+
+Explore Communities
+
+</Link>
 
 
 </div>
@@ -184,90 +260,26 @@ Share
 
 
 
-<nav className="profile-tabs">
-
-
-<span className="active">
-Posts
-</span>
-
-
-<span>
-Communities
-</span>
-
-
-<span>
-About
-</span>
-
-
-</nav>
-
-
-
-
-
-
 
 <section className="profile-section">
 
 
 <h2>
-💭 Thoughts
+
+💭 My Thoughts
+
 </h2>
 
 
-<div className="profile-card">
+
+<div className="profile-box">
 
 
-Technology should empower people and create meaningful change.
+<p>
 
-</div>
+Share your first thought with LCMT 🚀
 
-
-</section>
-
-
-
-
-
-
-
-<section className="profile-section">
-
-
-<h2>
-🔥 Interests
-</h2>
-
-
-<div className="interest-list">
-
-
-<span>
-AI
-</span>
-
-
-<span>
-Politics
-</span>
-
-
-<span>
-Startups
-</span>
-
-
-<span>
-Programming
-</span>
-
-
-<span>
-Cricket
-</span>
+</p>
 
 
 </div>
@@ -281,59 +293,54 @@ Cricket
 
 
 
-<section className="profile-section">
-
-
-<h2>
-🌍 Communities Joined
-</h2>
-
-
-<div className="profile-card">
-
-
-AI Builders
-
-<br/>
-
-Political Discussions
-
-<br/>
-
-Startup Network
-
-
-</div>
-
-
-</section>
-
-
-
-
-
-
 
 <section className="profile-section">
 
 
 <h2>
-📌 Recent Activity
+
+✨ Interests
+
 </h2>
 
+<ProfileSections
 
-<div className="profile-card">
+user={user}
+
+/>
+
+<div className="interest-container">
 
 
-Created AI discussion
+{
 
-<br/>
+(user.interests || [
 
-Joined Political Debate community
+"AI",
 
-<br/>
+"Technology",
 
-Followed new creators
+"Startups"
+
+])
+
+.map(
+(item:string)=>(
+
+
+<span key={item}>
+
+{item}
+
+</span>
+
+
+)
+
+)
+
+
+}
 
 
 </div>
@@ -346,9 +353,14 @@ Followed new creators
 
 </main>
 
+
+</Layout>
+
 )
 
+
 }
+
 
 
 export default Profile

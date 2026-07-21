@@ -1,46 +1,218 @@
-function Notifications() {
-  const notifications = [
-    {
-      id: 1,
-      title: "❤️ New Match",
-      message: "Sophia matched with you.",
-      time: "2 min ago",
-    },
-    {
-      id: 2,
-      title: "👍 Someone liked you",
-      message: "Emma liked your profile.",
-      time: "10 min ago",
-    },
-    {
-      id: 3,
-      title: "💬 New Message",
-      message: "Olivia sent you a message.",
-      time: "1 hour ago",
-    },
-  ]
+import {
+useEffect,
+useState
+}
+from "react"
 
-  return (
-    <main style={{ padding: "40px" }}>
-      <h1>Notifications 🔔</h1>
 
-      {notifications.map((item) => (
-        <div
-          key={item.id}
-          style={{
-            border: "1px solid #ddd",
-            borderRadius: "15px",
-            padding: "20px",
-            marginTop: "20px",
-          }}
-        >
-          <h3>{item.title}</h3>
-          <p>{item.message}</p>
-          <small>{item.time}</small>
-        </div>
-      ))}
-    </main>
-  )
+import {
+
+getPendingRequests,
+
+acceptRequest,
+
+rejectRequest
+
+}
+from "../utils/requests"
+
+
+
+export default function Notifications(){
+
+
+
+const user =
+JSON.parse(
+
+localStorage.getItem("user") || "{}"
+
+)
+
+
+
+
+const [requests,setRequests]=
+useState<any[]>([])
+
+
+
+function load(){
+
+
+setRequests(
+
+getPendingRequests(
+
+user._id
+
+)
+
+)
+
+
 }
 
-export default Notifications
+
+
+useEffect(()=>{
+
+
+load()
+
+
+},[])
+
+
+
+
+function accept(id:string){
+
+
+acceptRequest(
+
+id,
+
+user._id
+
+)
+
+
+load()
+
+
+}
+
+
+
+
+
+function reject(id:string){
+
+
+rejectRequest(
+
+id,
+
+user._id
+
+)
+
+
+load()
+
+
+}
+
+
+
+
+
+return (
+
+<main className="notifications-page">
+
+
+<h1>
+
+Notifications 🔔
+
+</h1>
+
+
+
+
+<h2>
+
+Friend Requests
+
+</h2>
+
+
+
+{
+
+requests.length===0
+
+?
+
+
+<p>
+
+No new requests
+
+</p>
+
+
+
+:
+
+
+requests.map(request=>(
+
+
+<div
+
+className="request-card"
+
+key={request.from}
+
+>
+
+
+<h3>
+
+👤 User {request.from}
+
+</h3>
+
+
+
+<div>
+
+
+<button
+
+onClick={()=>
+accept(request.from)
+}
+
+>
+
+Accept
+
+</button>
+
+
+
+<button
+
+onClick={()=>
+reject(request.from)
+}
+
+>
+
+Reject
+
+</button>
+
+
+</div>
+
+
+</div>
+
+
+))
+
+
+}
+
+
+
+</main>
+
+)
+
+}

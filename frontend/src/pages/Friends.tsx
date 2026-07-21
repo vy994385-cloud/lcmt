@@ -1,21 +1,104 @@
-function Friends(){
+import {
+getFriends
+}
+from "../utils/social"
 
-return(
+import {
+useEffect,
+useState
+}
+from "react"
 
-<main>
+
+
+export default function Friends(){
+
+
+const user =
+JSON.parse(
+
+localStorage.getItem("user") || "{}"
+
+)
+
+
+
+const [friends,setFriends]=
+useState<string[]>([])
+
+
+
+useEffect(()=>{
+
+
+setFriends(
+
+getFriends(user._id)
+
+)
+
+
+},[])
+
+
+
+
+
+return (
+
+<main className="social-page">
+
 
 <h1>
-Friends
+
+Friends 🤝
+
 </h1>
 
+
+
+{
+
+friends.length===0
+
+?
+
 <p>
-Your mutual connections and conversations.
+
+No friends yet
+
 </p>
+
+
+
+:
+
+
+friends.map(id=>(
+
+
+<div
+
+key={id}
+
+className="user-row"
+
+>
+
+User {id}
+
+</div>
+
+
+))
+
+
+}
+
+
 
 </main>
 
 )
 
 }
-
-export default Friends

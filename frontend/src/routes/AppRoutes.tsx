@@ -17,6 +17,7 @@ import TestBackend from "../pages/TestBackend"
 import Home from "../pages/Home"
 import Communities from "../pages/Communities"
 import CommunityDetails from "../pages/CommunityDetails"
+import PostDetail from "../pages/PostDetail"
 
 import Hero from "../components/Hero"
 import ThoughtFirst from "../components/ThoughtFirst"
@@ -158,11 +159,6 @@ element={<Circle />}
   element={<Profile />}
 />
 
-<Route
-  path="/profile/:id"
-  element={<Profile />}
-/>
-
 
 
       
@@ -226,9 +222,21 @@ element={<Circle />}
 
 
       <Route
-        path="/communities/:id"
-        element={<CommunityDetails />}
-      />
+path="/community/:id"
+element={<CommunityDetails />}
+/>
+
+
+      <Route
+path="/profile/:id"
+element={<Profile/>}
+/>
+
+
+<Route
+path="/post/:id"
+element={<PostDetail/>}
+/>
 
       <Route
 path="/followers"

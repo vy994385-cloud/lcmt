@@ -1,21 +1,102 @@
-function Following(){
+import {
+getFollowing
+}
+from "../utils/social"
 
-return(
+import {
+useEffect,
+useState
+}
+from "react"
 
-<main>
+
+
+export default function Following(){
+
+
+const user =
+JSON.parse(
+
+localStorage.getItem("user") || "{}"
+
+)
+
+
+const [following,setFollowing]=
+useState<string[]>([])
+
+
+
+useEffect(()=>{
+
+
+setFollowing(
+
+getFollowing(user._id)
+
+)
+
+
+},[])
+
+
+
+
+
+return (
+
+<main className="social-page">
+
 
 <h1>
-Following
+
+Following ❤️
+
 </h1>
 
+
+
+{
+
+following.length===0
+
+?
+
 <p>
-People and communities you follow.
+
+Not following anyone
+
 </p>
+
+
+:
+
+
+following.map(id=>(
+
+
+<div
+
+key={id}
+
+className="user-row"
+
+>
+
+User {id}
+
+</div>
+
+
+))
+
+
+}
+
+
 
 </main>
 
 )
 
 }
-
-export default Following

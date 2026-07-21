@@ -1,0 +1,48 @@
+.notifications-page{
+
+padding:40px;
+
+}
+
+
+
+.request-card{
+
+background:white;
+
+padding:20px;
+
+border-radius:18px;
+
+margin:15px 0;
+
+box-shadow:
+0 8px 20px rgba(0,0,0,.08);
+
+}
+
+
+
+.request-card button{
+
+margin-right:10px;
+
+padding:10px 18px;
+
+border:none;
+
+border-radius:20px;
+
+cursor:pointer;
+
+}
+
+
+
+.request-card button:first-child{
+
+background:#ff3d8d;
+
+color:white;
+
+}

@@ -7,6 +7,10 @@ import HomeHeader from "../components/Home/HomeHeader/HomeHeader"
 import "./Home.css"
 
 
+import FeedTabs from "../components/feed/FeedTabs"
+
+import PostCard from "../components/cards/PostCard/PostCard"
+import ConnectButton from "../components/social/ConnectButton"
 
 function Home() {
 
@@ -21,6 +25,9 @@ function Home() {
 
   const [loading, setLoading] =
     useState(true)
+
+    const [feed,setFeed] =
+useState("Latest")
 
 
 
@@ -292,140 +299,134 @@ function Home() {
 
 
 
-        <section className="home-section">
+        
 
 
-          <h2>
+          <section className="home-section">
 
-            ❤️ Thought Feed
 
-          </h2>
+<h2>
 
+❤️ Thought Feed
 
+</h2>
 
 
-          <div className="thought-feed">
 
+<FeedTabs
 
-          {
+active={feed}
 
+setActive={setFeed}
 
-            loading
+/>
 
 
-            ?
 
 
-            <p>
+<div className="thought-feed">
 
-              Loading thoughts...
 
-            </p>
+{
 
 
+loading
 
-            :
+?
 
 
+<p>
 
-            posts.length === 0
+Loading thoughts...
 
+</p>
 
 
-            ?
 
+:
 
 
-            <p>
+posts.length === 0
 
-              No thoughts yet.
-              Start the conversation ✨
 
-            </p>
+?
 
 
+<p>
 
-            :
+No thoughts yet.
+Start the conversation ✨
 
+</p>
 
 
-            posts.map((post:any)=>(
 
+:
 
-              <div
 
-                className="thought-card"
+posts
 
-                key={post._id}
+.filter((post:any)=>{
 
-              >
 
+if(feed==="Latest")
 
+return true
 
-                <h3>
 
-                  ❤️ {post.user?.name || "Student"}
 
-                </h3>
+if(feed==="Trending")
 
+return (
+(post.likes?.length || 0) > 5
+)
 
 
 
-                <span>
+if(feed==="Following")
 
-                  🌍 {post.community?.name || "LCMT"}
+return post.following === true
 
-                </span>
 
 
+if(feed==="Communities")
 
+return post.community
 
-                <p>
 
-                  "{post.content}"
 
-                </p>
+return true
 
 
+})
 
 
-                <div>
+.map((post:any)=>(
 
 
-                  ❤️ {post.likes?.length || 0}
+<PostCard
 
+key={
+post._id || post.id
+}
 
-                  {"   "}
+post={post}
 
+/>
 
-                  💬 {post.comments?.length || 0}
 
+))
 
-                </div>
 
+}
 
 
-              </div>
 
+</div>
 
 
-            ))
 
-
-          }
-
-
-          </div>
-
-
-
-        </section>
-
-
-
-
-
-
+</section>
 
 
 
@@ -534,11 +535,11 @@ function Home() {
 
 
 
-                <button>
+                <ConnectButton
 
-                  Connect ❤️
+userId={user._id}
 
-                </button>
+/>
 
 
 

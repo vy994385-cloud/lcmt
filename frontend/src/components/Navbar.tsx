@@ -1,5 +1,6 @@
-import { 
-  useState 
+import {
+  useEffect,
+  useState,
 } from "react"
 
 import {
@@ -9,282 +10,223 @@ import {
   MessageCircle,
   Bell,
   User,
-  MoreVertical
+  MoreVertical,
+  Users,
 } from "lucide-react"
 
 import {
   Link,
-  useLocation
+  useLocation,
 } from "react-router-dom"
 
 import MoreMenu from "./MoreMenu"
 
 import "./Navbar.css"
 
+function Navbar() {
+  const location = useLocation()
 
+  const [menuOpen, setMenuOpen] = useState(false)
 
-function Navbar(){
+  const [collapsed, setCollapsed] =
+    useState(false)
 
-const location = useLocation()
+  useEffect(() => {
+    let lastScroll = 0
 
+    const handleScroll = () => {
+      const current =
+        window.scrollY
 
+      if (
+        current > lastScroll &&
+        current > 80
+      ) {
+        setCollapsed(true)
+      } else {
+        setCollapsed(false)
+      }
 
-const isActive = (path:string)=>{
+      lastScroll = current
+    }
 
-  if(path === "/"){
-    return location.pathname === "/"
+    window.addEventListener(
+      "scroll",
+      handleScroll
+    )
+
+    return () =>
+      window.removeEventListener(
+        "scroll",
+        handleScroll
+      )
+  }, [])
+
+  const isActive = (
+    path: string
+  ) => {
+    if (path === "/") {
+      return (
+        location.pathname === "/"
+      )
+    }
+
+    return location.pathname.startsWith(
+      path
+    )
   }
 
-  return location.pathname.startsWith(path)
-
-}
-
-
-
-const [
-  menuOpen,
-  setMenuOpen
-]=useState(false)
-
-
-
-const navItems = [
-
-{
-path:"/",
-icon:<Home size={20}/>,
-label:"Home"
+  const navItems = [
+    {
+      path: "/",
+      icon: <Home size={20} />,
+      label: "Home",
+    },
+    {
+      path: "/explore",
+      icon: <Compass size={20} />,
+      label: "Explore",
+    },
+    {
+      path: "/circle",
+      icon: (
+        <UsersRound size={20} />
+      ),
+      label: "Circle",
+    },
+    {
+  path: "/communities",
+  icon: (
+    <Users size={20} />
+  ),
+  label: "Communities",
 },
+    {
+      path: "/chat",
+      icon: (
+        <MessageCircle
+          size={20}
+        />
+      ),
+      label: "Messages",
+    },
+    {
+      path: "/notifications",
+      icon: (
+        <div className="notification-icon">
+          <Bell size={20} />
 
-{
-path:"/explore",
-icon:<Compass size={20}/>,
-label:"Explore"
-},
+          <span>3</span>
+        </div>
+      ),
+      label: "Notifications",
+    },
+    {
+      path: "/profile",
+      icon: <User size={20} />,
+      label: "Profile",
+    },
+  ]
 
-{
-path:"/circle",
-icon:<UsersRound size={20}/>,
-label:"Circle"
-},
+  return (
+    <>
+      <nav
+        className={`desktop-nav ${
+          collapsed
+            ? "collapsed"
+            : ""
+        }`}
+      >
+        <div className="logo">
+          <span>❤️</span>
 
-{
-path:"/communities",
-icon:<UsersRound size={20}/>,
-label:"Communities"
-},
+          <div
+            className={
+              collapsed
+                ? "hide-text"
+                : ""
+            }
+          >
+            <strong>LCMT</strong>
 
-{
-path:"/chat",
-icon:<MessageCircle size={20}/>,
-label:"Messages"
-},
+            <small>
+              Ideas • People •
+              Communities
+            </small>
+          </div>
+        </div>
 
-{
-path:"/notifications",
-icon:
-<div className="notification-icon">
+        <div className="nav-links">
+          {navItems.map(
+            (item) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={
+                  isActive(
+                    item.path
+                  )
+                    ? "active-nav"
+                    : ""
+                }
+              >
+                {item.icon}
 
-<Bell size={20}/>
+                <span
+                  className={
+                    collapsed
+                      ? "hide-text"
+                      : ""
+                  }
+                >
+                  {item.label}
+                </span>
+              </Link>
+            )
+          )}
+        </div>
 
-<span>
-3
-</span>
+        <div
+          className="more-wrapper"
+          role="button"
+          aria-label="Open menu"
+          onClick={() =>
+            setMenuOpen(
+              !menuOpen
+            )
+          }
+        >
+          <MoreVertical
+            size={24}
+          />
 
-</div>,
-label:"Notifications"
-},
+          {menuOpen && (
+            <MoreMenu />
+          )}
+        </div>
+      </nav>
 
-{
-path:"/profile",
-icon:<User size={20}/>,
-label:"Profile"
+      <nav className="mobile-nav">
+        {navItems
+          .slice(0, 5)
+          .map((item) => (
+            <Link
+              key={item.path}
+              to={item.path}
+              className={
+                isActive(
+                  item.path
+                )
+                  ? "active-mobile"
+                  : ""
+              }
+            >
+              {item.icon}
+            </Link>
+          ))}
+      </nav>
+    </>
+  )
 }
-
-]
-
-
-
-return (
-
-<>
-
-
-<nav className="desktop-nav">
-
-
-
-<div className="logo">
-
-<span>
-❤️
-</span>
-
-
-<div>
-
-<strong>
-LCMT
-</strong>
-
-
-<small>
-Ideas • People • Communities
-</small>
-
-
-</div>
-
-
-</div>
-
-
-
-
-
-<div className="nav-links">
-
-
-{
-navItems.map(
-
-(item)=>(
-
-
-<Link
-
-key={item.path}
-
-to={item.path}
-
-className={
-isActive(item.path)
-?
-"active-nav"
-:
-""
-}
-
->
-
-
-{item.icon}
-
-
-<span>
-{item.label}
-</span>
-
-
-</Link>
-
-
-)
-
-)
-
-}
-
-
-</div>
-
-
-
-
-
-<div
-
-className="more-wrapper"
-
-role="button"
-
-aria-label="Open menu"
-
-onClick={() =>
-setMenuOpen(!menuOpen)
-}
-
->
-
-
-<MoreVertical size={24}/>
-
-
-
-{
-
-menuOpen &&
-
-<MoreMenu/>
-
-}
-
-
-
-</div>
-
-
-
-</nav>
-
-
-
-
-
-
-
-<nav className="mobile-nav">
-
-
-{
-
-navItems
-.slice(0,5)
-.map(
-
-(item)=>(
-
-
-<Link
-
-key={item.path}
-
-to={item.path}
-
-className={
-isActive(item.path)
-?
-"active-mobile"
-:
-""
-}
-
->
-
-
-{item.icon}
-
-
-</Link>
-
-
-)
-
-)
-
-}
-
-
-</nav>
-
-
-
-
-</>
-
-)
-
-}
-
 
 export default Navbar

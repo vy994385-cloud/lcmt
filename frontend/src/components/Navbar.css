@@ -427,3 +427,223 @@ transform:translateY(0);
 
 
 }
+
+/* ===========================
+   COLLAPSING NAVBAR
+=========================== */
+
+.desktop-nav{
+  transition:
+    all .35s ease;
+}
+
+.desktop-nav.collapsed{
+
+  height:58px;
+
+  padding:0 18px;
+
+  top:15px;
+
+  border-radius:30px;
+
+  background:
+  rgba(255,255,255,.72);
+
+  backdrop-filter:blur(28px);
+
+}
+
+
+
+.hide-text{
+
+  opacity:0;
+
+  width:0;
+
+  overflow:hidden;
+
+  transform:translateY(-6px);
+
+  transition:
+    all .25s ease;
+
+}
+
+
+
+.logo div{
+
+  display:flex;
+
+  flex-direction:column;
+
+  margin-left:10px;
+
+  transition:.25s;
+
+}
+
+
+
+.logo small{
+
+  font-size:11px;
+
+  color:#888;
+
+  font-weight:500;
+
+}
+
+
+
+.nav-links{
+
+  transition:.3s;
+
+}
+
+
+
+.desktop-nav a{
+
+  transition:
+  all .25s ease;
+
+}
+
+
+
+.desktop-nav a:hover{
+
+  transform:translateY(-2px);
+
+}
+
+
+
+.desktop-nav.collapsed a{
+
+  padding:10px;
+
+}
+
+
+
+.desktop-nav.collapsed .nav-links{
+
+  gap:12px;
+
+}
+
+
+
+/* ===========================
+   ICON ANIMATION
+=========================== */
+
+.desktop-nav svg{
+
+  transition:
+  transform .25s ease;
+
+}
+
+
+
+.desktop-nav a:hover svg{
+
+  transform:scale(1.15);
+
+}
+
+
+
+/* ===========================
+   ACTIVE TAB
+=========================== */
+
+.active-nav{
+
+  box-shadow:
+
+  0 8px 20px
+  rgba(255,61,141,.28);
+
+}
+
+
+
+/* ===========================
+   NOTIFICATION BADGE
+=========================== */
+
+.notification-icon{
+
+  position:relative;
+
+  display:flex;
+
+}
+
+
+
+.notification-icon span{
+
+  position:absolute;
+
+  right:-8px;
+
+  top:-6px;
+
+  width:17px;
+
+  height:17px;
+
+  border-radius:50%;
+
+  background:#ff3d8d;
+
+  color:white;
+
+  font-size:10px;
+
+  display:flex;
+
+  justify-content:center;
+
+  align-items:center;
+
+  font-weight:700;
+
+}
+
+
+
+/* ===========================
+   MOBILE
+=========================== */
+
+.mobile-nav{
+
+  transition:.3s;
+
+}
+
+
+
+.mobile-nav a{
+
+  transition:.25s;
+
+}
+
+
+
+.mobile-nav a:hover{
+
+  transform:translateY(-3px);
+
+}

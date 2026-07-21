@@ -1,102 +1,383 @@
-import { Heart, MessageCircle, Share2, Bookmark } from "lucide-react"
+import { useState } from "react"
 
-import Card from "../../ui/Card/Card"
-import Button from "../../ui/Button/Button"
-
-import type { Post } from "../../../types/Post"
+import {
+Heart,
+MessageCircle,
+Share2,
+Bookmark
+} from "lucide-react"
 
 import "./PostCard.css"
 
-interface Props {
-  post: Post
+
+
+interface Props{
+
+post:any
+
 }
 
-function PostCard({ post }: Props) {
-  return (
-    <Card className="post-card">
 
-      <div className="post-header">
 
-        <div className="post-user">
+export default function PostCard({
 
-          <img
-            src={
-              post.author.avatar ||
-              post.author.image ||
-              "https://i.pravatar.cc/150?img=12"
-            }
-            alt={post.author.name}
-            className="post-avatar"
-          />
+post
 
-          <div>
+}:Props){
 
-            <h3>{post.author.name}</h3>
 
-            <span>
-              {post.community.icon} {post.community.name}
-            </span>
 
-          </div>
+const [likes,setLikes]=useState(
+post.likes || 0
+)
 
-        </div>
 
-        <small>{post.createdAt}</small>
+const [liked,setLiked]=useState(false)
 
-      </div>
 
-      <p className="post-content">
-        {post.content}
-      </p>
+const [showComments,setShowComments]=useState(false)
 
-      {post.image && (
-        <img
-          src={post.image}
-          className="post-image"
-          alt=""
-        />
-      )}
 
-      <div className="post-tags">
+const [saved,setSaved]=useState(false)
 
-        {post.tags.map(tag => (
 
-          <span
-            key={tag}
-            className="post-tag"
-          >
-            #{tag}
-          </span>
+const [comment,setComment]=useState("")
 
-        ))}
 
-      </div>
+const [comments,setComments]=useState<any[]>(
+post.commentList || []
+)
 
-      <div className="post-actions">
 
-        <Button variant="ghost">
-          <Heart size={18}/>
-          {post.likes}
-        </Button>
 
-        <Button variant="ghost">
-          <MessageCircle size={18}/>
-          {post.comments}
-        </Button>
 
-        <Button variant="ghost">
-          <Share2 size={18}/>
-          Share
-        </Button>
 
-        <Button variant="ghost">
-          <Bookmark size={18}/>
-        </Button>
+function likePost(){
 
-      </div>
+setLiked(!liked)
 
-    </Card>
-  )
+setLikes(
+
+liked
+?
+likes-1
+:
+likes+1
+
+)
+
 }
 
-export default PostCard
+
+
+
+
+function addComment(){
+
+if(!comment.trim())
+return
+
+
+setComments([
+
+...comments,
+
+{
+
+id:Date.now(),
+
+text:comment,
+
+author:"Vishal Yadav"
+
+}
+
+])
+
+
+setComment("")
+
+}
+
+
+
+
+
+return (
+
+<article className="post-card">
+
+
+
+
+
+<div className="post-header">
+
+
+<img
+
+src={
+post.author?.avatar ||
+"https://i.pravatar.cc/100"
+}
+
+alt="avatar"
+
+/>
+
+
+
+<div>
+
+<h4>
+
+{
+post.author?.name ||
+"Anonymous"
+}
+
+</h4>
+
+
+<span>
+
+{
+new Date(
+post.createdAt || Date.now()
+)
+.toLocaleDateString()
+
+}
+
+</span>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+{
+
+post.type &&
+
+<div className="post-type">
+
+{post.type}
+
+</div>
+
+}
+
+
+
+
+
+
+
+<p className="post-content">
+
+{post.content}
+
+</p>
+
+
+
+
+
+
+
+
+<div className="post-actions">
+
+
+
+<button
+
+className={
+liked
+?
+"active-action"
+:
+""
+}
+
+onClick={likePost}
+
+>
+
+<Heart size={18}/>
+
+{likes}
+
+</button>
+
+
+
+
+
+
+<button
+
+onClick={()=>
+setShowComments(!showComments)
+}
+
+>
+
+<MessageCircle size={18}/>
+
+{comments.length}
+
+</button>
+
+
+
+
+
+
+
+<button>
+
+<Share2 size={18}/>
+
+Share
+
+</button>
+
+
+
+
+
+
+<button
+
+className={
+saved
+?
+"active-action"
+:
+""
+}
+
+onClick={()=>
+setSaved(!saved)
+}
+
+>
+
+<Bookmark size={18}/>
+
+</button>
+
+
+
+
+</div>
+
+
+
+
+
+
+
+{
+
+showComments &&
+
+<div className="comments-section">
+
+
+<div className="comment-input">
+
+
+<input
+
+placeholder="Write a comment..."
+
+value={comment}
+
+onChange={(e)=>
+setComment(e.target.value)
+}
+
+/>
+
+
+
+<button
+
+onClick={addComment}
+
+>
+
+Post
+
+</button>
+
+
+</div>
+
+
+
+
+
+
+{
+
+comments.map(c=>(
+
+
+<div
+
+key={c.id}
+
+className="comment"
+
+>
+
+
+<strong>
+
+{c.author}
+
+</strong>
+
+
+<p>
+
+{c.text}
+
+</p>
+
+
+</div>
+
+
+))
+
+
+}
+
+
+
+</div>
+
+
+}
+
+
+
+
+
+</article>
+
+)
+
+}

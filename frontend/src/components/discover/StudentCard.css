@@ -1,0 +1,49 @@
+.student-profile-card{
+
+background:white;
+
+padding:25px;
+
+border-radius:25px;
+
+text-align:center;
+
+box-shadow:0 10px 30px rgba(0,0,0,.08);
+
+}
+
+
+
+.student-profile-card img{
+
+width:120px;
+
+height:120px;
+
+border-radius:50%;
+
+object-fit:cover;
+
+}
+
+
+
+.student-profile-card h3{
+
+margin:15px 0 5px;
+
+}
+
+
+
+.student-profile-card span{
+
+display:block;
+
+margin:15px 0;
+
+font-size:14px;
+
+color:#666;
+
+}
