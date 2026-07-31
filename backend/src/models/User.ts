@@ -10,11 +10,11 @@ const userSchema = new mongoose.Schema(
     },
 
     username: {
-      type: String,
-      unique: true,
-      sparse: true,
-      default: "",
-    },
+  type: String,
+  unique: true,
+  sparse: true,
+  trim: true,
+},
 
     email: {
       type: String,
@@ -200,6 +200,47 @@ profileVisibility: {
       },
     ],
 
+
+    // Community Activity
+
+activities: [
+  {
+    icon: {
+      type:String,
+      default:"🌱",
+    },
+
+    title:{
+      type:String,
+      default:"",
+    },
+
+    time:{
+      type:String,
+      default:"Recently",
+    }
+  }
+],
+
+
+thoughts:[
+  {
+    text:{
+      type:String,
+      default:"",
+    },
+
+    community:{
+      type:String,
+      default:"",
+    },
+
+    time:{
+      type:String,
+      default:"Recently",
+    }
+  }
+],
     // Chat
 
     isOnline: {
@@ -258,6 +299,18 @@ profileVisibility: string
   lookingFor: string
   likedUsers: mongoose.Types.ObjectId[]
   matchedUsers: mongoose.Types.ObjectId[]
+
+  activities:{
+  icon:string
+  title:string
+  time:string
+}[]
+
+thoughts:{
+  text:string
+  community:string
+  time:string
+}[]
 
   isOnline: boolean
   lastSeen: Date

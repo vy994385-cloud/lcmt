@@ -2,79 +2,193 @@ import { Response } from "express"
 import User from "../models/User"
 import { AuthRequest } from "../middleware/authMiddleware"
 
+import Post from "../models/Post"
+
 export async function updateProfile(
   req: AuthRequest,
   res: Response
-) {
-  try {
-    console.log("USER ID:", req.userId)
-console.log("BODY:", req.body)
-    const {
-      
-  age,
-  gender,
-  college,
-  course,
-  year,
-  bio,
-  interests,
-  image,
-  lookingFor,
-  values,
-  personality,
-  answers,
-} = req.body
+){
 
-    const user = await User.findByIdAndUpdate(
-      req.userId,
-      {
-  age,
-  gender,
-  college,
-  course,
-  year,
-  bio,
-  interests,
-  image,
-  lookingFor,
-  values,
-  personality,
-  answers,
+try{
+
+const user =
+await User.findByIdAndUpdate(
+
+req.userId,
+
+{
+
+username:req.body.username,
+
+headline:req.body.headline,
+
+bio:req.body.bio,
+
+college:req.body.college,
+
+course:req.body.course,
+
+location:req.body.location,
+
+image:req.body.image,
+
+interests:req.body.interests,
+
+coverImage:req.body.coverImage,
+
+website:req.body.website,
+
+profileVisibility:req.body.profileVisibility
+
 },
-      {
-        new: true,
-      }
-    ).select("-password")
 
-    res.status(200).json({
-      message: "Profile updated successfully",
-      user,
-    })
-  } catch (error) {
-    console.error(error)
+{
+new:true
+}
 
-    res.status(500).json({
-      message: "Server Error",
-    })
-  }
+).select("-password")
+
+if(!user){
+
+return res.status(404).json({
+
+message:"User not found"
+
+})
+
+}
+
+const posts = await Post.find({
+
+user:user._id
+
+})
+.sort({
+
+createdAt:-1
+
+})
+
+.populate(
+
+"user",
+
+"name username image"
+
+)
+
+.populate(
+
+"community",
+
+"name"
+
+)
+
+res.status(200).json({
+
+message:"Profile updated successfully",
+
+user
+
+})
+
+
+}
+catch(error){
+
+console.log(error)
+
+res.status(500).json({
+
+message:"Server Error"
+
+})
+
+}
+
 }
 
 export async function getMyProfile(
   req: AuthRequest,
   res: Response
-) {
-  try {
-    
-    const user = await User.findById(req.userId).select("-password")
+){
 
-    res.status(200).json(user)
-  } catch (error) {
-    console.error(error)
+try{
 
-    res.status(500).json({
-      message: "Server Error",
-    })
-  }
+const user =
+await User.findById(req.userId)
+.select("-password")
+.populate(
+"communities",
+"name icon"
+)
+.populate(
+"friends",
+"name username image headline"
+)
+
+
+if(!user){
+
+return res.status(404).json({
+
+message:"User not found"
+
+})
+
+}
+
+const posts = await Post.find({
+
+user:user._id
+
+})
+
+.sort({
+
+createdAt:-1
+
+})
+
+.populate(
+
+"user",
+
+"name username image"
+
+)
+
+.populate(
+
+"community",
+
+"name"
+
+)
+
+res.status(200).json({
+
+...user.toObject(),
+
+posts
+
+})
+
+
+}
+catch(error){
+
+console.log(error)
+
+res.status(500).json({
+
+message:"Server Error"
+
+})
+
+}
+
 }
 
 export async function getUsers(
@@ -82,23 +196,35 @@ export async function getUsers(
   res: Response
 ) {
   try {
-    const users = await User.find({
-      _id: {
-        $ne: req.userId,
-      },
+const users = await User.find({
+  _id: {
+    $ne: req.userId,
+  },
 
-      bio: {
-        $ne: "",
-      },
+  bio: {
+    $ne: "",
+  },
 
-      college: {
-        $ne: "",
-      },
+  college: {
+    $ne: "",
+  },
 
-      course: {
-        $ne: "",
-      },
-    }).select("-password")
+  course: {
+    $ne: "",
+  },
+})
+
+.select("-password")
+
+.populate(
+  "communities",
+  "name icon"
+)
+
+.populate(
+  "friends",
+  "name username image"
+)
 
     res.status(200).json(users)
   } catch (error) {
@@ -217,36 +343,174 @@ export async function getMatches(
 }
 
 export async function getProfileById(
-  req:AuthRequest,
-  res:Response
+  req: AuthRequest,
+  res: Response
 ){
 
-  try{
+try{
 
-    const user = await User.findById(
-      req.params.id
-    )
-    .select("-password")
+const user =
+await User.findById(req.params.id)
+.select("-password")
+.populate(
+  "communities"
+)
+.populate(
+  "followers",
+  "name username image"
+)
+.populate(
+  "following",
+  "name username image headline"
+)
+.populate(
+  "friends",
+  "name username image headline"
+)
 
+if(!user){
 
-    if(!user){
+return res.status(404).json({
+message:"User not found"
+})
 
-      return res.status(404).json({
-        message:"User not found"
-      })
+}
 
-    }
+const currentUser =
+await User.findById(req.userId)
+.populate(
+  "friends",
+  "_id"
+)
 
+const isOwnProfile =
+String(user._id) === String(req.userId)
 
-    res.json(user)
+const isFriend =
+currentUser
+?
+currentUser.friends.some(
+(friend:any)=>
+String(friend._id || friend) ===
+String(user._id)
+)
+:
+false
 
-  }
-  catch(error){
+const canView =
+isOwnProfile ||
+user.profileVisibility === "public" ||
+isFriend
 
-    res.status(500).json({
-      message:"Profile fetch failed"
-    })
+let sharedInterests:string[]=[]
 
-  }
+if(currentUser){
+
+sharedInterests =
+user.interests.filter(
+(item:string)=>
+currentUser.interests.includes(item)
+)
+
+}
+
+let mutualConnections:any[]=[]
+
+if(currentUser){
+
+const friendIds =
+currentUser.friends.map(
+(id:any)=>id.toString()
+)
+
+mutualConnections =
+user.friends.filter(
+(id:any)=>
+friendIds.includes(
+id.toString()
+)
+)
+
+}
+
+if(!canView){
+
+return res.json({
+
+_id:user._id,
+
+name:user.name,
+
+username:user.username,
+
+image:user.image,
+
+headline:user.headline,
+
+verified:user.verified,
+
+profileVisibility:user.profileVisibility,
+
+followers:user.followers,
+
+following:user.following,
+
+communities:user.communities
+
+})
+
+}
+
+const posts =
+await Post.find({
+
+user:user._id
+
+})
+
+.sort({
+
+createdAt:-1
+
+})
+
+.populate(
+
+"user",
+
+"name username image"
+
+)
+
+.populate(
+
+"community",
+
+"name"
+
+)
+
+res.json({
+
+...user.toObject(),
+
+posts,
+
+sharedInterests,
+
+mutualConnections
+
+})
+
+}
+catch(error){
+
+console.log(error)
+
+res.status(500).json({
+message:"Profile fetch failed"
+})
+
+}
 
 }

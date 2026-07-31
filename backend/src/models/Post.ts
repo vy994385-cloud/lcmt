@@ -1,53 +1,105 @@
 import mongoose, { Schema } from "mongoose"
 
+
 const PostSchema = new Schema(
-  {
-    community: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Community",
-      required: true,
-    },
 
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
+{
 
-    content: {
-      type: String,
-      required: true,
-      trim: true,
-    },
+community:{
 
-    likes: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ],
+type:mongoose.Schema.Types.ObjectId,
 
-    comments: [
-      {
-        user: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "User",
-        },
+ref:"Community",
 
-        text: {
-          type: String,
-        },
+required:false
 
-        createdAt: {
-          type: Date,
-          default: Date.now,
-        },
-      },
-    ],
-  },
-  {
-    timestamps: true,
-  }
+},
+
+
+user:{
+
+type:mongoose.Schema.Types.ObjectId,
+
+ref:"User",
+
+required:true
+
+},
+
+
+content:{
+
+type:String,
+
+default:"",
+
+trim:true
+
+},
+
+
+image:{
+
+type:String,
+
+required:false
+
+},
+
+
+likes:[
+
+{
+
+type:mongoose.Schema.Types.ObjectId,
+
+ref:"User"
+
+}
+
+],
+
+
+comments:[
+
+{
+
+user:{
+
+type:mongoose.Schema.Types.ObjectId,
+
+ref:"User"
+
+},
+
+text:String,
+
+
+createdAt:{
+
+type:Date,
+
+default:Date.now
+
+}
+
+}
+
+]
+
+
+},
+
+{
+
+timestamps:true
+
+}
+
 )
 
-export default mongoose.model("Post", PostSchema)
+
+export default mongoose.model(
+"Post",
+PostSchema
+)

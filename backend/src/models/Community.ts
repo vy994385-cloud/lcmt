@@ -1,63 +1,176 @@
 import mongoose from "mongoose"
 
 
-const communitySchema = new mongoose.Schema(
+const communitySchema =
+new mongoose.Schema(
 
 {
 
-  name: {
+name:{
 
-    type:String,
+type:String,
 
-    required:true
+required:true,
 
-  },
-
-
-  description: {
-
-    type:String,
-
-    required:true
-
-  },
-
-
-  category: {
-
-    type:String,
-
-    required:true
-
-  },
-
-
-  icon: {
-
-    type:String,
-
-    default:"🌍"
-
-  },
-
-
-  members:[
-
-    {
-
-      type:mongoose.Schema.Types.ObjectId,
-
-      ref:"User"
-
-    }
-
-  ]
-
+trim:true
 
 },
 
+
+slug:{
+
+type:String,
+
+required:true,
+
+unique:true,
+
+trim:true,
+
+lowercase:true
+
+},
+
+
+verified:{
+
+type:Boolean,
+
+default:false
+
+},
+
+
+description:{
+
+type:String,
+
+default:""
+
+},
+
+
+icon:{
+
+type:String,
+
+default:"🌍"
+
+},
+
+
+
+coverImage:{
+
+type:String,
+
+default:""
+
+},
+
+
+
+category:{
+
+type:String,
+
+required:true
+
+},
+
+
+
+creator:{
+
+type:mongoose.Schema.Types.ObjectId,
+
+ref:"User",
+
+required:true
+
+},
+
+
+createdBy:{
+
+type:mongoose.Schema.Types.ObjectId,
+
+ref:"User",
+
+required:false
+
+},
+
+
+
+moderators:[
+
 {
-  timestamps:true
+
+type:mongoose.Schema.Types.ObjectId,
+
+ref:"User"
+
+}
+
+],
+
+
+
+members:[
+
+{
+
+type:mongoose.Schema.Types.ObjectId,
+
+ref:"User"
+
+}
+
+],
+
+
+
+
+rules:[
+
+{
+
+type:String
+
+}
+
+],
+
+
+
+isPublic:{
+
+type:Boolean,
+
+default:true
+
+},
+
+
+
+tags:[
+
+{
+
+type:String
+
+}
+
+]
+
+},
+
+
+{
+
+timestamps:true
+
 }
 
 )
@@ -65,6 +178,9 @@ const communitySchema = new mongoose.Schema(
 
 
 export default mongoose.model(
-  "Community",
-  communitySchema
+
+"Community",
+
+communitySchema
+
 )

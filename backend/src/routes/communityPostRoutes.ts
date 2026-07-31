@@ -5,8 +5,7 @@ import {
   createCommunityPost,
   toggleLike,
   addComment
-} from "../controllers/communityPostController"
-
+} from "../controllers/community/communityPostController"
 const router = express.Router()
 
 router.get(

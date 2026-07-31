@@ -1,293 +1,348 @@
 import { Response } from "express"
 
+import {
+  AuthRequest
+} from "../middleware/authMiddleware"
+
 import User from "../models/User"
 
-import { AuthRequest } from "../middleware/authMiddleware"
+import {
+  createNotification
+} from "../services/notificationService"
 
 
 
-
-// Send Friend Request
+// =========================
+// SEND FRIEND REQUEST
+// =========================
 
 export async function sendFriendRequest(
   req: AuthRequest,
   res: Response
-){
+) {
 
-try{
+  try {
 
+    const senderId = String(req.userId)
+    const receiverId = String(req.params.id)
 
-if(!req.userId){
+    if (senderId === receiverId) {
 
-return res.status(401).json({
-message:"Unauthorized"
-})
+      return res.status(400).json({
+        message: "You cannot connect with yourself"
+      })
+
+    }
+
+    const sender =
+      await User.findById(senderId)
+
+    const receiver =
+      await User.findById(receiverId)
+
+    if (!sender || !receiver) {
+
+      return res.status(404).json({
+        message: "User not found"
+      })
+
+    }
+
+    sender.friendRequestsSent ??= []
+    receiver.friendRequestsReceived ??= []
+
+    sender.friends ??= []
+    receiver.friends ??= []
+
+    const alreadyFriends =
+      sender.friends.some(
+        (id: any) =>
+          String(id) === receiverId
+      )
+
+    if (alreadyFriends) {
+
+      return res.status(400).json({
+        message: "Already connected"
+      })
+
+    }
+
+    const alreadySent =
+      sender.friendRequestsSent.some(
+        (id: any) =>
+          String(id) === receiverId
+      )
+
+    if (alreadySent) {
+
+      return res.status(400).json({
+        message: "Request already sent"
+      })
+
+    }
+
+    sender.friendRequestsSent.push(
+      receiver._id
+    )
+
+    receiver.friendRequestsReceived.push(
+      sender._id
+    )
+
+    await sender.save()
+    await receiver.save()
+
+    await createNotification({
+
+      receiver: receiverId,
+
+      sender: senderId,
+
+      type: "friend_request",
+
+      title: "New Connection Request",
+
+      message: `${sender.name} sent you a connection request.`
+
+    })
+
+    return res.json({
+
+      message: "Friend request sent"
+
+    })
+
+  }
+
+  catch (error) {
+
+    console.log(error)
+
+    return res.status(500).json({
+
+      message: "Server error"
+
+    })
+
+  }
 
 }
 
 
 
-const sender =
-await User.findById(
-req.userId
-)
-
-
-
-const receiver =
-await User.findById(
-req.params.id
-)
-
-
-
-if(!sender || !receiver){
-
-return res.status(404).json({
-message:"User not found"
-})
-
-}
-
-
-
-
-if(
-receiver.friendRequestsReceived.some(
-id =>
-id.toString() === sender._id.toString()
-)
-){
-
-return res.status(400).json({
-message:"Request already sent"
-})
-
-}
-
-
-
-
-receiver.friendRequestsReceived.push(
-sender._id
-)
-
-
-sender.friendRequestsSent.push(
-receiver._id
-)
-
-
-
-await receiver.save()
-
-await sender.save()
-
-
-
-res.json({
-
-success:true,
-
-message:"Friend request sent"
-
-})
-
-
-
-}
-catch(error){
-
-console.log(error)
-
-res.status(500).json({
-message:"Server Error"
-})
-
-}
-
-}
-
-
-
-
-
-
-
-
-// Accept Friend Request
+// =========================
+// ACCEPT FRIEND REQUEST
+// =========================
 
 export async function acceptFriendRequest(
-req:AuthRequest,
-res:Response
-){
+  req: AuthRequest,
+  res: Response
+) {
 
-try{
+  try {
 
+    const userId =
+      String(req.userId)
 
-const user =
-await User.findById(
-req.userId
-)
+    const senderId =
+      String(req.params.id)
 
+    const user =
+      await User.findById(userId)
 
-const requester =
-await User.findById(
-req.params.id
-)
+    const sender =
+      await User.findById(senderId)
 
+    if (!user || !sender) {
 
+      return res.status(404).json({
 
-if(!user || !requester){
+        message: "User not found"
 
-return res.status(404).json({
-message:"User not found"
-})
+      })
+
+    }
+
+    user.friendRequestsReceived ??= []
+    sender.friendRequestsSent ??= []
+
+    user.friends ??= []
+    sender.friends ??= []
+
+    user.friendRequestsReceived =
+      user.friendRequestsReceived.filter(
+
+        (id: any) =>
+
+          String(id) !== senderId
+
+      )
+
+    sender.friendRequestsSent =
+      sender.friendRequestsSent.filter(
+
+        (id: any) =>
+
+          String(id) !== userId
+
+      )
+
+    if (
+
+      !user.friends.some(
+
+        (id: any) =>
+
+          String(id) === senderId
+
+      )
+
+    ) {
+
+      user.friends.push(
+        sender._id
+      )
+
+    }
+
+    if (
+
+      !sender.friends.some(
+
+        (id: any) =>
+
+          String(id) === userId
+
+      )
+
+    ) {
+
+      sender.friends.push(
+        user._id
+      )
+
+    }
+
+    await user.save()
+
+    await sender.save()
+
+    await createNotification({
+
+      receiver: senderId,
+
+      sender: userId,
+
+      type: "friend_accept",
+
+      title: "Connection Accepted",
+
+      message:
+        `${user.name} accepted your connection request.`
+
+    })
+
+    return res.json({
+
+      message: "Friend request accepted"
+
+    })
+
+  }
+
+  catch (error) {
+
+    console.log(error)
+
+    return res.status(500).json({
+
+      message: "Server error"
+
+    })
+
+  }
 
 }
 
 
 
-
-user.friendRequestsReceived =
-user.friendRequestsReceived.filter(
-
-id =>
-id.toString()
-!== requester._id.toString()
-
-)
-
-
-
-requester.friendRequestsSent =
-requester.friendRequestsSent.filter(
-
-id =>
-id.toString()
-!== user._id.toString()
-
-)
-
-
-
-
-
-user.friends.push(
-requester._id
-)
-
-
-requester.friends.push(
-user._id
-)
-
-
-
-
-await user.save()
-
-await requester.save()
-
-
-
-
-res.json({
-
-success:true,
-
-message:"Friend request accepted"
-
-})
-
-
-}
-catch(error){
-
-console.log(error)
-
-res.status(500).json({
-message:"Server Error"
-})
-
-}
-
-
-}
-
-
-
-
-
-
-
-
-
-// Reject Friend Request
+// =========================
+// REJECT FRIEND REQUEST
+// =========================
 
 export async function rejectFriendRequest(
-req:AuthRequest,
-res:Response
-){
+  req: AuthRequest,
+  res: Response
+) {
 
-try{
+  try {
 
+    const userId =
+      String(req.userId)
 
-const user =
-await User.findById(
-req.userId
-)
+    const senderId =
+      String(req.params.id)
 
+    const user =
+      await User.findById(userId)
 
+    const sender =
+      await User.findById(senderId)
 
-if(!user){
+    if (!user || !sender) {
 
-return res.status(404).json({
-message:"User not found"
-})
+      return res.status(404).json({
 
-}
+        message: "User not found"
 
+      })
 
+    }
 
+    user.friendRequestsReceived ??= []
+    sender.friendRequestsSent ??= []
 
-user.friendRequestsReceived =
-user.friendRequestsReceived.filter(
+    user.friendRequestsReceived =
+      user.friendRequestsReceived.filter(
 
-id =>
-id.toString()
-!== req.params.id
+        (id: any) =>
 
-)
+          String(id) !== senderId
 
+      )
 
+    sender.friendRequestsSent =
+      sender.friendRequestsSent.filter(
 
-await user.save()
+        (id: any) =>
 
+          String(id) !== userId
 
+      )
 
-res.json({
+    await user.save()
 
-success:true,
+    await sender.save()
 
-message:"Request rejected"
+    return res.json({
 
-})
+      message: "Friend request rejected"
 
+    })
 
+  }
 
-}
-catch(error){
+  catch (error) {
 
-console.log(error)
+    console.log(error)
 
+    return res.status(500).json({
 
-res.status(500).json({
-message:"Server Error"
-})
+      message: "Server error"
 
+    })
 
-}
-
+  }
 
 }

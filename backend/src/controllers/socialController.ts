@@ -370,14 +370,69 @@ id.toString() !== user._id.toString()
 
 
 
-user.friends.push(
-requester._id
+if(
+!user.friends.some(
+id=>id.toString()===requester._id.toString()
 )
+){
+
+user.friends.push(requester._id)
+
+}
+
+if(
+!requester.friends.some(
+id=>id.toString()===user._id.toString()
+)
+){
+
+requester.friends.push(user._id)
+
+}
 
 
-requester.friends.push(
-user._id
+
+// Auto-follow each other
+
+if(
+!user.following.some(
+id=>id.toString()===requester._id.toString()
 )
+){
+
+user.following.push(requester._id)
+
+}
+
+if(
+!requester.followers.some(
+id=>id.toString()===user._id.toString()
+)
+){
+
+requester.followers.push(user._id)
+
+}
+
+if(
+!requester.following.some(
+id=>id.toString()===user._id.toString()
+)
+){
+
+requester.following.push(user._id)
+
+}
+
+if(
+!user.followers.some(
+id=>id.toString()===requester._id.toString()
+)
+){
+
+user.followers.push(requester._id)
+
+}
 
 
 

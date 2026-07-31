@@ -13,13 +13,31 @@ import userRoutes from "./routes/userRoutes"
 import chatRoutes from "./routes/chatRoutes"
 import communityRoutes from "./routes/communityRoutes"
 import postRoutes from "./routes/postRoutes"
-import communityPostRoutes from "./routes/communityPostRoutes"
+
 
 import User from "./models/User"
 import feedRoutes from "./routes/feedRoutes"
 import { setIO } from "./socket"
-import socialRoutes from "./routes/socialRoutes"
+
 import friendRoutes from "./routes/friendRoutes"
+import networkRoutes from "./routes/networkRoutes"
+import followRoutes from "./routes/followRoutes"
+import notificationRoutes from "./routes/notificationRoutes"
+import path from "path"
+import mediaRoutes from "./routes/mediaRoutes"
+import groupRoutes from "./routes/groupRoutes"
+import groupMessageRoutes from "./routes/groupMessageRoutes"
+import voiceRoutes from "./routes/voiceRoutes"
+import reactionRoutes from "./routes/reactionRoutes"
+import eventRoutes from "./routes/eventRoutes"
+import storyRoutes from "./routes/storyRoutes"
+
+import { registerGroupSocket }
+from "./socket/groups/groupSocket"
+
+import communityFeedRoutes from "./routes/communityFeedRoutes"
+
+import exploreRoutes from "./routes/exploreRoutes"
 
 dotenv.config()
 
@@ -65,12 +83,13 @@ app.use(
     ],
 
     methods:[
-      "GET",
-      "POST",
-      "PUT",
-      "DELETE",
-      "OPTIONS"
-    ]
+  "GET",
+  "POST",
+  "PUT",
+  "PATCH",
+  "DELETE",
+  "OPTIONS"
+]
 
   })
 )
@@ -107,13 +126,18 @@ const io = new Server(
 setIO(io)
 
 
-
 app.use(
-  express.json()
+  express.json({
+    limit:"5mb"
+  })
 )
 
-
-
+app.use(
+  express.urlencoded({
+    extended:true,
+    limit:"5mb"
+  })
+)
 
 
 // Routes
@@ -140,11 +164,6 @@ app.use(
 
 
 app.use(
-  "/api/social",
-  socialRoutes
-)
-
-app.use(
   "/api/chat",
   chatRoutes
 )
@@ -165,12 +184,6 @@ app.use(
 
 
 
-app.use(
-  "/api/communities",
-  communityPostRoutes
-)
-
-
 
 app.use(
   "/api/feed",
@@ -180,6 +193,40 @@ app.use(
 app.use(
 "/api/friends",
 friendRoutes
+)
+
+app.use("/api/follow", followRoutes)
+
+app.use("/api/network", networkRoutes)
+
+app.use(
+"/api/notifications",
+notificationRoutes
+)
+
+app.use(
+  "/api/group-messages",
+  groupMessageRoutes
+)
+
+app.use(
+  "/api/voice",
+  voiceRoutes
+)
+
+app.use(
+  "/api/explore",
+  exploreRoutes
+)
+
+app.use(
+  "/uploads",
+  express.static(
+    path.join(
+      process.cwd(),
+      "src/uploads"
+    )
+  )
 )
 
 
@@ -207,11 +254,36 @@ app.get(
   }
 )
 
+app.use(
+  "/api/media",
+  mediaRoutes
+)
 
 
+app.use(
+  "/api/groups",
+  groupRoutes
+)
 
+app.use(
+  "/api/reactions",
+  reactionRoutes
+)
 
+app.use(
+  "/api/events",
+  eventRoutes
+)
 
+app.use(
+  "/api/stories",
+  storyRoutes
+)
+
+app.use(
+  "/api/community-feed",
+  communityFeedRoutes
+)
 
 // Available routes
 
@@ -235,12 +307,15 @@ app.get(
 
   "/api/users/discover",
 
-  "/api/social/follow/:id",
-  "/api/social/unfollow/:id",
-  "/api/social/followers/:id",
-  "/api/social/following/:id",
-  "/api/social/friends/:id",
-  "/api/social/friend-request/:id",
+  "/api/friends/request/:id",
+  "/api/friends/accept/:id",
+  "/api/friends/reject/:id",
+
+  "/api/follow/:id",
+  "/api/follow/followers/:id",
+  "/api/follow/following/:id",
+
+  "/api/network",
 
   "/api/chat",
   "/api/chat/:id",
@@ -248,8 +323,22 @@ app.get(
 
   "/api/communities",
   "/api/communities/:id/join",
+  "/api/community-feed/:communityId",
+"/api/community-feed/:communityId (POST)",
+"/api/community-feed/like/:postId",
+"/api/community-feed/comment/:postId",
+"/api/community-feed/save/:postId",
+"/api/community-feed/pin/:postId",
 
-  "/api/communities/:id/posts"
+"/api/notifications",
+"/api/notifications/unread-count",
+"/api/notifications/:id/read",
+"/api/notifications/read-all",
+
+  "/api/groups",
+"/api/groups/:id",
+"/api/groups/:id/join",
+"/api/groups/:id/leave",
 
 ]
       
@@ -314,6 +403,55 @@ io.on(
   "connection",
   (socket)=>{
 
+    registerGroupSocket(io,socket)
+
+    console.log("🟢 User connected:", socket.id)
+
+    socket.on(
+  "join-group",
+  (groupId:string)=>{
+
+    socket.join(
+      `group:${groupId}`
+    )
+
+    console.log(
+      `Joined group ${groupId}`
+    )
+
+  }
+)
+
+
+socket.on(
+  "leave-group",
+  (groupId:string)=>{
+
+    socket.leave(
+      `group:${groupId}`
+    )
+
+    console.log(
+      `Left group ${groupId}`
+    )
+
+  }
+)
+
+
+socket.on(
+  "group-typing",
+  (data)=>{
+
+    socket
+      .to(`group:${data.groupId}`)
+      .emit(
+        "group-typing",
+        data
+      )
+
+  }
+)
 
     console.log(
       "🟢 User connected:",

@@ -6,14 +6,16 @@ import {
   sendMessage,
   getConversation,
   getInbox,
-  getChatUsers
+  getChatUsers,
+  markConversationRead,
+  getUnreadCount,
+  editMessage,
+  deleteMessage,
+  toggleStarMessage,
+  reactToMessage,
 } from "../controllers/chatController"
 
-
-
 const router = express.Router()
-
-
 
 // Inbox
 router.get(
@@ -22,6 +24,12 @@ router.get(
   getInbox
 )
 
+// Total unread messages
+router.get(
+  "/unread/count",
+  protect,
+  getUnreadCount
+)
 
 // Search users
 router.get(
@@ -30,7 +38,6 @@ router.get(
   getChatUsers
 )
 
-
 // Conversation
 router.get(
   "/:id",
@@ -38,6 +45,39 @@ router.get(
   getConversation
 )
 
+// Mark conversation as read
+router.put(
+  "/read/:id",
+  protect,
+  markConversationRead
+)
+// Edit message
+router.patch(
+  "/message/:id/edit",
+  protect,
+  editMessage
+)
+
+// Delete message
+router.delete(
+  "/message/:id",
+  protect,
+  deleteMessage
+)
+
+// Star / Unstar
+router.patch(
+  "/message/:id/star",
+  protect,
+  toggleStarMessage
+)
+
+// React to message
+router.patch(
+  "/message/:id/react",
+  protect,
+  reactToMessage
+)
 
 // Send message
 router.post(
@@ -45,7 +85,5 @@ router.post(
   protect,
   sendMessage
 )
-
-
 
 export default router

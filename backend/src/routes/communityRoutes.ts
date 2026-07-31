@@ -1,24 +1,72 @@
-import { Router } from "express"
+import express from "express"
 
 import {
- getCommunities,
- joinCommunity
-} from "../controllers/communityController"
+
+getCommunities,
+getCommunityById,
+createCommunity
+
+} from "../controllers/community/communityController"
 
 
-const router = Router()
+import {
+
+joinCommunity,
+leaveCommunity
+
+} from "../controllers/community/communityMemberController"
+
+
+
+import {
+
+addModerator
+
+} from "../controllers/community/communityModerationController"
+
+import { protect } from "../middleware/authMiddleware"
+
+const router =
+express.Router()
+
 
 
 router.get(
- "/",
- getCommunities
+"/",
+getCommunities
+)
+
+
+router.get(
+"/:id",
+getCommunityById
 )
 
 
 router.post(
- "/:id/join",
- joinCommunity
+"/create",
+protect,
+createCommunity
 )
+
+router.post(
+"/:id/join",
+protect,
+joinCommunity
+)
+
+router.post(
+"/:id/leave",
+protect,
+leaveCommunity
+)
+
+router.post(
+"/:id/moderator/:userId",
+protect,
+addModerator
+)
+
 
 
 export default router
