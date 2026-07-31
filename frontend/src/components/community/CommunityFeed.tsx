@@ -1,33 +1,17 @@
-import PostCard from "../cards/PostCard/PostCard"
-
-import postsData from "../../mock/posts"
-
-import { events } from "../../mock/events"
+import PostCard from "./PostCard"
 
 import "./CommunityFeed.css"
 
 
+interface Props{
 
-interface Props {
-
-
-  community?: any
-
-
-  tab?: string
-
-
-  posts?: any[]
-
+  posts?:any[]
 
 }
 
 
 
-
 export default function CommunityFeed({
-
-  tab="Feed",
 
   posts=[]
 
@@ -35,237 +19,42 @@ export default function CommunityFeed({
 
 
 
-
-
-const allPosts = [
-
-  ...posts,
-
-  ...postsData
-
-]
-
-
-
-
-
-
-if(tab==="Questions"){
-
-
 return (
 
 <div className="community-feed">
 
 
 <h2>
-❓ Questions
-</h2>
 
-
-
-{
-
-allPosts
-
-.filter(
-post =>
-post.type==="Question"
-||
-!post.type
-)
-
-.map(post=>(
-
-
-<PostCard
-
-key={post.id}
-
-post={post}
-
-/>
-
-
-))
-
-
-}
-
-
-
-</div>
-
-)
-
-
-}
-
-
-
-
-
-
-
-if(tab==="Polls"){
-
-
-return (
-
-<div className="community-feed">
-
-
-<h2>
-📊 Polls
-</h2>
-
-
-
-<div className="coming-card">
-
-Create polls and collect opinions from the community
-
-</div>
-
-
-
-</div>
-
-)
-
-
-}
-
-
-
-
-
-
-
-
-if(tab==="Events"){
-
-
-return (
-
-<div className="community-feed">
-
-
-<h2>
-🎉 Events
-</h2>
-
-
-
-{
-
-events.map((event:any)=>(
-
-
-<div
-
-key={event.id}
-
-className="event-box"
-
->
-
-
-<h3>
-
-{event.title}
-
-</h3>
-
-
-
-<p>
-
-{event.date}
-
-</p>
-
-
-
-</div>
-
-
-))
-
-
-}
-
-
-
-</div>
-
-)
-
-
-}
-
-
-
-
-
-
-
-if(tab==="Members"){
-
-
-return (
-
-<div className="community-feed">
-
-
-<h2>
-👥 Members
-</h2>
-
-
-
-
-<div className="coming-card">
-
-Community members will appear here
-
-</div>
-
-
-
-</div>
-
-)
-
-
-}
-
-
-
-
-
-
-
-return (
-
-<div className="community-feed">
-
-
-
-<h2>
 🔥 Discussions
+
 </h2>
 
 
 
 {
 
-allPosts.map(post=>(
+posts.length === 0
+
+?
+
+<div className="coming-card">
+
+No posts yet. Start the discussion.
+
+</div>
+
+
+:
+
+posts.map((post:any)=>(
 
 
 <PostCard
 
-key={post.id}
+key={
+post._id || post.id
+}
 
 post={post}
 
@@ -282,6 +71,5 @@ post={post}
 </div>
 
 )
-
 
 }

@@ -1,84 +1,165 @@
 import {
-useEffect,
-useState
-}
-from "react"
+  useEffect,
+  useMemo,
+  useState
+} from "react"
 
+import Layout from "../components/Layout"
+
+import NotificationList from "../components/notifications/NotificationList"
 
 import {
+  getNotifications,
+  markNotificationRead,
+  markAllNotificationsRead
+} from "../services/notificationService"
 
-getPendingRequests,
+import {
+  useNotifications
+} from "../context/NotificationContext"
 
-acceptRequest,
-
-rejectRequest
-
-}
-from "../utils/requests"
-
-
-
-export default function Notifications(){
+import "./Notifications.css"
 
 
 
-const user =
-JSON.parse(
-
-localStorage.getItem("user") || "{}"
-
-)
+type Filter =
+  | "all"
+  | "unread"
+  | "message"
+  | "connection"
+  | "community"
 
 
 
 
-const [requests,setRequests]=
-useState<any[]>([])
+function Notifications(){
+
+
+const [
+  notifications,
+  setNotifications
+] = useState<any[]>([])
+
+const {
+  latestNotification,
+  clearUnread
+}=useNotifications()
+
+const [
+  loading,
+  setLoading
+] = useState(true)
 
 
 
-function load(){
+const [
+  filter,
+  setFilter
+] = useState<Filter>("all")
 
 
-setRequests(
-
-getPendingRequests(
-
-user._id
-
-)
-
-)
-
-
-}
 
 
 
 useEffect(()=>{
 
+clearUnread()
 
-load()
-
+loadNotifications()
 
 },[])
 
 
+useEffect(()=>{
 
 
-function accept(id:string){
+if(!latestNotification){
+
+return
+
+}
 
 
-acceptRequest(
+setNotifications(prev=>{
 
-id,
 
-user._id
-
+const exists =
+prev.some(
+item =>
+item._id === latestNotification._id
 )
 
 
-load()
+if(exists){
+
+return prev
+
+}
+
+
+return [
+latestNotification,
+...prev
+]
+
+
+})
+
+
+},[
+latestNotification
+])
+
+
+
+
+
+
+
+
+async function loadNotifications(){
+
+
+try{
+
+
+setLoading(true)
+
+
+const data =
+await getNotifications()
+
+
+
+setNotifications(
+Array.isArray(data)
+?
+data
+:
+[]
+)
+
+
+}
+
+catch(error){
+
+
+console.log(
+"Notification loading error:",
+error
+)
+
+
+}
+
+finally{
+
+
+setLoading(false)
+
+
+}
 
 
 }
@@ -87,22 +168,194 @@ load()
 
 
 
-function reject(id:string){
 
 
-rejectRequest(
 
-id,
+async function handleRead(
+id:string
+){
 
-user._id
+
+try{
+
+
+await markNotificationRead(id)
+
+
+
+setNotifications(prev=>
+
+prev.map(item=>
+
+item._id === id
+
+?
+
+{
+...item,
+read:true
+}
+
+:
+
+item
+
+)
 
 )
 
 
-load()
+}
+
+catch(error){
+
+
+console.log(error)
 
 
 }
+
+
+}
+
+
+
+
+
+
+
+
+async function handleReadAll(){
+
+
+try{
+
+  clearUnread()
+
+
+await markAllNotificationsRead()
+
+
+
+setNotifications(prev=>
+
+prev.map(item=>({
+
+...item,
+
+read:true
+
+}))
+
+)
+
+
+}
+
+catch(error){
+
+
+console.log(error)
+
+
+}
+
+
+}
+
+
+
+
+
+
+
+
+const unreadCount =
+
+notifications.filter(
+
+item =>
+!item.read
+
+).length
+
+
+
+
+
+
+
+
+
+const filtered =
+
+useMemo(()=>{
+
+
+switch(filter){
+
+
+case "unread":
+
+return notifications.filter(
+n=>!n.read
+)
+
+
+
+case "message":
+
+return notifications.filter(
+n=>n.type==="message"
+)
+
+
+
+case "community":
+
+return notifications.filter(
+
+n=>
+
+String(n.type)
+.includes(
+"community"
+)
+
+)
+
+
+
+case "connection":
+
+return notifications.filter(
+
+n=>
+
+n.type==="friend_request"
+||
+n.type==="friend_accept"
+
+)
+
+
+
+default:
+
+return notifications
+
+
+}
+
+
+
+},[
+notifications,
+filter
+])
+
+
+
 
 
 
@@ -110,90 +363,205 @@ load()
 
 return (
 
+<Layout>
+
+
 <main className="notifications-page">
 
 
-<h1>
 
-Notifications 🔔
-
-</h1>
-
-
-
-
-<h2>
-
-Friend Requests
-
-</h2>
-
-
-
-{
-
-requests.length===0
-
-?
-
-
-<p>
-
-No new requests
-
-</p>
-
-
-
-:
-
-
-requests.map(request=>(
-
-
-<div
-
-className="request-card"
-
-key={request.from}
-
->
-
-
-<h3>
-
-👤 User {request.from}
-
-</h3>
-
+<section className="notifications-hero">
 
 
 <div>
 
 
+<h1>
+Notifications
+</h1>
+
+
+<p>
+
+Stay updated with conversations,
+communities and new connections.
+
+</p>
+
+
+</div>
+
+
+
+
+<div className="hero-stats">
+
+
+<div>
+
+<strong>
+
+{notifications.length}
+
+</strong>
+
+<span>
+Total
+</span>
+
+</div>
+
+
+
+
+<div>
+
+<strong>
+
+{unreadCount}
+
+</strong>
+
+<span>
+Unread
+</span>
+
+</div>
+
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+
+
+
+<section className="notification-toolbar">
+
+
+
+<div className="notification-filters">
+
+
 <button
 
 onClick={()=>
-accept(request.from)
+setFilter("all")
+}
+
+className={
+filter==="all"
+?
+"active"
+:
+""
 }
 
 >
 
-Accept
+All
 
 </button>
 
 
 
+
+
 <button
 
 onClick={()=>
-reject(request.from)
+setFilter("unread")
+}
+
+className={
+filter==="unread"
+?
+"active"
+:
+""
 }
 
 >
 
-Reject
+Unread
+
+</button>
+
+
+
+
+
+<button
+
+onClick={()=>
+setFilter("message")
+}
+
+className={
+filter==="message"
+?
+"active"
+:
+""
+}
+
+>
+
+Messages
+
+</button>
+
+
+
+
+
+<button
+
+onClick={()=>
+setFilter("connection")
+}
+
+className={
+filter==="connection"
+?
+"active"
+:
+""
+}
+
+>
+
+Connections
+
+</button>
+
+
+
+
+
+<button
+
+onClick={()=>
+setFilter("community")
+}
+
+className={
+filter==="community"
+?
+"active"
+:
+""
+}
+
+>
+
+Communities
 
 </button>
 
@@ -201,10 +569,63 @@ Reject
 </div>
 
 
+
+
+
+
+
+<button
+
+className="read-all-btn"
+
+onClick={handleReadAll}
+
+disabled={
+unreadCount===0
+}
+
+>
+
+Mark all as read
+
+</button>
+
+
+
+
+</section>
+
+
+
+
+
+
+
+
+
+{
+
+loading
+
+?
+
+<div className="notification-loading">
+
+Loading notifications...
+
 </div>
 
 
-))
+:
+
+
+<NotificationList
+
+notifications={filtered}
+
+onRead={handleRead}
+
+/>
 
 
 }
@@ -213,6 +634,14 @@ Reject
 
 </main>
 
+
+</Layout>
+
 )
 
+
 }
+
+
+
+export default Notifications

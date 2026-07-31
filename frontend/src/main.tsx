@@ -10,6 +10,11 @@ import "./styles/theme.css"
 
 import socket from "./socket"
 
+import { Toaster } from "react-hot-toast"
+
+import {
+  NotificationProvider
+} from "./context/NotificationContext"
 
 socket.on(
   "connect",
@@ -45,14 +50,48 @@ ReactDOM.createRoot(
 
     <BrowserRouter>
 
-      <AppProvider>
+  <AppProvider>
 
-        <App />
+    <NotificationProvider>
 
-      </AppProvider>
+      <App />
 
-    </BrowserRouter>
+      <Toaster
+        position="top-right"
+        reverseOrder={false}
+        gutter={12}
+        toastOptions={{
+          duration: 3000,
+          style: {
+            background: "#ffffff",
+            color: "#111827",
+            border: "1px solid #e5e7eb",
+            borderRadius: "16px",
+            boxShadow: "0 12px 32px rgba(0,0,0,.12)",
+            fontWeight: 500,
+          },
 
+          success: {
+            iconTheme: {
+              primary: "#10B981",
+              secondary: "#ffffff",
+            },
+          },
+
+          error: {
+            iconTheme: {
+              primary: "#EF4444",
+              secondary: "#ffffff",
+            },
+          },
+        }}
+      />
+
+    </NotificationProvider>
+
+  </AppProvider>
+
+</BrowserRouter>
   </React.StrictMode>
 
 )

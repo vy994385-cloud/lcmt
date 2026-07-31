@@ -1,0 +1,388 @@
+import {
+  useEffect,
+  useState
+} from "react"
+
+import {
+  useParams
+} from "react-router-dom"
+
+import Layout from "../components/Layout"
+
+import {
+  getMyProfile,
+  getProfile
+} from "../services/profileService"
+
+import "./Profile.css"
+
+import ProfilePosts from "../components/profile/ProfilePosts/ProfilePosts"
+import ProfileActivity from "../components/profile/ProfileActivity/ProfileActivity"
+import ProfileCommunities from "../components/profile/ProfileCommunities/ProfileCommunities"
+import ProfileMutuals from "../components/profile/ProfileMutuals/ProfileMutuals"
+import ProfileThoughts from "../components/profile/ProfileThoughts/ProfileThoughts"
+import ProfileQuickActions from "../components/profile/ProfileQuickActions/ProfileQuickActions"
+
+import toast from "react-hot-toast"
+
+import ProfileHero from "../components/profile/ProfileHero/ProfileHero"
+import ProfileStats from "../components/profile/ProfileStats/ProfileStats"
+import ProfileAbout from "../components/profile/ProfileAbout/ProfileAbout"
+import ProfileInterests from "../components/profile/ProfileInterests/ProfileInterests"
+import ProfileSocialLinks from "../components/profile/ProfileSocialLinks/ProfileSocialLinks"
+import ProfilePhotos from "../components/profile/ProfilePhotos/ProfilePhotos"
+import ProfileAchievements from "../components/profile/ProfileAchievements/ProfileAchievements"
+
+
+function Profile(){
+
+
+const {
+id
+}=useParams()
+
+
+
+const currentUser =
+JSON.parse(
+localStorage.getItem("user") || "{}"
+)
+
+
+const currentUserId =
+currentUser._id || currentUser.id
+
+
+
+const isOwnProfile =
+!id ||
+id === currentUserId
+
+
+
+const [
+user,
+setUser
+]=useState<any>(null)
+
+
+
+const [
+loading,
+setLoading
+]=useState(true)
+
+
+
+async function loadProfile(){
+
+try{
+
+
+const data =
+isOwnProfile
+
+?
+
+await getMyProfile()
+
+:
+
+await getProfile(id!)
+
+
+
+console.log(
+"PROFILE DATA:",
+data
+)
+
+
+
+setUser(data)
+
+
+
+}
+catch(error){
+
+console.log(
+"PROFILE ERROR",
+error
+)
+
+}
+
+finally{
+
+setLoading(false)
+
+}
+
+}
+
+
+
+
+useEffect(()=>{
+
+loadProfile()
+
+},[id])
+
+
+
+
+
+if(loading){
+
+return(
+
+<Layout>
+
+<main className="profile-page">
+
+<h2>
+Loading Profile...
+</h2>
+
+</main>
+
+</Layout>
+
+)
+
+}
+
+
+
+
+
+if(!user){
+
+return(
+
+<Layout>
+
+<main className="profile-page">
+
+<h2>
+User not found
+</h2>
+
+</main>
+
+</Layout>
+
+)
+
+}
+
+
+
+
+
+return(
+
+<Layout>
+
+
+<main className="profile-page">
+
+
+
+<ProfileHero
+
+user={user}
+
+isOwnProfile={isOwnProfile}
+
+/>
+
+
+
+
+
+<ProfileStats
+
+user={user}
+
+/>
+
+
+
+
+
+<section className="profile-section">
+
+<ProfileAbout
+
+user={user}
+
+/>
+
+</section>
+
+
+
+
+
+<section className="profile-section">
+
+<ProfileInterests
+
+user={user}
+
+/>
+
+</section>
+
+
+
+
+
+<section className="profile-section">
+
+<ProfileCommunities
+
+user={user}
+
+/>
+
+</section>
+
+
+
+
+
+<section className="profile-section">
+
+<ProfilePhotos
+
+user={user}
+
+/>
+
+</section>
+
+
+
+
+
+<section className="profile-section">
+
+<ProfileAchievements
+
+user={user}
+
+/>
+
+</section>
+
+
+
+
+
+<section className="profile-section">
+
+<ProfileSocialLinks
+
+user={user}
+
+/>
+
+</section>
+
+
+
+
+
+<section className="profile-section">
+
+<ProfilePosts
+
+user={user}
+
+/>
+
+</section>
+
+
+
+
+
+<section className="profile-section">
+
+<ProfileMutuals
+
+user={user}
+
+/>
+
+</section>
+
+
+
+
+
+<section className="profile-section">
+
+<ProfileActivity
+
+user={user}
+
+/>
+
+</section>
+
+
+
+
+
+<ProfileQuickActions
+
+onInvite={()=>{
+
+toast(
+"Community invitations are coming soon 🌍"
+)
+
+}}
+
+onDiscussion={()=>{
+
+toast(
+"Discussion rooms are coming soon 💭"
+)
+
+}}
+
+/>
+
+
+
+
+<section className="profile-section">
+
+<ProfileThoughts
+
+user={user}
+
+/>
+
+</section>
+
+
+
+</main>
+
+
+</Layout>
+
+)
+
+}
+
+
+
+export default Profile

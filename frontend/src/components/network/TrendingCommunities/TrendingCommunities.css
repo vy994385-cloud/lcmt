@@ -1,0 +1,26 @@
+.trending{
+
+background:white;
+padding:20px;
+border-radius:20px;
+margin:20px 0;
+
+}
+
+
+.trending div{
+
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+
+}
+
+
+.trending span{
+
+padding:10px 16px;
+background:#f3f4f6;
+border-radius:20px;
+
+}

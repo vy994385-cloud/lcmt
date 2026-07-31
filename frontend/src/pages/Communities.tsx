@@ -1,380 +1,374 @@
 import { useEffect, useState } from "react"
-import axios from "axios"
 import { useNavigate } from "react-router-dom"
+import toast from "react-hot-toast"
 
+import api from "../api/axios"
 import Layout from "../components/Layout"
+
 import "./Communities.css"
 
 
+function Communities(){
 
-function Communities() {
+const [communities,setCommunities]=useState<any[]>([])
 
+const [search,setSearch]=useState("")
 
-  const [communities, setCommunities] =
-    useState<any[]>([])
+const [category,setCategory]=useState("All")
 
+const [loadingId,setLoadingId]=useState<string|null>(null)
 
-  const [loadingId, setLoadingId] =
-    useState<string | null>(null)
 
+const navigate=useNavigate()
 
 
-  const navigate = useNavigate()
+const user =
+JSON.parse(
+localStorage.getItem("user") || "{}"
+)
 
 
 
-  const user =
-    JSON.parse(
-      localStorage.getItem("user") || "{}"
-    )
+async function fetchCommunities(){
 
+try{
 
+const res =
+await api.get("/communities")
 
+setCommunities(res.data)
 
-  async function fetchCommunities() {
+}
 
-    try {
+catch{
 
-      const response =
-        await axios.get(
-          "https://lcmt-backend.onrender.com/api/communities"
-        )
+toast.error(
+"Unable to load communities"
+)
 
+}
 
-      setCommunities(response.data)
+}
 
 
-    } catch(error){
 
-      console.log(error)
+useEffect(()=>{
 
-    }
+fetchCommunities()
 
-  }
+},[])
 
 
 
 
+async function joinCommunity(id:string){
 
-  useEffect(()=>{
+try{
 
-    fetchCommunities()
+setLoadingId(id)
 
-  },[])
 
+await api.post(
+`/communities/${id}/join`
+)
 
 
+toast.success(
+"Joined community 🎉"
+)
 
 
+fetchCommunities()
 
 
-  async function joinCommunity(id:string){
+}
 
+catch(error:any){
 
-    try {
+toast.error(
+error.response?.data?.message ||
+"Something went wrong"
+)
 
+}
 
-      setLoadingId(id)
+finally{
 
+setLoadingId(null)
 
+}
 
-      const response =
-        await axios.post(
+}
 
-          `https://lcmt-backend.onrender.com/api/communities/${id}/join`,
 
-          {
-            userId:user._id
-          }
 
-        )
 
+const categories=[
+"All",
+...Array.from(
+new Set(
+communities.map(
+(c)=>c.category
+)
+)
+)
+]
 
 
-      alert("Joined Community 🎉")
 
+const filtered =
+communities.filter(
+(c)=>
 
+c.name
+.toLowerCase()
+.includes(
+search.toLowerCase()
+)
 
-      setCommunities(prev =>
+&&
 
-        prev.map((community)=>
+(category==="All" ||
+c.category===category)
 
-          community._id === id
+)
 
-          ?
 
-          response.data.community
 
-          :
 
-          community
+return(
 
-        )
+<Layout>
 
-      )
+<main className="communities-page">
 
 
+<section className="community-header">
 
-    }
-    catch(error:any){
 
+<div>
 
-      console.log(
-        error.response?.data || error.message
-      )
+<h1>
+🌍 Explore Communities
+</h1>
 
 
-      alert(
-        error.response?.data?.message ||
-        "Join failed"
-      )
+<p>
+Discover people, ideas and groups
+around your interests.
+</p>
 
 
-    }
-    finally{
+</div>
 
-      setLoadingId(null)
 
-    }
+<button
+onClick={()=>
+navigate("/communities/create")
+}
+>
 
++ Create Community
 
-  }
+</button>
 
 
+</section>
 
 
 
+<div className="community-tools">
 
 
-  return (
+<input
 
-    <Layout>
+placeholder="Search communities..."
 
+value={search}
 
-      <main className="communities-page">
+onChange={(e)=>
+setSearch(e.target.value)
+}
 
+/>
 
 
-        <section className="community-header">
 
+<div className="category-list">
 
-          <h1>
-            🌍 Student Communities
-          </h1>
 
+{
+categories.map(cat=>(
 
-          <p>
-            Find people who share your interests,
-            passions, and goals.
-          </p>
+<button
 
+key={cat}
 
-        </section>
+className={
+category===cat
+?
+"active"
+:
+""
+}
 
+onClick={()=>
+setCategory(cat)
+}
 
+>
 
+{cat}
 
+</button>
 
+))
 
-        <div className="community-grid">
+}
 
 
-        {
+</div>
 
-          communities.map((community)=>(
 
+</div>
 
-            <div
 
-              className="community-card"
 
-              key={community._id}
 
 
-              onClick={()=>{
+<div className="community-grid">
 
-                navigate(
-                  `/communities/${community._id}`
-                )
 
-              }}
+{
+filtered.map(
+community=>(
 
-            >
 
+<div
 
+key={community._id}
 
+className="community-card"
 
+onClick={()=>
+navigate(`/community/${community._id}`)
+}
 
-              <div className="community-icon">
+>
 
-                {community.icon}
 
-              </div>
+<div className="community-icon">
 
+{community.icon}
 
+</div>
 
 
 
+<span className="category">
 
-              <span className="category">
+{community.category}
 
-                {community.category}
+</span>
 
-              </span>
 
 
+<h2>
 
+{community.name}
 
+</h2>
 
 
 
-              <h2>
+<p>
 
-                {community.name}
+{community.description}
 
-              </h2>
+</p>
 
 
 
+<div className="members">
 
+👥 {community.members?.length || 0} Members
 
+</div>
 
 
-              <p>
 
-                {community.description}
+{
+community.members?.some(
+(m:any)=>
+m._id===user._id
+)
 
-              </p>
+?
 
+<button
+disabled
+onClick={(e)=>
+e.stopPropagation()
+}
+>
 
+✓ Joined
 
+</button>
 
 
+:
 
+<button
 
-              <div className="members">
+disabled={
+loadingId===community._id
+}
 
-                👥 {community.members?.length || 0}
-                {" "}Students
+onClick={(e)=>{
 
-              </div>
+e.stopPropagation()
 
+joinCommunity(
+community._id
+)
 
+}}
 
+>
 
+{
+loadingId===community._id
+?
+"Joining..."
+:
+"Join Community"
+}
 
 
+</button>
 
+}
 
-              {
 
-                community.members?.some(
+</div>
 
-                  (member:any)=>
 
-                  member._id === user._id
+)
 
-                )
+)
 
+}
 
-                ?
 
+</div>
 
 
-                <button
+</main>
 
-                  className="joined"
+</Layout>
 
-                  disabled
-
-                  onClick={(e)=>{
-
-                    e.stopPropagation()
-
-                  }}
-
-                >
-
-                  ✓ Joined
-
-                </button>
-
-
-
-                :
-
-
-
-                <button
-
-
-                  disabled={
-                    loadingId === community._id
-                  }
-
-
-
-                  onClick={(e)=>{
-
-
-                    e.stopPropagation()
-
-
-
-                    joinCommunity(
-                      community._id
-                    )
-
-
-                  }}
-
-
-                >
-
-
-                  {
-
-                    loadingId === community._id
-
-                    ?
-
-                    "Joining..."
-
-                    :
-
-                    "Join Community"
-
-
-                  }
-
-
-                </button>
-
-
-              }
-
-
-
-
-
-            </div>
-
-
-          ))
-
-        }
-
-
-
-        </div>
-
-
-      </main>
-
-
-    </Layout>
-
-  )
+)
 
 }
 

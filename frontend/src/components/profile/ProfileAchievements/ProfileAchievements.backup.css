@@ -1,0 +1,56 @@
+.profile-achievements{
+
+  background:white;
+
+  padding:28px;
+
+  border-radius:22px;
+
+  margin-bottom:30px;
+
+  box-shadow:0 8px 25px rgba(0,0,0,.06);
+
+}
+
+.profile-achievements h2{
+
+  margin-top:0;
+
+  margin-bottom:20px;
+
+}
+
+.achievement-grid{
+
+  display:grid;
+
+  grid-template-columns:
+    repeat(auto-fit,minmax(180px,1fr));
+
+  gap:16px;
+
+}
+
+.achievement-card{
+
+  padding:18px;
+
+  border-radius:16px;
+
+  background:#f7f5ff;
+
+  text-align:center;
+
+  font-weight:600;
+
+  transition:.25s;
+
+}
+
+.achievement-card:hover{
+
+  transform:translateY(-4px);
+
+  background:#efe9ff;
+
+}

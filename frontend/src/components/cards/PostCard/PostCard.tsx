@@ -1,383 +1,667 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
+
+import api from "../../../api/axios"
 
 import {
-Heart,
-MessageCircle,
-Share2,
-Bookmark
+  formatTimeAgo,
+  fullDate
+} from "../../../utils/time"
+
+import {
+  getAvatar
+} from "../../../utils/avatar"
+
+import {
+  Heart,
+  MessageCircle,
+  Bookmark,
+  MoreHorizontal
 } from "lucide-react"
 
 import "./PostCard.css"
 
+import ShareButton from "../../share/ShareButton"
 
+import PostMenu from "../../social/PostMenu/PostMenu"
+
+import CommentBox from "../../social/CommentBox/CommentBox"
+
+import Reactions from "../../social/Reactions/Reactions"
+
+import RepostButton from "../../social/RepostButton/RepostButton"
+
+import FollowButton from "../../social/FollowButton/FollowButton"
 
 interface Props{
-
-post:any
-
+  post:any
 }
 
+export default function PostCard({post}:Props){
 
+  const author =
+    post.author ||
+    post.user ||
+    {}
 
-export default function PostCard({
+    
 
-post
+  const navigate = useNavigate()
 
-}:Props){
+  const [likes,setLikes]=useState(
 
+    Array.isArray(post.likes)
 
+      ? post.likes.length
 
-const [likes,setLikes]=useState(
-post.likes || 0
+      : post.likes || 0
+
+  )
+
+  const [liked,setLiked]=useState(()=>{
+
+const user =
+JSON.parse(
+localStorage.getItem("user") || "{}"
 )
 
-
-const [liked,setLiked]=useState(false)
-
-
-const [showComments,setShowComments]=useState(false)
-
-
-const [saved,setSaved]=useState(false)
-
-
-const [comment,setComment]=useState("")
-
-
-const [comments,setComments]=useState<any[]>(
-post.commentList || []
+return Array.isArray(post.likes)
+&&
+post.likes.some(
+(id:any)=>
+String(id) === String(user._id)
 )
 
+})
+
+  const [saved,setSaved]=useState(false)
+
+  const [deleting,setDeleting]=useState(false)
+
+  const [loadingLike,setLoadingLike]=useState(false)
+
+  const [showComments,setShowComments]=useState(false)
+
+  const [showMenu,setShowMenu]=useState(false)
+
+  const [comment,setComment]=useState("")
+
+  const [preview,setPreview]=useState("")
+
+  const [comments,setComments]=useState<any[]>(
+
+    post.comments ||
+
+    post.commentList ||
+
+    []
+
+  )
+
+  useEffect(()=>{
+
+    const savedPosts = JSON.parse(
+
+      localStorage.getItem("savedPosts") || "[]"
+
+    )
+
+    setSaved(
+
+      savedPosts.includes(post._id)
+
+    )
+
+  },[post._id])
+
+  async function likePost(){
+
+  if(!post._id || loadingLike) return
+
+  const previousLiked = liked
+  const previousLikes = likes
+
+  const nextLiked = !liked
+
+  setLiked(nextLiked)
+
+  setLikes(
+    nextLiked
+    ?
+    likes + 1
+    :
+    Math.max(0, likes - 1)
+  )
 
 
+  try{
 
+    setLoadingLike(true)
 
-function likePost(){
+    const {data}=await api.post(
+      `/feed/${post._id}/like`
+    )
 
-setLiked(!liked)
+    setLiked(data.liked)
 
-setLikes(
+    setLikes(data.likes)
 
-liked
-?
-likes-1
-:
-likes+1
+  }
 
+  catch(error){
+
+    console.log(error)
+
+    setLiked(previousLiked)
+
+    setLikes(previousLikes)
+
+  }
+
+  finally{
+
+    setLoadingLike(false)
+
+  }
+
+}
+
+function copyLink(){
+
+navigator.clipboard.writeText(
+window.location.origin+"/post/"+post._id
 )
 
-}
-
-
-
-
-
-function addComment(){
-
-if(!comment.trim())
-return
-
-
-setComments([
-
-...comments,
-
-{
-
-id:Date.now(),
-
-text:comment,
-
-author:"Vishal Yadav"
-
-}
-
-])
-
-
-setComment("")
+alert("Link copied")
 
 }
 
 
+function hidePost(){
 
+alert("Post hidden")
 
-
-return (
-
-<article className="post-card">
-
-
-
-
-
-<div className="post-header">
-
-
-<img
-
-src={
-post.author?.avatar ||
-"https://i.pravatar.cc/100"
 }
 
-alt="avatar"
 
-/>
+function reportPost(){
+
+alert("Post reported")
+
+}
 
 
+function notInterested(){
 
-<div>
+alert("You won't see similar posts")
+
+}
+  async function addComment(){
+
+    if(!comment.trim()) return
+
+    try{
+
+      const {data}=await api.post(
+
+        `/feed/${post._id}/comment`,
+
+        {
+
+          text:comment
+
+        }
+
+      )
+
+      setComments(data)
+
+      setComment("")
+
+    }
+
+    catch(error){
+
+      console.log(error)
+
+    }
+
+  }
+
+  function openPost(){
+
+    if(post._id){
+
+      navigate(
+
+        `/post/${post._id}`
+
+      )
+
+    }
+
+  }
+
+  function toggleSave(){
+
+    const savedPosts = JSON.parse(
+
+      localStorage.getItem("savedPosts") || "[]"
+
+    )
+
+    let updated
+
+    if(savedPosts.includes(post._id)){
+
+      updated = savedPosts.filter(
+
+        (id:string)=>id!==post._id
+
+      )
+
+      setSaved(false)
+
+    }
+
+    else{
+
+      updated=[
+
+        ...savedPosts,
+
+        post._id
+
+      ]
+
+      setSaved(true)
+
+    }
+
+    localStorage.setItem(
+
+      "savedPosts",
+
+      JSON.stringify(updated)
+
+    )
+
+  }
+
+  async function deleteCurrentPost(){
+
+  if(
+    !post._id ||
+    deleting
+  ) return
+
+  const ok = window.confirm(
+    "Delete this post?"
+  )
+
+  if(!ok) return
+
+  try{
+
+    setDeleting(true)
+
+    await api.delete(
+      `/feed/${post._id}`
+    )
+
+    window.location.reload()
+
+  }
+
+  catch(error){
+
+    console.log(error)
+
+    alert("Failed to delete post")
+
+  }
+
+  finally{
+
+    setDeleting(false)
+
+  }
+
+}
+
+  const imageUrl =
+
+  !post.image
+
+    ? ""
+
+    : post.image.startsWith("http")
+
+      ? post.image
+
+      : `${(import.meta.env.VITE_API_URL || "http://localhost:5000")
+          .replace("/api","")}${post.image}`
+
+      
+
+  return(
+
+    <article
+
+      className="post-card"
+
+      data-post={post._id}
+
+    >
+
+      <div className="post-header">
+
+        <div
+
+          className="post-author"
+
+          onClick={()=>
+
+            navigate(
+
+              `/profile/${author?._id || ""}`
+
+            )
+
+          }
+
+        >
+
+          <img
+
+            src={getAvatar(author)}
+
+            alt="avatar"
+
+          />
+
+          <div className="author-info">
+
+            <div className="author-name-row">
 
 <h4>
-
-{
-post.author?.name ||
-"Anonymous"
-}
-
+{author?.name || "Unknown User"}
 </h4>
 
 
-<span>
-
 {
-new Date(
-post.createdAt || Date.now()
-)
-.toLocaleDateString()
-
+author?._id &&
+<FollowButton id={author._id}/>
 }
+
+</div>
+
+            <div className="post-meta">
+
+              {
+
+                post.community?._id
+
+                ?
+
+                (
+
+                  <span
+
+  className="community-link"
+
+  onClick={(e)=>{
+
+    e.stopPropagation()
+
+    navigate(
+      `/community/${post.community._id}`
+    )
+
+  }}
+
+>
+
+  {post.community.name}
 
 </span>
 
+                )
 
-</div>
+                :
+
+                (
+
+                  <span>
+
+                    {post.communityName || "Community"}
+
+                  </span>
+
+                )
+
+              }
+
+              •
+
+              <span
+
+                title={fullDate(post.createdAt)}
+
+              >
+
+                {formatTimeAgo(post.createdAt)}
+
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div className="post-body">
+
+        {
+
+          post.type &&
+
+          <span className="post-type">
+
+            {post.type}
+
+          </span>
+
+        }
+
+        <p
+
+          className="post-content"
+
+          onClick={openPost}
+
+        >
+
+          {post.content}
+
+        </p>
+
+        
+
+       {
+  imageUrl && (
+
+    <img
+      src={imageUrl}
+      alt="Post"
+      className="post-image"
+      loading="lazy"
+      onError={(e)=>{
+        e.currentTarget.style.display = "none"
+      }}
+      onClick={(e)=>{
+        e.stopPropagation()
+        setPreview(imageUrl)
+      }}
+    />
+
+  )
+}
 
 
-</div>
+      </div>
 
+      <Reactions
+count={
+  Array.isArray(post.reactions)
+  ?
+  post.reactions.length
+  :
+  0
+}
+/>
 
+      <div className="post-actions">
+                <button
+          onClick={likePost}
+          disabled={loadingLike}
+          className={
+            liked
+              ? "active-action"
+              : ""
+          }
+        >
+          <Heart size={18}/>
+          <span>{likes}</span>
+        </button>
 
+        <button
+          onClick={()=>
+            setShowComments(
+              !showComments
+            )
+          }
+        >
+          <MessageCircle size={18}/>
+          <span>{comments.length}</span>
+        </button>
 
+       <RepostButton />
 
+<ShareButton post={post}/>
+
+        <button
+          onClick={toggleSave}
+          className={
+            saved
+              ? "active-action"
+              : ""
+          }
+        >
+          <Bookmark size={18}/>
+        </button>
+
+        {
+  String(author?._id || "") ===
+  String(
+    JSON.parse(
+      localStorage.getItem("user") || "{}"
+    )._id || ""
+  ) && (
+
+    <button
+      onClick={deleteCurrentPost}
+      disabled={deleting}
+      className="delete-post-btn"
+    >
+      🗑 Delete
+    </button>
+
+  )
+}
+
+<div className="post-more">
+
+<button
+onClick={()=>setShowMenu(!showMenu)}
+>
+<MoreHorizontal size={22}/>
+</button>
 
 
 {
+showMenu &&
 
-post.type &&
+<PostMenu
 
-<div className="post-type">
+onCopy={copyLink}
 
-{post.type}
+onReport={reportPost}
 
-</div>
+onHide={hidePost}
 
-}
-
-
-
-
-
-
-
-<p className="post-content">
-
-{post.content}
-
-</p>
-
-
-
-
-
-
-
-
-<div className="post-actions">
-
-
-
-<button
-
-className={
-liked
-?
-"active-action"
-:
-""
-}
-
-onClick={likePost}
-
->
-
-<Heart size={18}/>
-
-{likes}
-
-</button>
-
-
-
-
-
-
-<button
-
-onClick={()=>
-setShowComments(!showComments)
-}
-
->
-
-<MessageCircle size={18}/>
-
-{comments.length}
-
-</button>
-
-
-
-
-
-
-
-<button>
-
-<Share2 size={18}/>
-
-Share
-
-</button>
-
-
-
-
-
-
-<button
-
-className={
-saved
-?
-"active-action"
-:
-""
-}
-
-onClick={()=>
-setSaved(!saved)
-}
-
->
-
-<Bookmark size={18}/>
-
-</button>
-
-
-
-
-</div>
-
-
-
-
-
-
-
-{
-
-showComments &&
-
-<div className="comments-section">
-
-
-<div className="comment-input">
-
-
-<input
-
-placeholder="Write a comment..."
-
-value={comment}
-
-onChange={(e)=>
-setComment(e.target.value)
-}
+onNotInterested={notInterested}
 
 />
 
-
-
-<button
-
-onClick={addComment}
-
->
-
-Post
-
-</button>
-
-
-</div>
-
-
-
-
-
-
-{
-
-comments.map(c=>(
-
-
-<div
-
-key={c.id}
-
-className="comment"
-
->
-
-
-<strong>
-
-{c.author}
-
-</strong>
-
-
-<p>
-
-{c.text}
-
-</p>
-
-
-</div>
-
-
-))
-
-
 }
 
-
-
 </div>
 
+      </div>
+
+      {
+showComments &&
+
+<CommentBox
+
+comments={comments}
+
+value={comment}
+
+setValue={setComment}
+
+onSubmit={addComment}
+
+/>
 
 }
+      {
 
+        preview &&
 
+        <div
 
+          className="image-preview-overlay"
 
+          onClick={()=>
+            setPreview("")
+          }
 
-</article>
+        >
 
-)
+          <img
+
+            src={preview}
+
+            alt="Preview"
+
+            className="image-preview-full"
+
+            onClick={e=>
+              e.stopPropagation()
+            }
+
+          />
+
+        </div>
+
+      }
+
+    </article>
+
+  )
 
 }

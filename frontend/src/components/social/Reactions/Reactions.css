@@ -1,0 +1,44 @@
+.reaction-box{
+
+display:flex;
+
+align-items:center;
+
+gap:6px;
+
+margin-top:8px;
+
+}
+
+
+.reaction-box button{
+
+border:none;
+
+background:#f5f5f5;
+
+border-radius:20px;
+
+padding:6px 10px;
+
+cursor:pointer;
+
+font-size:16px;
+
+}
+
+
+.reaction-box .selected{
+
+transform:scale(1.15);
+
+}
+
+
+.reaction-box span{
+
+font-size:13px;
+
+color:#666;
+
+}

@@ -1,366 +1,454 @@
-import { Link } from "react-router-dom"
 import { useEffect, useState } from "react"
+import { useParams } from "react-router-dom"
+import toast from "react-hot-toast"
 
 import Layout from "../components/Layout"
 
 import {
-  getConnections
-} from "../utils/connections"
+  getMyProfile,
+  getProfile
+} from "../services/profileService"
+
+
+import ProfileHero from "../components/profile/ProfileHero/ProfileHero"
+import ProfileStats from "../components/profile/ProfileStats/ProfileStats"
+import ProfileAbout from "../components/profile/ProfileAbout/ProfileAbout"
+import ProfileInterests from "../components/profile/ProfileInterests/ProfileInterests"
+import ProfileCommunities from "../components/profile/ProfileCommunities/ProfileCommunities"
+import ProfileSocialLinks from "../components/profile/ProfileSocialLinks/ProfileSocialLinks"
+import ProfilePosts from "../components/profile/ProfilePosts/ProfilePosts"
+import ProfilePhotos from "../components/profile/ProfilePhotos/ProfilePhotos"
+import ProfileAchievements from "../components/profile/ProfileAchievements/ProfileAchievements"
+import ProfileQuickActions from "../components/profile/ProfileQuickActions/ProfileQuickActions"
+import ProfileFriends from "../components/profile/ProfileFriends/ProfileFriends"
+import ProfileStickyHeader from "../components/profile/ProfileStickyHeader/ProfileStickyHeader"
+import ProfileLockedSection from "../components/profile/ProfileLockedSection/ProfileLockedSection"
+
+import ProfileSidebar from "../components/profile/ProfileSidebar/ProfileSidebar"
 
 import "./Profile.css"
-import ProfileSections from "../components/profile/ProfileSections/ProfileSections"
 
 
 function Profile(){
 
-
-const user = JSON.parse(
-  localStorage.getItem("user") || "{}"
-)
+  const { id } = useParams()
 
 
-
-const [stats,setStats] = useState({
-
-followers:0,
-following:0,
-friends:0
-
-})
+  const currentUser = JSON.parse(
+    localStorage.getItem("user") || "{}"
+  )
 
 
+  const currentUserId =
+    currentUser._id || currentUser.id
+
+
+  const isOwnProfile =
+    !id || id === currentUserId
 
 
 
-useEffect(()=>{
+  const [user,setUser] = useState<any>(null)
 
-
-const connections = getConnections()
-
-
-
-const friends =
-connections.filter(
-(item:any)=>
-item.status==="accepted"
-)
+  const [loading,setLoading] = useState(true)
 
 
 
-const following =
-connections.filter(
-(item:any)=>
-item.from===user._id
-)
+  const [tab,setTab] = useState<
+    "posts" |
+    "replies" |
+    "media" |
+    "likes" |
+    "communities" |
+    "friends" |
+    "activity" |
+    "about"
+  >("posts")
 
 
 
-const followers =
-connections.filter(
-(item:any)=>
-item.to===user._id
-)
+  const ownTabs = [
+  { key: "posts", label: "📝 Posts" },
+  { key: "replies", label: "💬 Replies" },
+  { key: "media", label: "📸 Media" },
+  { key: "likes", label: "❤️ Likes" },
+  { key: "communities", label: "🌍 Communities" },
+  { key: "friends", label: "🤝 Friends" },
+  { key: "activity", label: "⚡ Activity" },
+  { key: "about", label: "ℹ️ About" }
+] as const
+
+const publicTabs = [
+  { key: "posts", label: "📝 Posts" },
+  { key: "media", label: "📸 Media" },
+  { key: "communities", label: "🌍 Communities" },
+  { key: "about", label: "ℹ️ About" }
+] as const
+
+const tabs = isOwnProfile ? ownTabs : publicTabs
+
+
+
+  async function loadProfile(){
+
+    try{
+
+      const data = isOwnProfile
+
+      ?
+
+      await getMyProfile()
+
+      :
+
+      await getProfile(id!)
+
+
+      setUser(data)
+
+    }
+
+    catch{
+
+      toast.error(
+        "Unable to load profile"
+      )
+
+    }
+
+    finally{
+
+      setLoading(false)
+
+    }
+
+  }
+
+
+
+  useEffect(()=>{
+
+    loadProfile()
+
+  },[id])
+
+
+
+  if(loading){
+
+    return(
+
+      <Layout>
+
+        <div className="profile-loading">
+
+          Loading profile...
+
+        </div>
+
+      </Layout>
+
+    )
+
+  }
+
+  const isPrivate =
+    user?.profileVisibility === "private"
+
+
+  const isFriend =
+    Array.isArray(user?.friends)
+      ?
+      user.friends.some(
+        (item:any)=>
+          String(item._id || item) ===
+          String(currentUserId)
+      )
+      :
+      false
+
+
+  const canViewPrivate =
+    isOwnProfile ||
+    !isPrivate ||
+    isFriend
+
+  if(!user){
+
+    return(
+
+      <Layout>
+
+        <div className="profile-loading">
+
+          Profile not found
+
+        </div>
+
+      </Layout>
+
+    )
+
+  }
+
+
+
+  return(
+
+    <Layout>
+
+      <main className="profile-page">
+
+
+        <ProfileStickyHeader
+
+          user={user}
+
+          isOwnProfile={isOwnProfile}
+
+          tab={tab}
+
+        />
+
+
+
+        <ProfileHero
+
+  user={user}
+
+  isOwnProfile={isOwnProfile}
+
+/>
+
+
+
+        <ProfileStats
+          user={user}
+        />
+
+
+
+       <ProfileQuickActions
+user={user}
+isOwnProfile={isOwnProfile}
+/>
 
 
 
 
-setStats({
+        <nav className="profile-tabs">
 
-followers:followers.length,
+  {tabs.map((item) => (
 
-following:following.length,
+    <button
 
-friends:friends.length
+      key={item.key}
 
-})
+      className={tab === item.key ? "active" : ""}
 
+      onClick={() => setTab(item.key)}
 
-},[user._id])
+    >
 
+      {item.label}
 
+    </button>
 
+  ))}
 
-
-
-
-return (
-
-<Layout>
-
-
-<main className="profile-page">
+</nav>
 
 
 
-<section className="profile-card">
+
+        <div className="profile-layout">
 
 
-<img
 
-src={
-user.image ||
-"https://picsum.photos/300"
+          <section className="profile-content">
+
+
+            {
+              tab==="posts" &&
+
+              <ProfilePosts
+                user={user}
+              />
+            }
+
+
+
+
+            {
+tab==="replies" &&
+
+<ProfileLockedSection
+
+icon="💬"
+
+title="Replies"
+
+text={
+isOwnProfile
+?
+"Your replies and conversations will appear here."
+:
+"Replies are limited to protect conversations."
 }
 
-alt="profile"
+/>
+
+}
+
+
+
+
+
+            {
+tab==="likes" &&
+
+<ProfileLockedSection
+
+icon="❤️"
+
+title="Liked Posts"
+
+text={
+isOwnProfile
+?
+"Posts you liked will appear here."
+:
+"This section is private."
+}
 
 />
 
+}
 
 
-<div className="profile-info">
-
-
-<h1>
-
-{user.name || "LCMT Student"}
-
-</h1>
-
-
-
-<p>
-
-🎓 {user.college || "College Student"}
-
-</p>
-
-
-
-<p>
-
-💻 {user.course || "Student"}
-
-</p>
-
-
-
-<p>
-
-✨ {user.bio || "Building meaningful connections"}
-
-</p>
-
-
-
-
-<Link
-
-className="edit-btn"
-
-to="/edit-profile"
-
->
-
-Edit Profile
-
-</Link>
-
-
-
-</div>
-
-
-</section>
-
-
-
-
-
-
-
-
-<section className="profile-stats">
-
-
-
-<Link to="/followers">
-
-<strong>
-
-{stats.followers}
-
-</strong>
-
-Followers
-
-</Link>
-
-
-
-
-
-<Link to="/following">
-
-<strong>
-
-{stats.following}
-
-</strong>
-
-Following
-
-</Link>
-
-
-
-
-
-<Link to="/friends">
-
-<strong>
-
-{stats.friends}
-
-</strong>
-
-Friends
-
-</Link>
-
-
-
-</section>
-
-
-
-
-
-
-
-
-<section className="profile-section">
-
-
-<h2>
-
-🌍 My Communities
-
-</h2>
-
-
-<div className="profile-box">
-
-
-<Link to="/communities">
-
-Explore Communities
-
-</Link>
-
-
-</div>
-
-
-</section>
-
-
-
-
-
-
-
-
-<section className="profile-section">
-
-
-<h2>
-
-💭 My Thoughts
-
-</h2>
-
-
-
-<div className="profile-box">
-
-
-<p>
-
-Share your first thought with LCMT 🚀
-
-</p>
-
-
-</div>
-
-
-</section>
-
-
-
-
-
-
-
-
-<section className="profile-section">
-
-
-<h2>
-
-✨ Interests
-
-</h2>
-
-<ProfileSections
-
-user={user}
-
-/>
-
-<div className="interest-container">
 
 
 {
+tab==="friends" &&
 
-(user.interests || [
+<ProfileFriends
 
-"AI",
+user={user}
 
-"Technology",
+canViewPrivate={canViewPrivate}
 
-"Startups"
-
-])
-
-.map(
-(item:string)=>(
+/>
+}
 
 
-<span key={item}>
-
-{item}
-
-</span>
 
 
-)
+            {
+tab==="activity" &&
 
-)
+<ProfileLockedSection
 
+icon="⚡"
+
+title="Activity"
+
+text={
+isOwnProfile
+?
+"Your community activity will appear here."
+:
+"Activity timeline is private."
+}
+
+/>
 
 }
 
 
-</div>
 
 
-</section>
+            {
+              tab==="media" &&
+
+              <ProfilePhotos
+                user={user}
+              />
+
+            }
 
 
 
 
-</main>
+
+            {
+              tab==="communities" &&
+
+              <ProfileCommunities
+                user={user}
+              />
+
+            }
 
 
-</Layout>
 
-)
 
+
+            {
+              tab==="about" &&
+
+              <>
+
+                <ProfileAbout
+                  user={user}
+                />
+
+
+                <ProfileInterests
+                  user={user}
+                />
+
+
+                <ProfileAchievements
+                  user={user}
+                />
+
+
+                <ProfileSocialLinks
+                  user={user}
+                />
+
+
+              </>
+
+            }
+
+
+          </section>
+
+
+
+
+
+          <ProfileSidebar
+
+            user={user}
+
+          />
+
+
+
+        </div>
+
+
+
+      </main>
+
+
+    </Layout>
+
+  )
 
 }
-
 
 
 export default Profile

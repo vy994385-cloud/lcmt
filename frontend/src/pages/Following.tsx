@@ -1,13 +1,13 @@
 import {
-getFollowing
-}
-from "../utils/social"
-
-import {
 useEffect,
 useState
-}
-from "react"
+} from "react"
+
+import {
+getFollowing
+} from "../services/profileService"
+
+import "./Followers.css"
 
 
 
@@ -16,25 +16,42 @@ export default function Following(){
 
 const user =
 JSON.parse(
-
 localStorage.getItem("user") || "{}"
-
 )
 
 
+
 const [following,setFollowing]=
-useState<string[]>([])
+useState<any[]>([])
 
 
 
 useEffect(()=>{
 
 
-setFollowing(
+async function load(){
 
-getFollowing(user._id)
+try{
 
+const data =
+await getFollowing(
+user._id
 )
+
+setFollowing(data)
+
+}
+
+catch(error){
+
+console.log(error)
+
+}
+
+}
+
+
+load()
 
 
 },[])
@@ -43,56 +60,75 @@ getFollowing(user._id)
 
 
 
-return (
+return(
 
 <main className="social-page">
 
 
 <h1>
-
 Following ❤️
-
 </h1>
 
 
 
 {
-
 following.length===0
 
 ?
 
 <p>
-
 Not following anyone
-
 </p>
 
 
 :
 
-
-following.map(id=>(
-
+following.map(
+(person:any)=>(
 
 <div
 
-key={id}
+key={person._id}
 
 className="user-row"
 
 >
 
-User {id}
+<img
+
+src={
+person.image ||
+"https://i.pravatar.cc/100"
+}
+
+alt={person.name}
+
+/>
+
+
+<div>
+
+<h3>
+{person.name}
+</h3>
+
+<p>
+{person.headline ||
+person.bio ||
+"LCMT Member"
+}
+</p>
 
 </div>
 
 
-))
+</div>
 
+)
+
+)
 
 }
-
 
 
 </main>

@@ -1,0 +1,46 @@
+.profile-actions{
+
+display:flex;
+gap:12px;
+align-items:center;
+flex-wrap:wrap;
+
+}
+
+
+.action{
+
+padding:10px 18px;
+border-radius:12px;
+border:1px solid #e5e7eb;
+background:white;
+font-weight:600;
+cursor:pointer;
+transition:.2s;
+
+}
+
+
+.action:hover{
+
+transform:translateY(-1px);
+
+}
+
+
+.primary{
+
+background:#111827;
+color:white;
+border:none;
+
+}
+
+
+.success{
+
+background:#ecfdf5;
+color:#047857;
+border:1px solid #a7f3d0;
+
+}

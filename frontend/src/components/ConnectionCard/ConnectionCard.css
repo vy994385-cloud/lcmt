@@ -1,0 +1,95 @@
+.connection-card{
+
+display:flex;
+
+gap:16px;
+
+padding:20px;
+
+background:white;
+
+border-radius:22px;
+
+border:1px solid #eee;
+
+}
+
+
+
+.connection-avatar{
+
+width:65px;
+
+height:65px;
+
+border-radius:50%;
+
+object-fit:cover;
+
+}
+
+
+
+.connection-info h3{
+
+margin:0;
+
+font-size:18px;
+
+}
+
+
+
+.connection-info p{
+
+color:#666;
+
+margin:8px 0;
+
+}
+
+
+
+.connection-interests{
+
+display:flex;
+
+flex-wrap:wrap;
+
+gap:8px;
+
+margin-bottom:15px;
+
+}
+
+
+
+.connection-interests span{
+
+background:#f3f4ff;
+
+padding:5px 10px;
+
+border-radius:20px;
+
+font-size:13px;
+
+}
+
+
+
+.connection-info button{
+
+border:none;
+
+padding:9px 20px;
+
+border-radius:20px;
+
+background:#2563eb;
+
+color:white;
+
+cursor:pointer;
+
+}

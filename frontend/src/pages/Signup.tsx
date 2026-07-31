@@ -1,7 +1,26 @@
-import { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import axios from "axios"
+import {
+  useState
+} from "react"
+
+import {
+  Link,
+  useNavigate
+} from "react-router-dom"
+
+import api from "../api/axios"
+
 import "./Signup.css"
+
+import InterestSelector from "../components/auth/signup/InterestSelector"
+import VibeSelector from "../components/auth/signup/VibeSelector"
+
+import ConversationFeed from "../components/auth/signup/ConversationFeed"
+
+import LiveTicker from "../components/auth/common/LiveTicker"
+
+import ConversationCloud
+from "../components/auth/atmosphere/ConversationCloud"
+import toast from "react-hot-toast"
 
 function Signup() {
 
@@ -13,48 +32,72 @@ function Signup() {
   const [confirmPassword, setConfirmPassword] = useState("")
   const [agree, setAgree] = useState(false)
 
+  const [step, setStep] = useState(1)
 
-  async function handleSubmit(e: React.FormEvent) {
+  const [interests, setInterests] = useState<string[]>([])
+  const [vibes, setVibes] = useState<string[]>([])
+
+  const [loading, setLoading] = useState(false)
+
+  async function handleSubmit(
+    e: React.FormEvent
+  ) {
 
     e.preventDefault()
 
+    if (loading) return
+
+    if (step < 3) {
+      setStep(step + 1)
+      return
+    }
+
+    setLoading(true)
 
     if (password !== confirmPassword) {
-
-      alert("Passwords do not match")
+      setLoading(false)
+      toast.error("Passwords do not match")
       return
-
     }
-
 
     if (!agree) {
-
-      alert("Please accept Terms & Privacy Policy")
+      setLoading(false)
+      toast.error("Please accept Terms & Privacy Policy")
       return
-
     }
 
+    if (interests.length === 0) {
+      setLoading(false)
+      toast.error("Please select some interests")
+      return
+    }
 
     try {
 
-      const response = await axios.post(
-        "https://lcmt-backend.onrender.com/api/auth/signup",
+      const response = await api.post(
+"/auth/signup",
         {
           name,
           email,
           password,
+          interests,
+          values: vibes
         }
       )
 
+      toast.error(response.data.message)
 
-      alert(response.data.message)
+      setLoading(false)
 
       navigate("/onboarding")
 
+    }
 
-    } catch (error: any) {
+    catch (error: any) {
 
-      alert(
+      setLoading(false)
+
+      toast.error(
         error.response?.data?.message ||
         "Something went wrong"
       )
@@ -63,307 +106,257 @@ function Signup() {
 
   }
 
-
-
   return (
 
     <main className="signup-page">
 
-
-      {/* Background decoration */}
-
-      <div className="bg-shape shape-one"></div>
-
-      <div className="bg-shape shape-two"></div>
-
-      <div className="bg-shape shape-three"></div>
-
-
-
-      {/* Floating connection bubbles */}
-
-      <div className="profile-bubble bubble-one">
-        👩‍🎓
-      </div>
-
-
-      <div className="profile-bubble bubble-two">
-        👨‍💻
-      </div>
-
-
-      <div className="profile-bubble bubble-three">
-        💖
-      </div>
-
-
-      <div className="profile-bubble bubble-four">
-        🎓
-      </div>
-
-
-
-
-
       <section className="signup-wrapper">
 
+        <LiveTicker />
 
+        <ConversationCloud />
 
-        {/* Left side branding */}
-
+        <ConversationFeed />
 
         <div className="welcome-section">
 
-
           <h1>
 
-            Find connections
-
             <span>
-              that truly matter.
+
+              LCMT is where
+
             </span>
+
+            people come to talk.
 
           </h1>
 
-
-
           <p>
 
-            LCMT is built around thoughts,
-            personalities and meaningful bonds.
+            Not just another feed.
+
+            Join conversations, communities and
+            people around things you actually care about.
 
           </p>
 
-
-
-
-
           <div className="feature-list">
 
-
             <div>
-              💭 Match through ideas
+              🏏 Join today's biggest conversations
             </div>
 
-
             <div>
-              🎓 Connect with students
+              😂 Discover what people are laughing about
             </div>
 
-
             <div>
-              ❤️ Build real relationships
+              🎬 Share opinions that matter
             </div>
 
+            <div>
+              🌎 Find communities that match your interests
+            </div>
 
           </div>
 
-
-
         </div>
-
-
-
-
-
-
-
-        {/* Signup Card */}
-
 
         <section className="signup-card">
 
-
-
           <div className="brand">
-
 
             <h2>
               LCMT
             </h2>
 
-
             <p>
               Love Creates Magic Together
             </p>
 
-
           </div>
 
-
-
-
-
           <h3>
-            Create Your Account 💖
+
+            {
+              step === 1 &&
+              "Create Your Account ✨"
+            }
+
+            {
+              step === 2 &&
+              "Choose Your Interests 🌎"
+            }
+
+            {
+              step === 3 &&
+              "Choose Your Vibe 🔥"
+            }
+
           </h3>
-
-
-
 
           <p className="subtitle">
 
-            Start your journey toward meaningful connections.
+            {
+              step === 1 &&
+              "Start your journey with LCMT."
+            }
+
+            {
+              step === 2 &&
+              "Select communities you want to explore."
+            }
+
+            {
+              step === 3 &&
+              "Tell people how you like to participate."
+            }
 
           </p>
 
+          <div className="signup-progress">
 
+            <span className={step >= 1 ? "active" : ""}>
+              1
+            </span>
 
+            <span className={step >= 2 ? "active" : ""}>
+              2
+            </span>
 
+            <span className={step >= 3 ? "active" : ""}>
+              3
+            </span>
 
+          </div>
 
           <form onSubmit={handleSubmit}>
 
-
-
-            <label>
-              Full Name
-            </label>
-
-
-            <input
-
-              type="text"
-
-              placeholder="Enter your name"
-
-              value={name}
-
-              onChange={(e)=>setName(e.target.value)}
-
-              required
-
-            />
-
-
-
-
-
-            <label>
-              Email
-            </label>
-
-
-            <input
-
-              type="email"
-
-              placeholder="Enter your email"
-
-              value={email}
-
-              onChange={(e)=>setEmail(e.target.value)}
-
-              required
-
-            />
-
-
-
-
-
-
-
-            <label>
-              Password
-            </label>
-
-
-            <input
-
-              type="password"
-
-              placeholder="Create a password"
-
-              value={password}
-
-              onChange={(e)=>setPassword(e.target.value)}
-
-              required
-
-            />
-
-
-
-
-
-
-
-            <label>
-              Confirm Password
-            </label>
-
-
-            <input
-
-              type="password"
-
-              placeholder="Confirm your password"
-
-              value={confirmPassword}
-
-              onChange={(e)=>setConfirmPassword(e.target.value)}
-
-              required
-
-            />
-
-
-
-
-
-
-
-            <label className="checkbox">
-
-
-              <input
-
-                type="checkbox"
-
-                checked={agree}
-
-                onChange={(e)=>setAgree(e.target.checked)}
-
+            {
+
+              step === 1 &&
+
+              <>
+
+                <label>
+                  Full Name
+                </label>
+
+                <input
+                  type="text"
+                  placeholder="Enter your name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                />
+
+                <label>
+                  Email
+                </label>
+
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+
+                <label>
+                  Password
+                </label>
+
+                <input
+                  type="password"
+                  placeholder="Create a password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+
+                <label>
+                  Confirm Password
+                </label>
+
+                <input
+                  type="password"
+                  placeholder="Confirm password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                />
+
+              </>
+
+            }
+
+            {
+
+              step === 2 &&
+
+              <InterestSelector
+                selected={interests}
+                setSelected={setInterests}
               />
 
+            }
 
-              <span>
-                I agree to Terms & Privacy Policy
-              </span>
+            {
 
+              step === 3 &&
 
-            </label>
+              <VibeSelector
+                selected={vibes}
+                setSelected={setVibes}
+              />
 
+            }
 
+            {
 
+              step === 3 &&
 
+              <label className="checkbox">
 
+                <input
+                  type="checkbox"
+                  checked={agree}
+                  onChange={(e) =>
+                    setAgree(e.target.checked)
+                  }
+                />
 
+                <span>
 
-            <button type="submit">
+                  I agree to Terms & Privacy Policy
 
-              Join LCMT ✨
+                </span>
+
+              </label>
+
+            }
+
+            <button
+              type="submit"
+              disabled={loading}
+            >
+
+              {
+                loading
+                  ? "Creating account..."
+                  : step === 3
+                    ? "Join LCMT ✨"
+                    : "Continue →"
+              }
 
             </button>
 
-
-
-
-
           </form>
-
-
-
-
-
-
 
           <p className="signup-link">
 
-
             Already have an account?
-
 
             <Link to="/login">
 
@@ -371,28 +364,36 @@ function Signup() {
 
             </Link>
 
-
           </p>
-
-
-
-
 
         </section>
 
+        <div className="live-topics">
 
+          <span>
+            🏏 Match discussions
+          </span>
 
+          <span>
+            🎬 Movie theories
+          </span>
+
+          <span>
+            😂 Viral memes
+          </span>
+
+          <span>
+            🌎 Community stories
+          </span>
+
+        </div>
 
       </section>
-
-
-
 
     </main>
 
   )
 
 }
-
 
 export default Signup

@@ -11,7 +11,12 @@ import {
   getMyProfile
 } from "../api/profile"
 
+import {
+  joinCommunity
+} from "../services/networkService"
+
 import "./Circle.css"
+
 
 
 
@@ -76,9 +81,30 @@ interface FriendRequest {
 
 
 
+interface Community {
+
+  _id:string
+
+  name:string
+
+  description:string
+
+  category:string
+
+  icon:string
+
+  members:string[]
+
+}
+
+
+
+
+
 
 
 function Circle(){
+
 
 
 const [people,setPeople] =
@@ -88,6 +114,11 @@ useState<Person[]>([])
 
 const [requests,setRequests] =
 useState<FriendRequest[]>([])
+
+
+
+const [communities,setCommunities] =
+useState<Community[]>([])
 
 
 
@@ -112,9 +143,11 @@ useState(true)
 
 
 
+
 async function loadUsers(){
 
 try{
+
 
 const response =
 await api.get(
@@ -136,6 +169,38 @@ console.log(error)
 
 }
 
+
+
+
+
+
+
+async function loadCommunities(){
+
+try{
+
+
+const response =
+await api.get(
+"/communities"
+)
+
+
+
+setCommunities(
+response.data
+)
+
+
+
+}
+catch(error){
+
+console.log(error)
+
+}
+
+}
 
 
 
@@ -199,24 +264,34 @@ setLoading(false)
 
 
 
+
 async function acceptRequest(
 id:string
 ){
 
 try{
 
+
 await api.post(
 `/social/friend-request/accept/${id}`
 )
 
 
+
 setRequests(
+
 prev =>
+
 prev.filter(
+
 item =>
+
 item._id !== id
+
 )
+
 )
+
 
 
 }
@@ -227,6 +302,7 @@ console.log(error)
 }
 
 }
+
 
 
 
@@ -241,18 +317,27 @@ id:string
 
 try{
 
+
 await api.post(
 `/social/friend-request/reject/${id}`
 )
 
 
+
 setRequests(
+
 prev =>
+
 prev.filter(
+
 item =>
+
 item._id !== id
+
 )
+
 )
+
 
 
 }
@@ -270,12 +355,49 @@ console.log(error)
 
 
 
+
+async function handleJoin(
+id:string
+){
+
+try{
+
+
+await joinCommunity(
+id
+)
+
+
+
+loadCommunities()
+
+
+
+}
+catch(error){
+
+console.log(error)
+
+}
+
+}
+
+
+
+
+
+
+
+
+
 useEffect(()=>{
 
 
 loadUsers()
 
 loadProfile()
+
+loadCommunities()
 
 
 },[])
@@ -294,6 +416,9 @@ return (
 
 
 
+
+
+
 <header className="circle-header">
 
 
@@ -304,11 +429,13 @@ return (
 </h1>
 
 
+
 <p>
 
 Connect with people, communities and conversations that matter.
 
 </p>
+
 
 
 
@@ -341,6 +468,7 @@ className="circle-search"
 </h2>
 
 
+
 <p className="section-subtitle">
 
 People from your growing LCMT community
@@ -365,6 +493,7 @@ Loading community...
 
 <div className="people-grid">
 
+
 {
 
 people.map(
@@ -386,6 +515,7 @@ person
 )
 
 }
+
 
 
 </div>
@@ -415,58 +545,82 @@ person
 
 
 
+
 <div className="feature-card">
 
 
 <div className="connection-stats">
 
 
+
 <div>
 
 <strong>
+
 {network.followers}
+
 </strong>
 
+
 <span>
+
 Followers
+
 </span>
 
+
 </div>
+
 
 
 
 <div>
 
 <strong>
+
 {network.following}
+
 </strong>
 
+
 <span>
+
 Following
+
 </span>
 
+
 </div>
+
+
 
 
 
 <div>
 
 <strong>
+
 {network.friends}
+
 </strong>
 
+
 <span>
-Friends
+
+Connections
+
 </span>
 
-</div>
-
-
 
 </div>
 
 
+
 </div>
+
+
+</div>
+
 
 
 </section>
@@ -491,17 +645,24 @@ Friends
 
 
 
+
 {
 
 requests.length === 0 ?
 
+
 <div className="feature-card">
 
+
 <p>
-No friend requests yet.
+
+No connection requests yet.
+
 </p>
 
+
 </div>
+
 
 
 :
@@ -511,25 +672,37 @@ requests.map(
 
 request =>
 
+
 <div
+
 key={request._id}
+
 className="feature-card"
+
 >
 
 
 <div>
 
+
 <h3>
+
 {request.name}
+
 </h3>
 
 
+
 <p>
+
 {request.course || "LCMT Member"}
+
 </p>
 
 
 </div>
+
+
 
 
 
@@ -564,7 +737,9 @@ Ignore
 </div>
 
 
+
 </div>
+
 
 )
 
@@ -587,32 +762,108 @@ Ignore
 
 <h2>
 
-🌍 Communities You Follow
+🌎 Community Invitations
 
 </h2>
 
 
 
-<div className="feature-card">
+<p className="section-subtitle">
+
+Communities matching your interests
+
+</p>
+
+
+
+
+
+<div className="people-grid">
+
+
+{
+
+communities.map(
+
+community =>
+
+
+<div
+
+key={community._id}
+
+className="feature-card"
+
+>
+
+
+<h3>
+
+{community.icon}
+
+{" "}
+
+{community.name}
+
+</h3>
+
 
 
 <p>
 
-🤖 AI Builders
-&nbsp; • &nbsp;
-🏛 Political Discussions
-&nbsp; • &nbsp;
-🚀 Startup Ideas
-&nbsp; • &nbsp;
-🏏 Sports Hub
+{community.description}
 
 </p>
+
+
+
+
+<p>
+
+🔥 {community.category}
+
+</p>
+
+
+
+
+<p>
+
+👥 {community.members.length} members
+
+</p>
+
+
+
+
+<button
+
+onClick={()=>handleJoin(community._id)}
+
+>
+
+Join Community
+
+</button>
+
+
 
 
 </div>
 
 
+)
+
+}
+
+
+
+</div>
+
+
+
 </section>
+
 
 
 

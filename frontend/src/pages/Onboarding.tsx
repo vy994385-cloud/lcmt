@@ -2,34 +2,36 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import api from "../api/axios"
 import "./Onboarding.css"
-
+import toast from "react-hot-toast"
 
 function Onboarding() {
 
   const navigate = useNavigate()
 
+  const [loading, setLoading] = useState(false)
 
   const [form, setForm] = useState({
 
-  age: "",
-  gender: "",
-  college: "",
-  course: "",
-  year: "",
-  bio: "",
-  interests: "",
-  lookingFor: "",
-  values: "",
-  personality: "",
+    age: "",
+    gender: "",
+    college: "",
+    course: "",
+    year: "",
+    bio: "",
+    interests: "",
+    lookingFor: "",
+    values: "",
+    personality: "",
+    answers: ""
 
-  answers: ""
-
-})
-
-
+  })
 
   function handleChange(
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement |
+      HTMLTextAreaElement |
+      HTMLSelectElement
+    >
   ) {
 
     setForm({
@@ -42,149 +44,139 @@ function Onboarding() {
 
   }
 
-
-
-
-
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(
+    e: React.FormEvent
+  ) {
 
     e.preventDefault()
 
+    if (loading) return
+
+    if (
+      !form.age ||
+      !form.gender ||
+      !form.college ||
+      !form.course ||
+      !form.year
+    ) {
+
+      toast.error(
+        "Please complete the required profile information."
+      )
+
+      return
+
+    }
+
+    setLoading(true)
 
     try {
 
+      const response = await api.put(
+        "/profile",
+        {
 
-      const response = await api.put("/profile", {
+          age: Number(form.age),
 
+          gender: form.gender,
 
-  age:Number(form.age),
+          college: form.college,
 
-  gender:form.gender,
+          course: form.course,
 
-  college:form.college,
+          year: Number(form.year),
 
-  course:form.course,
+          bio: form.bio,
 
-  year:Number(form.year),
+          interests: form.interests
+            .split(",")
+            .map(item => item.trim())
+            .filter(Boolean),
 
-  bio:form.bio,
+          lookingFor: form.lookingFor,
 
-  interests:
-    form.interests
-    .split(",")
-    .map(item=>item.trim())
-    .filter(Boolean),
+          values: form.values
+            .split(",")
+            .map(item => item.trim())
+            .filter(Boolean),
 
+          personality: form.personality,
 
-  lookingFor:form.lookingFor,
+          answers: {
+            respect: form.answers
+          }
 
+        }
+      )
 
-  values:
-    form.values
-    .split(",")
-    .map(item=>item.trim())
-    .filter(Boolean),
+      localStorage.setItem(
+        "user",
+        JSON.stringify(response.data.user)
+      )
 
-
-  personality: form.personality,
-
-answers: {
-  respect: form.answers
-},
-
-
-})
-localStorage.setItem(
-  "user",
-  JSON.stringify(response.data.user)
-)
-
-
+      toast.success(
+        "Profile completed successfully 🎉"
+      )
 
       navigate("/home")
 
+    }
 
-    } catch(error) {
-
+    catch (error) {
 
       console.log(
         "Profile update failed",
         error
       )
 
-
-      alert(
+      toast.error(
         "Could not save profile"
       )
 
+    }
+
+    finally {
+
+      setLoading(false)
 
     }
 
-
   }
-
-
-
-
 
   return (
 
-
     <main className="onboarding-page">
-
-
 
       <div className="onboarding-card">
 
-
-
         <div className="onboarding-brand">
-
 
           <h1>
             LCMT ❤️
           </h1>
 
-
           <p>
             Love Creates Magic Together
           </p>
 
-
         </div>
 
-
-
-
-
         <div className="welcome-text">
-
 
           <h2>
             Build your identity ✨
           </h2>
-
 
           <p>
             LCMT is not just about profiles.
             It's about understanding people.
           </p>
 
-
         </div>
-
-
-
-
-
-
 
         <form onSubmit={handleSubmit}>
 
-
-
           <div className="input-grid">
-
 
             <input
               name="age"
@@ -193,16 +185,12 @@ localStorage.setItem(
               onChange={handleChange}
             />
 
-
-
             <input
               name="gender"
               placeholder="Gender"
               value={form.gender}
               onChange={handleChange}
             />
-
-
 
             <input
               name="college"
@@ -211,16 +199,12 @@ localStorage.setItem(
               onChange={handleChange}
             />
 
-
-
             <input
               name="course"
               placeholder="Course"
               value={form.course}
               onChange={handleChange}
             />
-
-
 
             <input
               name="year"
@@ -229,139 +213,71 @@ localStorage.setItem(
               onChange={handleChange}
             />
 
-
           </div>
 
-
-
-
-
           <textarea
-
             name="bio"
-
             placeholder="Tell something about yourself..."
-
             value={form.bio}
-
             onChange={handleChange}
-
           />
 
-
-
-
-
-
           <input
-
             name="interests"
-
             placeholder="Interests (Coding, Music, Cricket)"
-
             value={form.interests}
-
             onChange={handleChange}
-
           />
 
-
-
-
-
-
-
           <input
-
             name="lookingFor"
-
             placeholder="What kind of connection are you looking for?"
-
             value={form.lookingFor}
-
             onChange={handleChange}
-
           />
-
-
-
-
-
-
 
           <input
-
             name="values"
-
             placeholder="Your values (Honesty, Growth)"
-
             value={form.values}
-
             onChange={handleChange}
-
           />
 
-
-
-
-
-
-
-
           <textarea
-
             name="personality"
-
             placeholder="Describe your personality..."
-
             value={form.personality}
-
             onChange={handleChange}
-
           />
 
           <textarea
+            name="answers"
+            placeholder="What quality instantly makes you respect someone?"
+            value={form.answers}
+            onChange={handleChange}
+          />
 
-name="answers"
+          <button
+            type="submit"
+            disabled={loading}
+          >
 
-placeholder="What quality instantly makes you respect someone?"
-
-value={form.answers}
-
-onChange={handleChange}
-
-/>
-
-
-
-
-
-
-
-
-          <button type="submit">
-
-            Complete Profile ❤️
+            {
+              loading
+                ? "Saving..."
+                : "Complete Profile ❤️"
+            }
 
           </button>
 
-
-
         </form>
-
-
-
 
       </div>
 
-
-
     </main>
-
 
   )
 
 }
-
 
 export default Onboarding

@@ -1,33 +1,49 @@
-import Navbar from "./Navbar"
+import React from "react"
+
 import "./Layout.css"
 
 
-type LayoutProps = {
-  children: React.ReactNode
+interface LayoutProps{
+
+children:React.ReactNode
+
 }
 
 
-function Layout({ children }: LayoutProps) {
+function Layout({
+
+children
+
+}:LayoutProps){
 
 
-  return (
+return(
 
-    <div className="app-layout">
-
-
-      <Navbar />
+<div className="app-shell">
 
 
-      <main className="page-content">
+{/* Ambient lights */}
 
-        {children}
+<div className="ambient ambient-one"></div>
 
-      </main>
+<div className="ambient ambient-two"></div>
+
+<div className="ambient ambient-three"></div>
 
 
-    </div>
 
-  )
+<div className="page-container">
+
+{children}
+
+</div>
+
+
+
+</div>
+
+)
+
 
 }
 

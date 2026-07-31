@@ -1,93 +1,202 @@
-interface MessageBubbleProps {
-  message: any
-  currentUserId: string
-}
+import "./MessageBubble.css"
 
-function MessageBubble({
-  message,
-  currentUserId,
-}: MessageBubbleProps) {
+import { useState } from "react"
 
-  const senderId =
-    typeof message.sender === "object"
-      ? message.sender._id
-      : message.sender
+import MessageActions from "./MessageActions"
 
-  const mine = senderId === currentUserId
+import ReactionBar,{
+type MessageReaction
+} from "./reactions/ReactionBar"
 
-  return (
+import MessageMedia from "./message/MessageMedia"
 
-    <div
-      style={{
-        display: "flex",
-        justifyContent: mine ? "flex-end" : "flex-start",
-        marginBottom: "12px",
-      }}
-    >
+import MessageContent from "./message/MessageContent"
 
-      <div
-        style={{
-          maxWidth: "70%",
-          padding: "12px 16px",
-          borderRadius: mine
-            ? "20px 20px 6px 20px"
-            : "20px 20px 20px 6px",
-          background: mine
-            ? "#ff4d88"
-            : "#ffffff",
-          color: mine
-            ? "#ffffff"
-            : "#222",
-          boxShadow:
-            "0 2px 8px rgba(0,0,0,0.08)",
-          wordBreak: "break-word",
-        }}
-      >
+import MessageReply from "./message/MessageReply"
 
-        <div
-          style={{
-            fontSize: "15px",
-            lineHeight: "1.5",
-          }}
-        >
-          {message.text}
-        </div>
+import MessageStatus from "./message/MessageStatus"
 
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            alignItems: "center",
-            gap: "5px",
-            marginTop: "6px",
-            fontSize: "11px",
-            opacity: 0.75,
-          }}
-        >
+type Message={
 
-          <span>
-            {new Date(
-              message.createdAt
-            ).toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            })}
-          </span>
+_id:string
 
-          {mine && (
-            <span>
-              ✓
-            </span>
-          )}
+text?:string
 
-        </div>
+type?:string
 
-      </div>
+image?:string
 
-    </div>
+video?:string
 
-  )
+audio?:string
+
+file?:string
+
+fileName?:string
+
+createdAt:string
+
+edited?:boolean
+
+deleted?:boolean
+
+delivered?:boolean
+
+read?:boolean
+
+replyTo?:{
+
+sender?:string
+
+text?:string
 
 }
 
-export default MessageBubble
+reactions?:MessageReaction[]
+
+}
+
+interface Props{
+
+message:Message
+
+mine:boolean
+
+onReaction?:(emoji:string)=>void
+
+onOpenMenu?:()=>void
+
+}
+
+export default function MessageBubble({
+
+message,
+
+mine,
+
+onReaction,
+
+onOpenMenu
+
+}:Props){
+
+const[showMenu,setShowMenu]=
+useState(false)
+
+return(
+
+<div
+className={
+mine
+?
+"message mine"
+:
+"message"
+}
+>
+
+<div
+
+className="bubble"
+
+onContextMenu={(e)=>{
+
+e.preventDefault()
+
+setShowMenu(true)
+
+onOpenMenu?.()
+
+}}
+
+>
+
+<MessageReply
+reply={message.replyTo}
+/>
+
+<MessageMedia
+message={message}
+/>
+
+<MessageContent
+
+text={message.text}
+
+deleted={message.deleted}
+
+/>
+
+<ReactionBar
+
+reactions={
+message.reactions||[]
+}
+
+onReact={onReaction}
+
+/>
+
+{
+
+showMenu&&
+
+<MessageActions
+
+mine={mine}
+
+onReply={()=>{
+setShowMenu(false)
+}}
+
+onCopy={()=>{
+
+navigator.clipboard.writeText(
+message.text||""
+)
+
+setShowMenu(false)
+
+}}
+
+onStar={()=>{
+setShowMenu(false)
+}}
+
+onEdit={()=>{
+setShowMenu(false)
+}}
+
+onDeleteMe={()=>{
+setShowMenu(false)
+}}
+
+onDeleteEveryone={()=>{
+setShowMenu(false)
+}}
+
+/>
+
+}
+
+</div>
+
+<MessageStatus
+
+mine={mine}
+
+createdAt={message.createdAt}
+
+edited={message.edited}
+
+delivered={message.delivered}
+
+read={message.read}
+
+/>
+
+</div>
+
+)
+
+}

@@ -1,0 +1,95 @@
+.share-overlay{
+
+position:fixed;
+
+inset:0;
+
+background:rgba(0,0,0,.45);
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+z-index:9999;
+
+}
+
+.share-modal{
+
+width:320px;
+
+background:#fff;
+
+border-radius:18px;
+
+padding:22px;
+
+display:flex;
+
+flex-direction:column;
+
+gap:12px;
+
+box-shadow:0 20px 50px rgba(0,0,0,.18);
+
+}
+
+.share-modal h3{
+
+margin:0 0 8px;
+
+font-size:20px;
+
+text-align:center;
+
+}
+
+.share-modal button{
+
+display:flex;
+
+align-items:center;
+
+gap:10px;
+
+padding:12px 14px;
+
+border:none;
+
+border-radius:12px;
+
+background:#f8fafc;
+
+cursor:pointer;
+
+font-size:15px;
+
+transition:.2s;
+
+}
+
+.share-modal button:hover{
+
+background:#e2e8f0;
+
+}
+
+.close-share{
+
+margin-top:8px;
+
+background:#2563eb !important;
+
+color:#fff;
+
+justify-content:center;
+
+}
+
+.close-share:hover{
+
+background:#1d4ed8 !important;
+
+}

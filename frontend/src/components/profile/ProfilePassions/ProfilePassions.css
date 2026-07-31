@@ -1,0 +1,55 @@
+.profile-passions{
+
+background:white;
+
+padding:28px;
+
+border-radius:22px;
+
+box-shadow:
+0 8px 25px rgba(0,0,0,.06);
+
+}
+
+
+
+.profile-passions h2{
+
+margin-bottom:20px;
+
+}
+
+
+
+.passion-list{
+
+display:flex;
+
+flex-wrap:wrap;
+
+gap:12px;
+
+}
+
+
+
+.passion-list span{
+
+padding:10px 18px;
+
+border-radius:25px;
+
+background:
+linear-gradient(
+135deg,
+#fff1f7,
+#f3e8ff
+);
+
+font-weight:600;
+
+font-size:14px;
+
+color:#555;
+
+}

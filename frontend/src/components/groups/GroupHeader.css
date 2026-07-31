@@ -1,0 +1,44 @@
+.group-header{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+padding:20px;
+
+background:white;
+
+border-radius:18px;
+
+margin-bottom:20px;
+
+}
+
+
+.group-header h1{
+
+margin:0;
+
+}
+
+
+.group-header p{
+
+color:#777;
+
+}
+
+
+.group-status{
+
+background:#eefaf1;
+
+padding:10px 16px;
+
+border-radius:20px;
+
+font-size:14px;
+
+}

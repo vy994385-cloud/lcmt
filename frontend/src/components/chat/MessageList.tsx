@@ -32,10 +32,13 @@ function MessageList({
       {messages.map((message) => (
 
         <MessageBubble
-          key={message._id}
-          message={message}
-          currentUserId={currentUserId}
-        />
+  key={message._id}
+  message={message}
+  mine={
+    message.sender?._id === currentUserId ||
+    message.sender === currentUserId
+  }
+/>
 
       ))}
 

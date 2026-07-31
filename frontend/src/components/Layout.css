@@ -1,16 +1,85 @@
-.app-layout {
+.app-shell{
+
+min-height:100vh;
+
+position:relative;
+
+overflow:hidden;
 
 
-  min-height:100vh;
+background:
+
+radial-gradient(
+circle at 15% 20%,
+rgba(139,92,246,.25),
+transparent 30%
+),
+
+radial-gradient(
+circle at 80% 10%,
+rgba(37,99,235,.22),
+transparent 35%
+),
+
+var(--background);
 
 
-  background:
+}
 
-  linear-gradient(
-    135deg,
-    #fff5fa,
-    #f5f3ff
-  );
+
+
+.page-container{
+
+position:relative;
+
+z-index:2;
+
+min-height:100vh;
+
+padding:20px;
+
+
+}
+
+
+
+/* floating atmosphere */
+
+
+.ambient{
+
+position:fixed;
+
+border-radius:50%;
+
+filter:blur(90px);
+
+opacity:.35;
+
+pointer-events:none;
+
+z-index:0;
+
+animation:
+
+float 12s infinite alternate ease-in-out;
+
+
+}
+
+
+
+.ambient-one{
+
+width:350px;
+
+height:350px;
+
+background:#8B5CF6;
+
+top:-120px;
+
+left:-120px;
 
 
 }
@@ -18,16 +87,41 @@
 
 
 
-.page-content {
+.ambient-two{
+
+width:300px;
+
+height:300px;
+
+background:#2563EB;
+
+right:-100px;
+
+top:35%;
 
 
-  min-height:100vh;
+animation-delay:3s;
 
 
-  padding-top:120px;
+}
 
 
-  width:100%;
+
+
+.ambient-three{
+
+width:260px;
+
+height:260px;
+
+background:#FF4D8D;
+
+bottom:-100px;
+
+left:40%;
+
+
+animation-delay:5s;
 
 
 }
@@ -35,20 +129,27 @@
 
 
 
-@media(max-width:700px){
+@keyframes float{
 
 
-.page-content {
+from{
 
+transform:
 
-  padding-top:20px;
-
-
-  padding-bottom:100px;
-
+translateY(0);
 
 }
 
+
+to{
+
+
+transform:
+
+translateY(60px);
+
+
+}
 
 
 }

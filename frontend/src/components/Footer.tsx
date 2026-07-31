@@ -7,121 +7,94 @@ function Footer() {
 
     <footer className="footer">
 
-
       <div className="footer-content">
-
-
 
         <div className="footer-brand">
 
+          <Link
+            to="/"
+            className="footer-logo"
+          >
 
-          <h2>
-            ❤️ LCMT
-          </h2>
+            <div className="vy-logo">
+              VY
+            </div>
 
+            <div className="brand-text">
 
-          <p>
-            Love Creates Magic Together
-          </p>
+              <h2>
+                LCMT
+              </h2>
 
+              <p>
+                Love Creates Magic Together
+              </p>
+
+            </div>
+
+          </Link>
 
           <span>
-            Meaningful connections built around thoughts,
-            personalities, and real conversations.
+            Explore ideas. Connect with people.
+            Build communities. Grow together.
           </span>
-
 
         </div>
 
-
-
-
-
         <div className="footer-links">
-
 
           <h3>
             Explore
           </h3>
 
-
           <Link to="/signup">
             Join LCMT
           </Link>
-
 
           <Link to="/login">
             Login
           </Link>
 
-
-          <Link to="/discover">
-            Discover
+          <Link to="/explore">
+            Explore
           </Link>
-
 
         </div>
 
-
-
-
-
         <div className="footer-community">
-
 
           <h3>
             Community
           </h3>
 
-
           <p>
-            ❤️ Real Connections
+            💡 Ideas & Innovation
           </p>
 
-
           <p>
-            🎓 Student Network
+            🤝 People & Communities
           </p>
 
-
           <p>
-            ✨ Meaningful Bonds
+            🚀 Learn • Build • Grow
           </p>
-
 
         </div>
 
-
-
       </div>
-
-
-
-
 
       <div className="footer-bottom">
 
-
         <p>
-          Created with love
+          Crafted with ❤️ by VY
         </p>
 
-
-        <h3>
-          — Vishu
-        </h3>
-
-
-
       </div>
-
-
 
     </footer>
 
   )
 
 }
-
 
 export default Footer

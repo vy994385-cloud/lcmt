@@ -1,0 +1,88 @@
+.community-resources{
+
+background:#fff;
+
+padding:28px;
+
+border-radius:20px;
+
+box-shadow:0 8px 20px rgba(0,0,0,.06);
+
+}
+
+.community-resources h2{
+
+margin-bottom:24px;
+
+}
+
+.resource-grid{
+
+display:grid;
+
+grid-template-columns:
+repeat(auto-fit,minmax(220px,1fr));
+
+gap:20px;
+
+}
+
+.resource-card{
+
+padding:20px;
+
+border:1px solid #ececec;
+
+border-radius:18px;
+
+transition:.25s;
+
+text-align:center;
+
+}
+
+.resource-card:hover{
+
+transform:translateY(-4px);
+
+box-shadow:0 8px 18px rgba(0,0,0,.08);
+
+}
+
+.resource-icon{
+
+font-size:2rem;
+
+margin-bottom:14px;
+
+}
+
+.resource-card h3{
+
+margin:0 0 10px;
+
+}
+
+.resource-card p{
+
+color:#666;
+
+margin-bottom:18px;
+
+}
+
+.resource-card button{
+
+background:#355dff;
+
+color:#fff;
+
+border:none;
+
+padding:10px 18px;
+
+border-radius:10px;
+
+cursor:pointer;
+
+}

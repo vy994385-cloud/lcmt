@@ -1,705 +1,276 @@
-import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
-import axios from "axios"
+import {
+  useMemo,
+  useState,
+  useEffect
+} from "react"
+
+import {
+  useParams
+} from "react-router-dom"
+
+import toast from "react-hot-toast"
 
 import Layout from "../components/Layout"
+
+import api from "../api/axios"
+
+import CommunityBanner from "../components/community/CommunityBanner/CommunityBanner"
+import CommunityTabs from "../components/community/CommunityTabs/CommunityTabs"
+import CommunityFeed from "../components/community/CommunityFeed"
+import CommunityDiscussions from "../components/community/CommunityDiscussions/CommunityDiscussions"
+import CommunityAnnouncements from "../components/community/CommunityAnnouncements/CommunityAnnouncements"
+import CommunityEvents from "../components/community/CommunityEvents/CommunityEvents"
+import CommunityResources from "../components/community/CommunityResources/CommunityResources"
+import CommunityMembers from "../components/community/CommunityMembers/CommunityMembers"
+import CommunityAbout from "../components/community/CommunityAbout/CommunityAbout"
+
 import "./CommunityDetails.css"
-import ThreeDotMenu from "../components/ThreeDotMenu"
-import {
-  Image,
-  Video,
-  Mic,
-  BarChart3,
-  Send
-} from "lucide-react"
 
-function CommunityDetails() {
 
-  const { id } = useParams()
+type Tab =
+| "Feed"
+| "Discussions"
+| "Announcements"
+| "Events"
+| "Resources"
+| "Members"
+| "About"
 
 
-  const [posts, setPosts] =
-    useState<any[]>([])
 
+export default function CommunityDetails(){
 
-  const [content, setContent] =
-    useState("")
 
+const {
+id
+}=useParams()
 
-  const [commentText, setCommentText] =
-    useState<Record<string,string>>({})
 
 
-  const [loading, setLoading] =
-    useState(false)
+const [community,setCommunity]=
+useState<any>(null)
 
+const [communityPosts,setCommunityPosts]=
+useState<any[]>([])
 
-  const [fetching, setFetching] =
-    useState(true)
+const [activeTab,setActiveTab]=
+useState<Tab>("Feed")
 
 
-  const user =
-    JSON.parse(
-      localStorage.getItem("user") || "{}"
-    )
 
+async function loadCommunity(){
 
+try{
 
-  async function fetchPosts(){
+const res =
+await api.get(
+`/communities/${id}`
+)
 
-    try{
+setCommunity(
+res.data
+)
 
-      setFetching(true)
+}
 
+catch{
 
-      const response =
-        await axios.get(
+toast.error(
+"Unable to load community"
+)
 
-          `https://lcmt-backend.onrender.com/api/communities/${id}/posts`
+}
 
-        )
+}
 
+async function loadPosts(){
 
-      setPosts(
+try{
 
-        Array.isArray(response.data)
+const res =
+await api.get(
+`/community-feed/${id}`
+)
 
-        ?
+setCommunityPosts(
+Array.isArray(res.data)
+?
+res.data
+:
+[]
+)
 
-        response.data
+}
 
-        :
+catch(error){
 
-        []
+console.log(
+"POST LOAD ERROR",
+error
+)
 
-      )
+}
 
+}
 
-    }
-    catch(error:any){
+useEffect(()=>{
 
-      console.log(
-        error.response?.data ||
-        error.message
-      )
+if(id){
 
+loadCommunity()
 
-      setPosts([])
+loadPosts()
 
-    }
-    finally{
+}
 
-      setFetching(false)
+},[id])
 
-    }
 
-  }
 
 
+const content =
+useMemo(()=>{
 
-  useEffect(()=>{
 
-    if(id){
+switch(activeTab){
 
-      fetchPosts()
 
-    }
+case "Feed":
 
-  },[id])
+return (
 
+<CommunityFeed
 
+posts={communityPosts}
 
+/>
 
+)
 
-  async function createPost(){
 
+case "Discussions":
+return <CommunityDiscussions />
 
-    if(!content.trim()){
 
-      return
+case "Announcements":
+return <CommunityAnnouncements />
 
-    }
 
+case "Events":
+return <CommunityEvents />
 
-    try{
 
+case "Resources":
+return <CommunityResources />
 
-      setLoading(true)
 
-
-      const response =
-        await axios.post(
-
-          `https://lcmt-backend.onrender.com/api/communities/${id}/posts`,
-
-          {
-            content,
-            userId:user._id
-          }
-
-        )
-
-
-      setPosts(prev=>[
-
-        response.data.post,
-
-        ...prev
-
-      ])
-
-
-      setContent("")
-
-
-    }
-    catch(error:any){
-
-      console.log(
-        error.response?.data ||
-        error.message
-      )
-
-
-      alert("Post failed")
-
-    }
-    finally{
-
-      setLoading(false)
-
-    }
-
-  }
-
-
-
-
-
-  async function toggleLike(
-    postId:string
-  ){
-
-    try{
-
-
-      const response =
-        await axios.post(
-
-          `https://lcmt-backend.onrender.com/api/communities/posts/${postId}/like`,
-
-          {
-            userId:user._id
-          }
-
-        )
-
-
-      setPosts(prev=>
-
-        prev.map(post=>
-
-          post._id === postId
-
-          ?
-
-          response.data.post
-
-          :
-
-          post
-
-        )
-
-      )
-
-
-    }
-    catch(error:any){
-
-      console.log(
-        error.response?.data ||
-        error.message
-      )
-
-    }
-
-  }
-
-
-
-
-
-  async function addComment(
-    postId:string
-  ){
-
-
-    const text =
-      commentText[postId]
-
-
-    if(!text?.trim()){
-
-      return
-
-    }
-
-
-
-    try{
-
-
-      const response =
-        await axios.post(
-
-          `https://lcmt-backend.onrender.com/api/communities/posts/${postId}/comment`,
-
-          {
-            userId:user._id,
-            text
-          }
-
-        )
-
-
-
-      setPosts(prev=>
-
-        prev.map(post=>
-
-          post._id === postId
-
-          ?
-
-          response.data.post
-
-          :
-
-          post
-
-        )
-
-      )
-
-
-
-      setCommentText(prev=>({
-
-        ...prev,
-
-        [postId]:""
-
-      }))
-
-
-
-    }
-    catch(error:any){
-
-      console.log(
-        error.response?.data ||
-        error.message
-      )
-
-    }
-
-
-  }
-
-
-
-
-
-  return (
-
-    <Layout>
-
-
-      <main className="community-feed">
-
-  <h1 className="feed-title">
-    Community Feed 🌍
-  </h1>
-
-  <section className="feed-header">
-
-    <div className="composer-top">
-
-      <img
-        src={
-          user.image ||
-          "https://picsum.photos/60"
-        }
-        alt="Profile"
-        className="composer-avatar"
-      />
-
-      <div className="composer-input">
-
-        <h3>
-          What's on your mind, {user.name || "Student"}?
-        </h3>
-
-        <textarea
-          placeholder="Share something with your community..."
-          value={content}
-          onChange={(e)=>
-            setContent(e.target.value)
-          }
-        />
-
-      </div>
-
-    </div>
-
-    <div className="composer-actions">
-
-      <div className="composer-icons">
-
-        <button type="button">
-          <Image size={18}/>
-          <span>Photo</span>
-        </button>
-
-        <button type="button">
-          <Video size={18}/>
-          <span>Video</span>
-        </button>
-
-        <button type="button">
-          <Mic size={18}/>
-          <span>Voice</span>
-        </button>
-
-        <button type="button">
-          <BarChart3 size={18}/>
-          <span>Poll</span>
-        </button>
-
-      </div>
-
-      <button
-        className="post-btn"
-        onClick={createPost}
-        disabled={loading}
-      >
-
-        <Send size={18}/>
-
-        {loading ? "Posting..." : "Post"}
-
-      </button>
-
-    </div>
-
-  </section>
-
-        <section className="posts">
-
-
-        {
-
-          fetching
-
-          ?
-
-          <p>
-            Loading posts...
-          </p>
-
-
-          :
-
-
-          posts.length === 0
-
-
-          ?
-
-          <p>
-            No posts yet. Start the conversation!
-          </p>
-
-
-          :
-
-
-          posts.map((post:any)=>(
-
-
-            <div
-
-              className="post-card"
-
-              key={post._id}
-
-            >
-
-
-
-              <div className="post-header">
-
-  <div className="post-user">
-
-    <img
-      src={
-        post?.user?.image ||
-        "https://picsum.photos/50"
-      }
-      alt="profile"
-    />
-
-    <strong>
-      {
-        post?.user?.name ||
-        "Student"
-      }
-    </strong>
-
-  </div>
-
-  <ThreeDotMenu
-    items={[
-      {
-        label: "💾 Save Post",
-        onClick: () => {
-          alert("Coming Soon")
-        }
-      },
-      {
-        label: "🔗 Copy Link",
-        onClick: () => {
-          navigator.clipboard.writeText(
-            `${window.location.origin}/communities/${id}`
-          )
-          alert("Link copied")
-        }
-      },
-      {
-        label: "📤 Share",
-        onClick: () => {
-          alert("Coming Soon")
-        }
-      },
-      {
-        label: "🚩 Report",
-        onClick: () => {
-          alert("Reported")
-        }
-      }
-    ]}
+case "Members":
+return (
+  <CommunityMembers
+    members={community.members || []}
   />
+)
 
-</div>
 
+case "About":
+return <CommunityAbout />
 
 
+default:
+return <CommunityFeed />
 
+}
 
-              <p>
+},[activeTab,communityPosts])
 
-                {
-                  post.content
-                }
 
-              </p>
 
 
+if(!community){
 
+return (
 
+<Layout>
 
+<main className="community-page">
 
-              <button
+<h2>
+Loading community...
+</h2>
 
-                onClick={()=>
+</main>
 
-                  toggleLike(
-                    post._id
-                  )
+</Layout>
 
-                }
-
-              >
-
-
-                {
-                  post.likes?.some(
-
-                    (like:any)=>
-
-                      like.toString() === user._id
-
-                  )
-
-                  ?
-
-                  "❤️"
-
-                  :
-
-                  "🤍"
-
-                }
-
-
-                {" "}
-
-
-                {
-                  post.likes?.length || 0
-                }
-
-
-              </button>
-
-
-
-
-
-
-
-              <div className="comments">
-
-
-                <input
-
-
-                  placeholder="Write a comment..."
-
-
-                  value={
-                    commentText[post._id] || ""
-                  }
-
-
-                  onChange={(e)=>
-
-                    setCommentText(prev=>({
-
-                      ...prev,
-
-                      [post._id]:
-                      e.target.value
-
-                    }))
-
-                  }
-
-
-                />
-
-
-
-                <button
-
-                  onClick={()=>
-
-                    addComment(
-                      post._id
-                    )
-
-                  }
-
-                >
-
-                  Comment 💬
-
-                </button>
-
-
-
-
-                {
-
-                  post.comments?.map(
-
-                    (comment:any)=>(
-
-
-                      <p
-
-                        key={
-                          comment._id
-                        }
-
-                      >
-
-                        <strong>
-
-                          {
-                            comment.user?.name ||
-                            "Student"
-                          }
-
-                        </strong>
-
-
-                        {" "}
-
-
-                        {
-                          comment.text
-                        }
-
-
-                      </p>
-
-
-                    )
-
-                  )
-
-                }
-
-
-              </div>
-
-
-
-
-
-
-
-              {
-
-                post.createdAt &&
-
-
-                <small>
-
-                  {
-                    new Date(
-                      post.createdAt
-                    ).toLocaleString()
-                  }
-
-                </small>
-
-              }
-
-
-
-
-            </div>
-
-
-          ))
-
-        }
-
-
-        </section>
-
-
-      </main>
-
-
-    </Layout>
-
-  )
+)
 
 }
 
 
-export default CommunityDetails
+
+
+return(
+
+<Layout>
+
+
+<main className="community-page">
+
+
+<CommunityBanner
+
+community={{
+
+name:community.name,
+
+description:community.description,
+
+image:community.icon,
+
+members:
+community.members?.length,
+
+tags:
+community.tags,
+
+visibility:
+community.isPublic
+?
+"Public"
+:
+"Private"
+
+}}
+
+/>
+
+
+
+<CommunityTabs
+
+active={activeTab}
+
+setActive={(tab)=>
+setActiveTab(tab as Tab)
+}
+
+/>
+
+
+
+<section className="community-content">
+
+{content}
+
+</section>
+
+
+</main>
+
+
+</Layout>
+
+)
+
+
+}

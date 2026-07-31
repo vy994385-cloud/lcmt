@@ -1,17 +1,211 @@
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
 }
 
+
+html,
+body,
+#root{
+
+min-height:100%;
+
+}
+
+
 body {
-  font-family: Arial, sans-serif;
-  color: #222;
-  background: linear-gradient(
-    135deg,
-    #fff1f5,
-    #f8e8ff,
-    #e8f7ff
-  );
-  min-height: 100vh;
+
+font-family:
+Inter,
+Arial,
+sans-serif;
+
+color:#111827;
+
+
+background:
+
+linear-gradient(
+135deg,
+#fff1f5,
+#f8e8ff,
+#e8f7ff
+);
+
+
+min-height:100vh;
+
+}
+
+
+/* ===========================
+   GLOBAL INPUT SYSTEM
+=========================== */
+
+
+input,
+textarea,
+select {
+
+
+width:100%;
+
+
+font-family:inherit;
+
+
+font-size:16px;
+
+
+color:#111827 !important;
+
+
+background:
+
+rgba(255,255,255,.85) !important;
+
+
+border:
+
+1px solid rgba(148,163,184,.35);
+
+
+border-radius:14px;
+
+
+padding:14px 16px;
+
+
+outline:none;
+
+
+transition:.25s;
+
+
+}
+
+
+
+input::placeholder,
+textarea::placeholder{
+
+
+color:#64748b !important;
+
+
+opacity:1;
+
+
+}
+
+
+
+input:focus,
+textarea:focus,
+select:focus{
+
+
+background:white !important;
+
+
+border-color:#8b5cf6;
+
+
+box-shadow:
+
+0 0 0 4px rgba(139,92,246,.15);
+
+
+}
+
+
+
+
+/* Chrome autofill fix */
+
+
+input:-webkit-autofill,
+textarea:-webkit-autofill{
+
+
+-webkit-text-fill-color:#111827 !important;
+
+
+-webkit-box-shadow:
+
+0 0 0 1000px white inset !important;
+
+
+transition:
+
+background-color 9999s ease-in-out 0s;
+
+
+}
+
+
+
+/* Buttons */
+
+
+button{
+
+font-family:inherit;
+
+cursor:pointer;
+
+}
+
+
+
+/* ===========================
+   LCMT PAPER TEXTURE SYSTEM
+=========================== */
+
+
+.paper-texture{
+
+position:relative;
+
+}
+
+
+
+.paper-texture::before{
+
+content:"";
+
+position:absolute;
+
+inset:0;
+
+
+background-image:
+
+radial-gradient(
+rgba(0,0,0,.035) 1px,
+transparent 1px
+);
+
+
+background-size:6px 6px;
+
+
+opacity:.35;
+
+
+pointer-events:none;
+
+}
+
+
+
+.editorial-shadow{
+
+box-shadow:
+
+0 30px 80px
+rgba(15,23,42,.15);
+
 }

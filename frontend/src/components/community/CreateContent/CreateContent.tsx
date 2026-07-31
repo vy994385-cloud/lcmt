@@ -1,97 +1,167 @@
-import { useState } from "react"
+import {
+useState
+} from "react"
+
+import api from "../../../api/axios"
 
 import "./CreateContent.css"
 
 
-
 interface Props {
 
-  onCreate?: (post:any)=>void
+communityId?: string
+
+onCreate?: (post:any)=>void
 
 }
-
 
 
 export default function CreateContent({
 
-  onCreate
+onCreate
 
 }:Props){
 
 
+const [content,setContent]=useState("")
 
-const [open,setOpen] = useState(false)
+const [loading,setLoading]=useState(false)
 
+const [image,setImage]=useState<File | null>(null)
 
-const [type,setType] = useState("Discussion")
-
-
-const [content,setContent] = useState("")
-
-
-
-const types = [
-
-"Discussion",
-
-"Question",
-
-"Poll",
-
-"Event"
-
-]
+const [imagePreview,setImagePreview]=useState("")
 
 
 
+function handleImage(
+e:React.ChangeEvent<HTMLInputElement>
+){
+
+const file =
+e.target.files?.[0]
 
 
-function createPost(){
+if(!file)
+return
 
 
-if(!content.trim()) return
+setImage(file)
+
+setImagePreview(
+URL.createObjectURL(file)
+)
+
+}
 
 
 
-const newPost = {
-
-id:Date.now().toString(),
-
-type,
-
-content,
+async function createPost(){
 
 
-author:{
-
-name:"Vishal Yadav",
-
-avatar:"https://i.pravatar.cc/150?img=12"
-
-},
+const text =
+content.trim()
 
 
-likes:0,
-
-comments:0,
-
-shares:0,
+if(!text && !image)
+return
 
 
-createdAt:new Date().toISOString()
+try{
+
+
+setLoading(true)
+
+
+let imageUrl=""
+
+
+if(image){
+
+
+const formData =
+new FormData()
+
+
+formData.append(
+"file",
+image
+)
+
+
+
+const upload =
+await api.post(
+
+"/media/upload",
+
+formData,
+
+{
+
+headers:{
+
+"Content-Type":
+"multipart/form-data"
+
+}
+
+}
+
+)
+
+
+
+imageUrl =
+upload.data.file.url
 
 
 }
 
 
 
-onCreate?.(newPost)
+const {data}=await api.post(
 
+"/feed",
+
+{
+
+content:text,
+
+image:imageUrl
+
+}
+
+)
+
+
+
+onCreate?.(
+data
+)
 
 
 setContent("")
 
-setOpen(false)
+setImage(null)
+
+setImagePreview("")
+
+
+
+}
+
+catch(error){
+
+console.log(error)
+
+}
+
+
+finally{
+
+setLoading(false)
+
+}
 
 
 }
@@ -99,125 +169,125 @@ setOpen(false)
 
 
 
+return(
+
+<div className="composer">
 
 
-return (
-
-<div className="create-content">
-
-
-
-<button
-
-className="create-button"
-
-onClick={()=>
-setOpen(!open)
-}
-
->
-
-➕ Create
-
-</button>
-
-
-
-
-
-{
-
-open &&
-
-<div className="create-box">
-
-
-<h3>
-
-Create {type}
-
-</h3>
-
-
-
-
-<div className="content-types">
-
-
-{
-
-types.map(item=>(
-
-<button
-
-key={item}
-
-className={
-type===item
-?
-"selected-type"
-:
-""
-}
-
-onClick={()=>
-setType(item)
-}
-
->
-
-{item}
-
-</button>
-
-
-))
-
-}
-
-
-</div>
-
-
-
+<div className="composer-top">
 
 
 <textarea
 
-placeholder={`Create a ${type.toLowerCase()}...`}
+placeholder="What's happening in your communities?"
 
 value={content}
 
-onChange={(e)=>
-setContent(e.target.value)
+onChange={
+e=>setContent(e.target.value)
 }
 
 />
 
 
 
+{
 
+imagePreview &&
 
-<button
+<img
 
-className="post-button"
+src={imagePreview}
 
-onClick={createPost}
+className="image-preview"
 
->
+alt="preview"
 
-Publish
+/>
 
-</button>
-
+}
 
 
 
 </div>
 
 
+
+<div className="composer-bottom">
+
+
+<div className="composer-tools">
+
+
+
+<label className="photo-btn">
+
+📷 Photo
+
+<input
+
+type="file"
+
+accept="image/*"
+
+hidden
+
+onChange={handleImage}
+
+/>
+
+</label>
+
+
+
+<button>
+❓ Question
+</button>
+
+
+<button>
+💡 Idea
+</button>
+
+
+
+</div>
+
+
+
+<button
+
+className="publish"
+
+onClick={createPost}
+
+disabled={
+loading ||
+(!content.trim() && !image)
 }
 
+>
+
+
+{
+
+loading
+
+?
+
+"Posting..."
+
+:
+
+"Post"
+
+}
+
+
+</button>
+
+
+</div>
 
 
 </div>

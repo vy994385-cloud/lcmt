@@ -1,34 +1,119 @@
-import {useParams} from "react-router-dom"
+import {
+  useEffect,
+  useState
+} from "react"
 
-import posts from "../mock/posts"
+import {
+  useParams
+} from "react-router-dom"
+
+import api from "../api/axios"
+
+import Layout from "../components/Layout"
 
 import PostCard from "../components/cards/PostCard/PostCard"
 
 
-function PostDetail(){
+export default function PostDetail(){
 
 const {id}=useParams()
 
+const [post,setPost]=useState<any>(null)
 
-const post = posts.find(
-p=>p.id===id
+const [loading,setLoading]=useState(true)
+
+
+
+useEffect(()=>{
+
+async function loadPost(){
+
+try{
+
+const {data}=await api.get(
+`/feed/${id}`
 )
 
+setPost(data)
 
-if(!post){
+}
+
+catch(error){
+
+console.log(
+"Post loading error",
+error
+)
+
+}
+
+finally{
+
+setLoading(false)
+
+}
+
+}
+
+if(id){
+
+loadPost()
+
+}
+
+},[id])
+
+
+
+if(loading){
 
 return(
 
-<h2>
-Post not found
-</h2>
+<Layout>
+
+<div style={{
+padding:"120px 30px",
+textAlign:"center"
+}}>
+
+Loading post...
+
+</div>
+
+</Layout>
 
 )
 
 }
 
 
+
+if(!post){
+
 return(
+
+<Layout>
+
+<div style={{
+padding:"120px 30px",
+textAlign:"center"
+}}>
+
+Post not found
+
+</div>
+
+</Layout>
+
+)
+
+}
+
+
+
+return(
+
+<Layout>
 
 <main
 style={{
@@ -46,9 +131,8 @@ post={post}
 
 </main>
 
+</Layout>
+
 )
 
 }
-
-
-export default PostDetail

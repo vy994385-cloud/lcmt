@@ -1,0 +1,93 @@
+.community-announcements{
+
+background:#fff;
+
+padding:28px;
+
+border-radius:20px;
+
+box-shadow:0 8px 20px rgba(0,0,0,.06);
+
+}
+
+.community-announcements h2{
+
+margin-bottom:24px;
+
+}
+
+.announcement-card{
+
+padding:20px;
+
+border-left:5px solid #355dff;
+
+background:#f8faff;
+
+border-radius:16px;
+
+margin-bottom:20px;
+
+}
+
+.announcement-header{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+flex-wrap:wrap;
+
+gap:10px;
+
+margin-bottom:12px;
+
+}
+
+.announcement-header h3{
+
+margin:0;
+
+}
+
+.announcement-header span{
+
+font-size:.85rem;
+
+color:#777;
+
+}
+
+.announcement-card p{
+
+color:#555;
+
+line-height:1.6;
+
+margin-bottom:16px;
+
+}
+
+.announcement-actions{
+
+display:flex;
+
+gap:10px;
+
+}
+
+.announcement-actions button{
+
+background:#fff;
+
+border:1px solid #ddd;
+
+padding:8px 14px;
+
+border-radius:10px;
+
+cursor:pointer;
+
+}

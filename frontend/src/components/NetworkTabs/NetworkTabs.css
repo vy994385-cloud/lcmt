@@ -1,0 +1,51 @@
+.network-tabs{
+
+display:flex;
+
+gap:12px;
+
+margin-bottom:30px;
+
+flex-wrap:wrap;
+
+}
+
+
+
+.network-tabs button{
+
+padding:10px 22px;
+
+border-radius:25px;
+
+border:1px solid #e5e5e5;
+
+background:white;
+
+cursor:pointer;
+
+font-weight:600;
+
+transition:.2s;
+
+}
+
+
+
+.network-tabs button:hover{
+
+transform:translateY(-2px);
+
+}
+
+
+
+.network-tabs button.active{
+
+background:#2563eb;
+
+color:white;
+
+border-color:#2563eb;
+
+}

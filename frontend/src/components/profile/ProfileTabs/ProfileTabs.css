@@ -1,0 +1,47 @@
+.profile-tabs{
+
+display:flex;
+
+gap:14px;
+
+overflow:auto;
+
+margin:22px 0;
+
+padding-bottom:8px;
+
+}
+
+.profile-tabs button{
+
+padding:12px 22px;
+
+border:none;
+
+border-radius:999px;
+
+background:#f3f4f6;
+
+cursor:pointer;
+
+font-weight:700;
+
+white-space:nowrap;
+
+transition:.25s;
+
+}
+
+.profile-tabs button:hover{
+
+background:#e5e7eb;
+
+}
+
+.profile-tabs .active{
+
+background:#2563eb;
+
+color:white;
+
+}
