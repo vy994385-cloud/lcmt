@@ -31,14 +31,14 @@ export default function ProfileStats({ user }: any) {
       icon:"👥",
       value:user.followers?.length || 0,
       label:"Followers",
-      action:()=>navigate(`/profile/${user._id}/followers`)
+      action:()=>navigate("/followers")
     },
 
     {
       icon:"❤️",
       value:user.following?.length || 0,
       label:"Following",
-      action:()=>navigate(`/profile/${user._id}/following`)
+     action:()=>navigate("/following")
     },
 
     {
@@ -52,7 +52,7 @@ export default function ProfileStats({ user }: any) {
       icon:"🤝",
       value:user.friends?.length || 0,
       label:"Friends",
-      action:()=>navigate("/network")
+      action:()=>navigate("/friends")
     }
 
   ]

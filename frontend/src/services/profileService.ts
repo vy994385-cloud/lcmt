@@ -31,7 +31,6 @@ return response.data
 
 
 
-
 export async function followUser(
 id:string
 ){
@@ -106,5 +105,18 @@ data
 )
 
 return response.data
+
+}
+
+export async function getFriends(
+  id:string
+){
+
+  const response =
+  await api.get(
+    `/friends/${id}`
+  )
+
+  return response.data
 
 }

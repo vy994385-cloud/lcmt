@@ -4,39 +4,40 @@ useState
 } from "react"
 
 import {
+useLocation
+} from "react-router-dom"
+
+import {
 getFollowing
 } from "../services/profileService"
 
 import "./Followers.css"
 
-
-
 export default function Following(){
 
+const location = useLocation()
 
-const user =
+const currentUser =
 JSON.parse(
 localStorage.getItem("user") || "{}"
 )
 
-
+const userId =
+new URLSearchParams(location.search).get("id")
+||
+currentUser._id
 
 const [following,setFollowing]=
 useState<any[]>([])
 
-
-
 useEffect(()=>{
-
 
 async function load(){
 
 try{
 
 const data =
-await getFollowing(
-user._id
-)
+await getFollowing(userId)
 
 setFollowing(data)
 
@@ -50,86 +51,58 @@ console.log(error)
 
 }
 
-
 load()
 
-
-},[])
-
-
-
-
+},[userId])
 
 return(
 
 <main className="social-page">
 
-
 <h1>
 Following ❤️
 </h1>
 
-
-
 {
 following.length===0
-
 ?
 
-<p>
-Not following anyone
-</p>
-
+<p>Not following anyone</p>
 
 :
 
-following.map(
-(person:any)=>(
+following.map((person:any)=>(
 
 <div
-
 key={person._id}
-
 className="user-row"
-
 >
 
 <img
-
 src={
 person.image ||
 "https://i.pravatar.cc/100"
 }
-
 alt={person.name}
-
 />
-
 
 <div>
 
-<h3>
-{person.name}
-</h3>
+<h3>{person.name}</h3>
 
 <p>
 {person.headline ||
 person.bio ||
-"LCMT Member"
-}
+"LCMT Member"}
 </p>
 
 </div>
 
-
 </div>
 
-)
-
-)
+))
 
 }
-
 
 </main>
 

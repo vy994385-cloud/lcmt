@@ -1,104 +1,107 @@
 import {
-getFriends
-}
-from "../utils/social"
+  useEffect,
+  useState
+} from "react"
 
 import {
-useEffect,
-useState
-}
-from "react"
+  getFriends
+} from "../services/profileService"
 
-
+import "./Followers.css"
 
 export default function Friends(){
 
+  const user = JSON.parse(
+    localStorage.getItem("user") || "{}"
+  )
 
-const user =
-JSON.parse(
+  const [friends,setFriends] =
+    useState<any[]>([])
 
-localStorage.getItem("user") || "{}"
+  useEffect(()=>{
 
-)
+    async function load(){
 
+      try{
 
+        const data =
+          await getFriends(user._id)
 
-const [friends,setFriends]=
-useState<string[]>([])
+        setFriends(data)
 
+      }
 
+      catch(error){
 
-useEffect(()=>{
+        console.log(error)
 
+      }
 
-setFriends(
+    }
 
-getFriends(user._id)
+    load()
 
-)
+  },[])
 
+  return(
 
-},[])
+    <main className="social-page">
 
+      <h1>
+        Friends 🤝
+      </h1>
 
+      {
 
+        friends.length===0
 
+        ?
 
-return (
+        <p>
+          No friends yet
+        </p>
 
-<main className="social-page">
+        :
 
+        friends.map((person:any)=>(
 
-<h1>
+          <div
+            key={person._id}
+            className="user-row"
+          >
 
-Friends 🤝
+            <img
+              src={
+                person.image ||
+                "https://i.pravatar.cc/100"
+              }
+              alt={person.name}
+            />
 
-</h1>
+            <div>
 
+              <h3>
+                {person.name}
+              </h3>
 
+              <p>
+                {
+                  person.headline ||
+                  person.bio ||
+                  "LCMT Member"
+                }
+              </p>
 
-{
+            </div>
 
-friends.length===0
+          </div>
 
-?
+        ))
 
-<p>
+      }
 
-No friends yet
+    </main>
 
-</p>
-
-
-
-:
-
-
-friends.map(id=>(
-
-
-<div
-
-key={id}
-
-className="user-row"
-
->
-
-User {id}
-
-</div>
-
-
-))
-
-
-}
-
-
-
-</main>
-
-)
+  )
 
 }
