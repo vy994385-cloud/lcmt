@@ -200,6 +200,14 @@ export async function getAllPosts(
         select:"name"
       })
 
+      .populate({
+  path:"originalPost",
+  populate:{
+    path:"user",
+    select:"name username image"
+  }
+})
+
       .sort({
         createdAt:-1
       })
@@ -219,5 +227,97 @@ export async function getAllPosts(
     })
 
   }
+
+}
+
+export async function repostPost(
+  req: AuthRequest,
+  res: Response
+){
+
+try{
+
+const userId =
+req.userId
+
+if(!userId){
+
+return res.status(401).json({
+message:"Unauthorized"
+})
+
+}
+
+const original =
+await Post.findById(
+req.params.id
+)
+
+if(!original){
+
+return res.status(404).json({
+message:"Post not found"
+})
+
+}
+
+const repost =
+await Post.create({
+
+user:userId,
+
+community:original.community,
+
+content:original.content,
+
+image:original.image,
+
+isRepost:true,
+
+originalPost:original._id
+
+})
+
+original.shareCount += 1
+
+await original.save()
+
+const populated =
+await Post.findById(repost._id)
+
+.populate(
+"user",
+"name username image"
+)
+
+.populate(
+"originalPost"
+)
+
+.populate(
+"community",
+"name"
+)
+
+res.json({
+
+success:true,
+
+post:populated
+
+})
+
+}
+catch(error){
+
+console.log(error)
+
+res.status(500).json({
+
+message:"Server Error"
+
+})
+
+}
 
 }

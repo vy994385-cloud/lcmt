@@ -1,103 +1,68 @@
-import mongoose, { Schema } from "mongoose"
+import mongoose,{ Schema } from "mongoose"
 
-
-const PostSchema = new Schema(
-
-{
+const PostSchema = new Schema({
 
 community:{
-
-type:mongoose.Schema.Types.ObjectId,
-
-ref:"Community",
-
-required:false
-
+type:Schema.Types.ObjectId,
+ref:"Community"
 },
-
 
 user:{
-
-type:mongoose.Schema.Types.ObjectId,
-
+type:Schema.Types.ObjectId,
 ref:"User",
-
 required:true
-
 },
-
 
 content:{
-
 type:String,
-
 default:"",
-
 trim:true
-
 },
-
 
 image:{
-
-type:String,
-
-required:false
-
+type:String
 },
 
+isRepost:{
+type:Boolean,
+default:false
+},
 
-likes:[
+originalPost:{
+type:Schema.Types.ObjectId,
+ref:"Post",
+default:null
+},
 
-{
+shareCount:{
+type:Number,
+default:0
+},
 
-type:mongoose.Schema.Types.ObjectId,
-
+likes:[{
+type:Schema.Types.ObjectId,
 ref:"User"
+}],
 
-}
-
-],
-
-
-comments:[
-
-{
+comments:[{
 
 user:{
-
-type:mongoose.Schema.Types.ObjectId,
-
+type:Schema.Types.ObjectId,
 ref:"User"
-
 },
 
 text:String,
 
-
 createdAt:{
-
 type:Date,
-
 default:Date.now
-
 }
 
-}
+}]
 
-]
-
-
-},
-
-{
-
+},{
 timestamps:true
-
-}
-
-)
-
+})
 
 export default mongoose.model(
 "Post",
