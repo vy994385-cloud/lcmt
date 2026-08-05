@@ -129,7 +129,7 @@ export default function Explore() {
 
                 {
 
-                  data.posts.map(post => (
+                  (data.posts || []).map(post => (
 
                     <PostCard
                       key={post._id}
@@ -153,7 +153,7 @@ export default function Explore() {
 
                 {
 
-                  data.people.map(person => (
+                  (data.people || []).map(person => (
 
                     <div
                       key={person._id}
@@ -207,7 +207,7 @@ export default function Explore() {
 
                 {
 
-                  data.communities.map(c => (
+                  (data.communities || []).map(c => (
 
                     <CommunityCard
                       key={c._id}
@@ -235,7 +235,7 @@ posts={"0"}
 
                 {
 
-                  data.events.map(event => (
+                  (data.events || []).map(event => (
 
                     <div
                       key={event._id}
@@ -285,7 +285,7 @@ posts={"0"}
 
                 {
 
-                  data.trendingTopics.map(topic => (
+                  (data.trendingTopics || []).map(topic => (
 
                     <div
                       key={topic.name}

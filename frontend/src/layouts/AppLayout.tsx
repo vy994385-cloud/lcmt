@@ -1,28 +1,46 @@
-import { Outlet } from "react-router-dom"
+import { Outlet, useLocation } from "react-router-dom"
 
 import TopBar from "../components/navigation/TopBar"
 import BottomNav from "../components/navigation/BottomNav"
 
-export default function AppLayout() {
+import "./AppLayout.css"
 
-  return (
+import EditorialBackground from "../components/background/EditorialBackground"
 
-    <div className="app-shell">
+export default function AppLayout(){
 
-      <TopBar />
+const location = useLocation()
 
-      <main
-        style={{
-          minHeight: "calc(100vh - 120px)"
-        }}
-      >
-        <Outlet />
-      </main>
+const hideNavigation =
+location.pathname === "/login" ||
+location.pathname === "/signup" ||
+location.pathname === "/onboarding"
 
-      <BottomNav />
 
-    </div>
+return (
 
-  )
+<div className="app-shell">
+
+<EditorialBackground />
+
+{
+!hideNavigation &&
+<TopBar />
+}
+
+<main className="app-content">
+
+<Outlet />
+
+</main>
+
+{
+!hideNavigation &&
+<BottomNav />
+}
+
+</div>
+
+)
 
 }

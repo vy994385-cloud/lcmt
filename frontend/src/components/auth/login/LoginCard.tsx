@@ -1,5 +1,6 @@
 import "./LoginCard.css"
 
+import { Link } from "react-router-dom"
 
 interface LoginCardProps{
 
@@ -100,7 +101,7 @@ Email
 <input
 
 type="email"
-
+autoComplete="email"
 placeholder="Enter your email"
 
 value={email}
@@ -136,6 +137,7 @@ showPassword
 }
 
 placeholder="Enter your password"
+autoComplete="current-password"
 
 value={password}
 
@@ -154,15 +156,12 @@ required
 
 
 <button
-
 type="button"
-
 className="password-toggle"
-
+tabIndex={-1}
 onClick={()=>
 setShowPassword(!showPassword)
 }
-
 >
 
 {
@@ -250,11 +249,9 @@ loading
 Don't have an account?
 
 
-<a href="/signup">
-
+<Link to="/signup">
 Create one
-
-</a>
+</Link>
 
 
 </p>

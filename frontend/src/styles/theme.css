@@ -2,94 +2,108 @@
 
 
 /* ===========================
-   LCMT COLORS
-   Conversation Universe Theme
+ LCMT LIGHT GLASS THEME
 =========================== */
 
 
---primary:#8B5CF6;
---primary-light:#A78BFA;
---primary-dark:#6D28D9;
+--primary:#6366F1;
+--primary-light:#818CF8;
+--primary-dark:#4338CA;
 
 
---secondary:#2563EB;
---secondary-light:#60A5FA;
+--secondary:#38BDF8;
+--secondary-light:#7DD3FC;
 
 
---accent-pink:#FF4D8D;
---accent-orange:#F97316;
---accent-green:#22C55E;
+--accent-pink:#F472B6;
+--accent-orange:#FB923C;
+--accent-green:#34D399;
+
 
 
 --success:#22C55E;
 --warning:#F59E0B;
 --danger:#EF4444;
---info:#3B82F6;
+--info:#0EA5E9;
 
 
 
-/* ===========================
-   BACKGROUND SYSTEM
-=========================== */
+/* BACKGROUND */
 
 
---background:#080B18;
+--background:
 
---background-light:#111827;
+linear-gradient(
+135deg,
+#F8FAFF,
+#EEF7FF,
+#FDF2F8
+);
+
+
+--background-light:#FFFFFF;
+
+
+
+/* SURFACE */
+
 
 --surface:
-rgba(255,255,255,.08);
+
+rgba(255,255,255,.72);
 
 
 --surface-hover:
-rgba(255,255,255,.14);
+
+rgba(255,255,255,.90);
+
 
 
 --card:
-rgba(255,255,255,.10);
+
+rgba(255,255,255,.78);
 
 
 
-/* ===========================
-   TEXT
-=========================== */
+
+/* TEXT */
 
 
---text:#F8FAFC;
+--text:#172033;
 
---text-light:#CBD5E1;
+--text-light:#475569;
 
---text-muted:#94A3B8;
+--text-muted:#64748B;
 
 --text-white:#FFFFFF;
 
 
 
-/* ===========================
-   BORDERS
-=========================== */
+/* BORDERS */
 
 
 --border:
-rgba(255,255,255,.14);
+
+rgba(148,163,184,.25);
+
 
 
 --border-dark:
-rgba(255,255,255,.25);
+
+rgba(100,116,139,.35);
 
 
 
-/* ===========================
-   GRADIENTS
-=========================== */
+
+/* GRADIENTS */
 
 
 --gradient:
 
 linear-gradient(
 135deg,
-#8B5CF6,
-#2563EB
+#6366F1,
+#38BDF8
 );
 
 
@@ -98,8 +112,8 @@ linear-gradient(
 
 linear-gradient(
 135deg,
-#FF4D8D,
-#F97316
+#F472B6,
+#FB923C
 );
 
 
@@ -108,8 +122,8 @@ linear-gradient(
 
 linear-gradient(
 135deg,
-#2563EB,
-#22C55E
+#38BDF8,
+#34D399
 );
 
 
@@ -118,7 +132,7 @@ linear-gradient(
 
 linear-gradient(
 135deg,
-#8B5CF6,
+#6366F1,
 #A78BFA
 );
 
@@ -128,268 +142,90 @@ linear-gradient(
 
 linear-gradient(
 135deg,
-#2563EB,
-#60A5FA
+#0EA5E9,
+#38BDF8
 );
 
 
 
 
-/* ===========================
-   GLASS SYSTEM
-=========================== */
+/* GLASS */
 
 
 --glass-bg:
 
-rgba(255,255,255,.08);
-
+rgba(255,255,255,.65);
 
 
 --glass-border:
 
-rgba(255,255,255,.18);
+rgba(255,255,255,.65);
 
 
 
 --blur:
 
-24px;
+20px;
 
 
 
 
-/* ===========================
-   TYPOGRAPHY
-=========================== */
-
-
---font-family:
-
-"Poppins",
-sans-serif;
-
-
-
---h1:48px;
-
---h2:36px;
-
---h3:28px;
-
---h4:22px;
-
-
---body:16px;
-
---small:14px;
-
---tiny:12px;
-
-
-
-
-/* ===========================
-   SPACING
-=========================== */
-
-
---space-xs:8px;
-
---space-sm:12px;
-
---space-md:16px;
-
---space-lg:24px;
-
---space-xl:32px;
-
---space-2xl:48px;
-
---space-3xl:64px;
-
-
-
-
-/* ===========================
-   BORDER RADIUS
-=========================== */
-
-
---radius-xs:8px;
-
---radius-sm:14px;
-
---radius-md:18px;
-
---radius-lg:24px;
-
---radius-xl:32px;
-
---radius-round:999px;
-
-
-
-
-/* ===========================
-   DEPTH SYSTEM
-=========================== */
+/* SHADOWS */
 
 
 --shadow-sm:
 
-0 8px 20px rgba(0,0,0,.15);
-
+0 8px 20px rgba(15,23,42,.08);
 
 
 --shadow-md:
 
-0 15px 40px rgba(0,0,0,.25);
-
+0 15px 40px rgba(15,23,42,.10);
 
 
 --shadow-lg:
 
-0 25px 70px rgba(0,0,0,.35);
-
+0 25px 70px rgba(15,23,42,.14);
 
 
 --shadow-xl:
 
-0 40px 100px rgba(0,0,0,.45);
+0 40px 100px rgba(15,23,42,.18);
 
 
 
 --floating-shadow:
 
-0 30px 80px rgba(0,0,0,.45);
+0 30px 80px rgba(15,23,42,.15);
 
 
 
 --glow-purple:
 
-0 0 80px rgba(139,92,246,.35);
-
+0 0 80px rgba(99,102,241,.18);
 
 
 --glow-blue:
 
-0 0 80px rgba(37,99,235,.35);
+0 0 80px rgba(56,189,248,.18);
 
 
 
+--font-family:
+"Poppins",
+sans-serif;
 
-/* ===========================
-   TRANSITIONS
-=========================== */
 
+--radius-sm:14px;
+--radius-md:18px;
+--radius-lg:24px;
+--radius-xl:32px;
+--radius-round:999px;
 
---transition-fast:
 
-.18s ease;
 
+--transition:.3s ease;
 
---transition:
-
-.30s ease;
-
-
---transition-slow:
-
-.45s ease;
-
-
-
-
-/* ===========================
-   Z INDEX
-=========================== */
-
-
---z-dropdown:100;
-
---z-sticky:500;
-
---z-overlay:900;
-
---z-modal:1000;
-
---z-toast:1100;
-
-
-
-
-/* ===========================
-   CHAT SYSTEM
-=========================== */
-
-
---sent-message:
-
-#8B5CF6;
-
-
---received-message:
-
-rgba(255,255,255,.12);
-
-
-
-/* ===========================
-   COMMUNITY COLORS
-=========================== */
-
-
---sports:
-
-#F97316;
-
-
---technology:
-
-#2563EB;
-
-
---entertainment:
-
-#EC4899;
-
-
---debate:
-
-#8B5CF6;
-
-
---memes:
-
-#FACC15;
-
-
---creator:
-
-#22C55E;
-
-
-
-
-/* ===========================
-   DARK MODE SUPPORT
-=========================== */
-
-
---background-dark:
-
-#050816;
-
-
---surface-dark:
-
-#111827;
-
-
---text-dark:
-
-#F9FAFB;
 
 
 }
@@ -673,48 +509,93 @@ rgba(139,92,246,.2);
 
 .card{
 
+position:relative;
+
+overflow:hidden;
 
 background:
-
-var(--glass-bg);
-
-
+linear-gradient(
+180deg,
+rgba(255,255,255,.14),
+rgba(255,255,255,.08)
+);
 
 backdrop-filter:
+blur(22px);
 
-blur(var(--blur));
-
-
+-webkit-backdrop-filter:
+blur(22px);
 
 border:
-
-1px solid var(--glass-border);
-
-
+1px solid rgba(255,255,255,.16);
 
 border-radius:
-
 var(--radius-lg);
-
-
 
 box-shadow:
 
-var(--shadow-md);
+0 20px 50px rgba(0,0,0,.22),
 
+inset 0 1px 0 rgba(255,255,255,.15);
 
+padding:20px;
 
-padding:
-
-20px;
-
-
+transition:
+transform .25s ease,
+box-shadow .25s ease,
+border-color .25s ease;
 
 }
 
+.card::before{
 
+content:"";
 
+position:absolute;
 
+left:0;
+right:0;
+top:0;
+
+height:1px;
+
+background:
+
+linear-gradient(
+
+90deg,
+
+transparent,
+
+rgba(255,255,255,.55),
+
+transparent
+
+);
+
+opacity:.8;
+
+pointer-events:none;
+
+}
+
+.card:hover{
+
+transform:
+
+translateY(-4px);
+
+border-color:
+
+rgba(255,255,255,.24);
+
+box-shadow:
+
+0 30px 70px rgba(0,0,0,.28),
+
+inset 0 1px 0 rgba(255,255,255,.25);
+
+}
 
 /* ===========================
    SELECTION

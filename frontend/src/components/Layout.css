@@ -9,22 +9,100 @@ overflow:hidden;
 
 background:
 
-radial-gradient(
-circle at 15% 20%,
-rgba(139,92,246,.25),
-transparent 30%
-),
-
-radial-gradient(
-circle at 80% 10%,
-rgba(37,99,235,.22),
-transparent 35%
-),
-
-var(--background);
+linear-gradient(
+135deg,
+#F5FBFF,
+#F8F9FF,
+#FFFFFF
+);
 
 
 }
+
+
+
+/* soft background atmosphere */
+
+
+.ambient{
+
+position:fixed;
+
+border-radius:50%;
+
+filter:blur(100px);
+
+opacity:.22;
+
+pointer-events:none;
+
+z-index:0;
+
+animation:
+
+float 14s infinite alternate ease-in-out;
+
+
+}
+
+
+
+.ambient-one{
+
+width:420px;
+
+height:420px;
+
+background:#8DD8FF;
+
+top:-180px;
+
+left:-150px;
+
+}
+
+
+
+
+.ambient-two{
+
+width:360px;
+
+height:360px;
+
+background:#B7C8FF;
+
+right:-160px;
+
+top:30%;
+
+
+animation-delay:4s;
+
+
+}
+
+
+
+.ambient-three{
+
+width:320px;
+
+height:320px;
+
+background:#FFD6E7;
+
+bottom:-150px;
+
+left:35%;
+
+
+animation-delay:7s;
+
+
+}
+
+
 
 
 
@@ -36,92 +114,7 @@ z-index:2;
 
 min-height:100vh;
 
-padding:20px;
-
-
-}
-
-
-
-/* floating atmosphere */
-
-
-.ambient{
-
-position:fixed;
-
-border-radius:50%;
-
-filter:blur(90px);
-
-opacity:.35;
-
-pointer-events:none;
-
-z-index:0;
-
-animation:
-
-float 12s infinite alternate ease-in-out;
-
-
-}
-
-
-
-.ambient-one{
-
-width:350px;
-
-height:350px;
-
-background:#8B5CF6;
-
-top:-120px;
-
-left:-120px;
-
-
-}
-
-
-
-
-.ambient-two{
-
-width:300px;
-
-height:300px;
-
-background:#2563EB;
-
-right:-100px;
-
-top:35%;
-
-
-animation-delay:3s;
-
-
-}
-
-
-
-
-.ambient-three{
-
-width:260px;
-
-height:260px;
-
-background:#FF4D8D;
-
-bottom:-100px;
-
-left:40%;
-
-
-animation-delay:5s;
+padding:24px;
 
 
 }
@@ -135,7 +128,6 @@ animation-delay:5s;
 from{
 
 transform:
-
 translateY(0);
 
 }
@@ -143,11 +135,8 @@ translateY(0);
 
 to{
 
-
 transform:
-
-translateY(60px);
-
+translateY(50px);
 
 }
 

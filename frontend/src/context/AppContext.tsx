@@ -120,7 +120,7 @@ const response =
 await api.get("/users/discover")
 
 setUsers(
-response.data.map(formatUser)
+  (response.data.users || response.data).map(formatUser)
 )
 
 }
@@ -143,7 +143,7 @@ const response =
 await api.get("/users/matches")
 
 setMatches(
-response.data.map(formatUser)
+  (response.data.matches || response.data).map(formatUser)
 )
 
 }

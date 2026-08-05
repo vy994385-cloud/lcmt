@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 import api from "../../../api/axios"
@@ -33,16 +33,40 @@ import RepostButton from "../../social/RepostButton/RepostButton"
 
 import FollowButton from "../../social/FollowButton/FollowButton"
 
+import {
+  toggleSavePost
+} from "../../../services/feedService"
+
 interface Props{
   post:any
 }
 
 export default function PostCard({post}:Props){
 
-  const author =
+  const repostUser =
+  post.user || {}
+
+
+const author =
+  post.isRepost && post.originalPost
+  ?
+  (
+    post.originalPost.author ||
+    post.originalPost.user ||
+    {}
+  )
+  :
+  (
     post.author ||
     post.user ||
     {}
+  )
+
+    const originalPost =
+  post.originalPost || null
+
+const originalAuthor =
+  originalPost?.user || {}
 
     
 
@@ -74,8 +98,11 @@ String(id) === String(user._id)
 
 })
 
-  const [saved,setSaved]=useState(false)
+  const [saved,setSaved]=useState(
 
+Boolean(post.saved)
+
+)
   const [deleting,setDeleting]=useState(false)
 
   const [loadingLike,setLoadingLike]=useState(false)
@@ -98,21 +125,6 @@ String(id) === String(user._id)
 
   )
 
-  useEffect(()=>{
-
-    const savedPosts = JSON.parse(
-
-      localStorage.getItem("savedPosts") || "[]"
-
-    )
-
-    setSaved(
-
-      savedPosts.includes(post._id)
-
-    )
-
-  },[post._id])
 
   async function likePost(){
 
@@ -242,52 +254,26 @@ alert("You won't see similar posts")
 
   }
 
-  function toggleSave(){
+  async function toggleSave(){
 
-    const savedPosts = JSON.parse(
+if(!post._id) return
 
-      localStorage.getItem("savedPosts") || "[]"
+try{
 
-    )
+const data =
+await toggleSavePost(post._id)
 
-    let updated
+setSaved(data.saved)
 
-    if(savedPosts.includes(post._id)){
+}
 
-      updated = savedPosts.filter(
+catch(error){
 
-        (id:string)=>id!==post._id
+console.log(error)
 
-      )
+}
 
-      setSaved(false)
-
-    }
-
-    else{
-
-      updated=[
-
-        ...savedPosts,
-
-        post._id
-
-      ]
-
-      setSaved(true)
-
-    }
-
-    localStorage.setItem(
-
-      "savedPosts",
-
-      JSON.stringify(updated)
-
-    )
-
-  }
-
+}
   async function deleteCurrentPost(){
 
   if(
@@ -347,12 +333,20 @@ alert("You won't see similar posts")
   return(
 
     <article
+  className="post-card"
+  data-post={post._id}
+>
 
-      className="post-card"
+{
+  post.isRepost &&
+  originalPost && (
 
-      data-post={post._id}
+    <div className="repost-banner">
+🔁 Reposted by {repostUser?.name}
+</div>
 
-    >
+  )
+}
 
       <div className="post-header">
 
@@ -391,7 +385,18 @@ alert("You won't see similar posts")
 
 {
 author?._id &&
-<FollowButton id={author._id}/>
+String(author._id) !==
+String(
+JSON.parse(
+localStorage.getItem("user") || "{}"
+)._id
+)
+&&
+<FollowButton
+
+id={author._id}
+
+/>
 }
 
 </div>
@@ -476,17 +481,35 @@ author?._id &&
 
         }
 
-        <p
+        {
+  post.isRepost && originalPost ? (
 
-          className="post-content"
+    <div
+      className="repost-card"
+      onClick={openPost}
+    >
 
-          onClick={openPost}
+      <h4>
+        {originalAuthor.name}
+      </h4>
 
-        >
+      <p>
+        {originalPost.content}
+      </p>
 
-          {post.content}
+    </div>
 
-        </p>
+  ) : (
+
+    <p
+      className="post-content"
+      onClick={openPost}
+    >
+      {post.content}
+    </p>
+
+  )
+}
 
         
 
@@ -548,7 +571,7 @@ count={
           <span>{comments.length}</span>
         </button>
 
-       <RepostButton />
+       <RepostButton post={post} />
 
 <ShareButton post={post}/>
 

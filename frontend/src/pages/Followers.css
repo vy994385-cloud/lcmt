@@ -1,0 +1,9 @@
+.user-row{
+cursor:pointer;
+transition:.2s;
+}
+
+.user-row:hover{
+background:#f8fafc;
+transform:translateY(-2px);
+}

@@ -1,0 +1,313 @@
+.editorial-bg{
+position:fixed;
+inset:0;
+overflow:hidden;
+pointer-events:none;
+z-index:-2;
+background:#f8fbff;
+}
+
+/* ===========================
+   Layer 1
+   Pastel Atmosphere
+=========================== */
+
+.editorial-colors{
+
+position:absolute;
+inset:0;
+
+background:
+
+radial-gradient(circle at 10% 20%,
+rgba(96,165,250,.20),
+transparent 34%),
+
+radial-gradient(circle at 90% 10%,
+rgba(244,114,182,.14),
+transparent 32%),
+
+radial-gradient(circle at 25% 80%,
+rgba(167,243,208,.16),
+transparent 34%),
+
+radial-gradient(circle at 85% 75%,
+rgba(196,181,253,.16),
+transparent 30%),
+
+radial-gradient(circle at 50% 45%,
+rgba(255,255,255,.55),
+transparent 60%);
+
+animation:ambientMove 28s ease-in-out infinite alternate;
+
+}
+
+/* ===========================
+   Layer 2
+   Paper
+=========================== */
+
+.editorial-paper{
+
+position:absolute;
+inset:0;
+
+opacity:.06;
+
+background-image:
+
+radial-gradient(#000 1px,transparent 1px);
+
+background-size:6px 6px;
+
+mix-blend-mode:multiply;
+
+}
+
+/* ===========================
+   Layer 3
+   Headlines
+=========================== */
+
+.editorial-headlines{
+
+position:absolute;
+inset:0;
+
+font-family:
+
+"Times New Roman",
+serif;
+
+font-weight:700;
+
+letter-spacing:3px;
+
+text-transform:uppercase;
+
+}
+
+.editorial-headlines span{
+
+position:absolute;
+
+color:#000;
+
+opacity:.035;
+
+white-space:nowrap;
+
+user-select:none;
+
+}
+
+/* ===========================
+   Fold Marks
+=========================== */
+
+.editorial-overlay{
+
+position:absolute;
+inset:0;
+
+background:
+
+linear-gradient(
+
+90deg,
+
+transparent 24%,
+
+rgba(0,0,0,.035) 25%,
+
+transparent 26%
+
+),
+
+linear-gradient(
+
+180deg,
+
+transparent 48%,
+
+rgba(0,0,0,.03) 49%,
+
+transparent 50%
+
+);
+
+background:
+
+linear-gradient(
+90deg,
+transparent,
+rgba(255,255,255,.18),
+transparent
+),
+
+linear-gradient(
+180deg,
+transparent,
+rgba(0,0,0,.03),
+transparent
+);
+
+}
+
+/* ===========================
+   Coffee Ring
+=========================== */
+
+.editorial-overlay::before{
+
+content:"";
+
+position:absolute;
+
+width:340px;
+height:340px;
+
+border-radius:50%;
+
+border:6px solid rgba(90,60,20,.05);
+
+top:18%;
+right:12%;
+
+transform:rotate(18deg);
+
+}
+
+/* ===========================
+   Ink Stamp
+=========================== */
+
+.editorial-overlay::after{
+
+content:"LCMT";
+
+position:absolute;
+
+bottom:9%;
+left:6%;
+
+font-size:64px;
+
+font-weight:900;
+
+letter-spacing:6px;
+
+color:rgba(180,20,20,.04);
+
+border:3px solid rgba(180,20,20,.04);
+
+padding:16px 26px;
+
+transform:rotate(-18deg);
+
+border-radius:12px;
+
+}
+
+/* ===========================
+   Motion
+=========================== */
+
+@keyframes ambientMove{
+
+0%{
+
+transform:
+translateY(-20px)
+translateX(-15px);
+
+}
+
+100%{
+
+transform:
+translateY(20px)
+translateX(15px);
+
+}
+
+}
+
+.editorial-bg{
+position:fixed;
+inset:0;
+pointer-events:none;
+z-index:0;
+overflow:hidden;
+}
+
+.app-content,
+.navbar,
+.topbar,
+.bottom-nav{
+position:relative;
+z-index:2;
+}
+
+/* ===========================
+   Editorial Columns
+=========================== */
+
+.editorial-bg::before{
+
+content:"";
+
+position:absolute;
+inset:0;
+
+opacity:.035;
+
+background-image:
+
+repeating-linear-gradient(
+
+90deg,
+
+transparent 0,
+
+transparent 255px,
+
+rgba(0,0,0,.7) 256px,
+
+transparent 257px,
+
+transparent 510px
+
+);
+
+}
+
+.editorial-bg::after{
+
+content:"";
+
+position:absolute;
+inset:0;
+
+opacity:.025;
+
+background-image:
+
+repeating-linear-gradient(
+
+180deg,
+
+transparent 0,
+
+transparent 170px,
+
+rgba(0,0,0,.9) 171px,
+
+transparent 172px,
+
+transparent 340px
+
+);
+
+}

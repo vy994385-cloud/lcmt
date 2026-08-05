@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom"
 
 import {
   followUser,
-  unfollowUser
+  unfollowUser,
+  updateProfile
 } from "../../../services/profileService"
 
 import "./ProfileHero.css"
@@ -128,6 +129,43 @@ function ProfileHero({
 
   }
 
+  async function changeCover(){
+
+const url =
+window.prompt(
+"Paste your cover image URL"
+)
+
+
+if(!url) return
+
+
+try{
+
+
+await updateProfile({
+
+coverImage:url
+
+})
+
+
+window.location.reload()
+
+
+}
+
+catch(error){
+
+console.log(error)
+
+alert("Failed to update cover")
+
+}
+
+
+}
+
   return(
 
     <section className="profile-hero">
@@ -165,13 +203,19 @@ function ProfileHero({
           isOwnProfile &&
 
           <button
-            className="cover-btn"
-            onClick={(e)=>e.stopPropagation()}
-          >
+  className="cover-btn"
+  onClick={(e)=>{
 
-            Change Cover
+    e.stopPropagation()
 
-          </button>
+    changeCover()
+
+  }}
+>
+
+  Change Cover
+
+</button>
 
         }
 

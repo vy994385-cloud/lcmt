@@ -20,42 +20,42 @@ export default function ProfileStats({ user }: any) {
 
   const stats = [
 
-    {
-      icon:"📝",
-      value:user.posts?.length || 0,
-      label:"Posts",
-      action:()=>{}
-    },
+  {
+    icon:"📝",
+    value:user.posts?.length || 0,
+    label:"Posts",
+    action:()=>navigate(`/profile/${user._id || ""}`)
+  },
 
-    {
-      icon:"👥",
-      value:user.followers?.length || 0,
-      label:"Followers",
-      action:()=>navigate("/followers")
-    },
+  {
+    icon:"👥",
+    value:user.followers?.length || 0,
+    label:"Followers",
+    action:()=>navigate("/followers")
+  },
 
-    {
-      icon:"❤️",
-      value:user.following?.length || 0,
-      label:"Following",
-     action:()=>navigate("/following")
-    },
+  {
+    icon:"❤️",
+    value:user.following?.length || 0,
+    label:"Following",
+    action:()=>navigate("/following")
+  },
 
-    {
-      icon:"🌍",
-      value:user.communities?.length || 0,
-      label:"Communities",
-      action:()=>navigate("/communities")
-    },
+  {
+    icon:"🌍",
+    value:user.communities?.length || 0,
+    label:"Communities",
+    action:()=>navigate("/communities")
+  },
 
-    {
-      icon:"🤝",
-      value:user.friends?.length || 0,
-      label:"Friends",
-      action:()=>navigate("/friends")
-    }
+  {
+    icon:"🤝",
+    value:user.friends?.length || 0,
+    label:"Friends",
+    action:()=>navigate("/friends")
+  }
 
-  ]
+]
 
   return(
 
@@ -94,3 +94,4 @@ export default function ProfileStats({ user }: any) {
   )
 
 }
+

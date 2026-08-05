@@ -512,51 +512,36 @@ Location
 
 
 <select
-
-value={form.location}
-
-onChange={
-e=>updateField(
-"location",
-e.target.value
-)
-}
-
+  value={form.location}
+  onChange={e => updateField("location", e.target.value)}
 >
 
-<option>
-Select
-</option>
+  <option value="">
+    Select
+  </option>
 
-
-{
-locationOptions.map(item=>(
-
-<option key={item}>
-{item}
-</option>
-
-))
-}
-
-<label>
-Website
-</label>
-
-<input
-placeholder="https://yourwebsite.com"
-value={form.website}
-onChange={
-e=>updateField(
-"website",
-e.target.value
-)
-}
-/>
-
+  {locationOptions.map(item => (
+    <option key={item} value={item}>
+      {item}
+    </option>
+  ))}
 
 </select>
 
+<label>
+  Website
+</label>
+
+<input
+  placeholder="https://yourwebsite.com"
+  value={form.website}
+  onChange={e =>
+    updateField(
+      "website",
+      e.target.value
+    )
+  }
+/>
 
 
 

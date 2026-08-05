@@ -5,6 +5,71 @@
 }
 
 
+:root{
+
+/* =====================
+   LCMT COLOR SYSTEM
+===================== */
+
+
+--bg-primary:#F7FBFF;
+
+--bg-soft:
+linear-gradient(
+135deg,
+#F3FAFF,
+#F8F6FF,
+#FFFFFF
+);
+
+
+--card-bg:
+rgba(255,255,255,.72);
+
+
+--card-border:
+rgba(148,163,184,.22);
+
+
+
+--text-primary:#1E293B;
+
+--text-secondary:#64748B;
+
+
+--accent:
+#6D8DFF;
+
+
+--accent-soft:
+#EAF1FF;
+
+
+--success:
+#34D399;
+
+
+--danger:
+#FF6B8A;
+
+
+--shadow:
+
+0 20px 60px
+rgba(30,41,59,.08);
+
+
+
+--glass:
+
+blur(18px);
+
+
+}
+
+
+
+
 html,
 body,
 #root{
@@ -14,39 +79,43 @@ min-height:100%;
 }
 
 
-body {
+
+body{
+
 
 font-family:
 Inter,
 Arial,
 sans-serif;
 
-color:#111827;
+
+color:
+
+var(--text-primary);
+
 
 
 background:
 
-linear-gradient(
-135deg,
-#fff1f5,
-#f8e8ff,
-#e8f7ff
-);
+var(--bg-soft);
+
 
 
 min-height:100vh;
 
+
 }
 
 
-/* ===========================
-   GLOBAL INPUT SYSTEM
-=========================== */
+
+/* ==========================
+GLOBAL INPUT SYSTEM
+========================== */
 
 
 input,
 textarea,
-select {
+select{
 
 
 width:100%;
@@ -58,26 +127,35 @@ font-family:inherit;
 font-size:16px;
 
 
-color:#111827 !important;
+color:
+
+var(--text-primary)!important;
+
 
 
 background:
 
-rgba(255,255,255,.85) !important;
+rgba(255,255,255,.65)!important;
+
 
 
 border:
 
-1px solid rgba(148,163,184,.35);
+1px solid var(--card-border);
 
 
-border-radius:14px;
+
+border-radius:16px;
 
 
-padding:14px 16px;
+padding:
+
+14px 16px;
+
 
 
 outline:none;
+
 
 
 transition:.25s;
@@ -91,10 +169,9 @@ input::placeholder,
 textarea::placeholder{
 
 
-color:#64748b !important;
+color:
 
-
-opacity:1;
+#94A3B8!important;
 
 
 }
@@ -106,47 +183,45 @@ textarea:focus,
 select:focus{
 
 
-background:white !important;
+background:white!important;
 
 
-border-color:#8b5cf6;
+border-color:
+
+var(--accent);
+
 
 
 box-shadow:
 
-0 0 0 4px rgba(139,92,246,.15);
+0 0 0 5px rgba(109,141,255,.15);
 
 
 }
 
 
 
-
-/* Chrome autofill fix */
 
 
 input:-webkit-autofill,
 textarea:-webkit-autofill{
 
 
--webkit-text-fill-color:#111827 !important;
+-webkit-text-fill-color:
+
+var(--text-primary)!important;
+
 
 
 -webkit-box-shadow:
 
-0 0 0 1000px white inset !important;
-
-
-transition:
-
-background-color 9999s ease-in-out 0s;
+0 0 0 1000px white inset!important;
 
 
 }
 
 
 
-/* Buttons */
 
 
 button{
@@ -155,13 +230,158 @@ font-family:inherit;
 
 cursor:pointer;
 
+border:none;
+
 }
 
 
 
-/* ===========================
-   LCMT PAPER TEXTURE SYSTEM
-=========================== */
+/* ==========================
+LCMT GLASS CARD SYSTEM
+========================== */
+
+
+.lcmt-card{
+
+
+background:
+
+var(--card-bg);
+
+
+
+backdrop-filter:
+
+var(--glass);
+
+
+
+-webkit-backdrop-filter:
+
+var(--glass);
+
+
+
+border:
+
+1px solid var(--card-border);
+
+
+
+border-radius:24px;
+
+
+
+box-shadow:
+
+var(--shadow);
+
+
+}
+
+
+
+
+
+/* ==========================
+BUTTON SYSTEM
+========================== */
+
+
+.primary-btn{
+
+
+background:
+
+linear-gradient(
+135deg,
+#62C6FF,
+#7184FF
+);
+
+
+
+color:white;
+
+
+
+padding:
+
+12px 24px;
+
+
+
+border-radius:
+
+16px;
+
+
+
+font-weight:
+
+600;
+
+
+
+transition:.25s;
+
+
+}
+
+
+
+.primary-btn:hover{
+
+
+transform:
+
+translateY(-2px);
+
+
+box-shadow:
+
+0 15px 35px rgba(113,132,255,.25);
+
+
+}
+
+
+
+
+
+/* ==========================
+SOCIAL COLORS
+========================== */
+
+
+
+.like-active{
+
+
+color:
+
+#FF6B8A;
+
+
+}
+
+
+
+.comment-accent{
+
+
+color:
+
+#6D8DFF;
+
+
+}
+
+
+
+/* ==========================
+TEXTURE
+========================== */
 
 
 .paper-texture{
@@ -184,28 +404,168 @@ inset:0;
 background-image:
 
 radial-gradient(
-rgba(0,0,0,.035) 1px,
+rgba(30,41,59,.035) 1px,
 transparent 1px
 );
 
 
-background-size:6px 6px;
+
+background-size:
+
+8px 8px;
 
 
-opacity:.35;
+opacity:.25;
 
 
 pointer-events:none;
+
 
 }
 
 
 
+
 .editorial-shadow{
+
 
 box-shadow:
 
 0 30px 80px
-rgba(15,23,42,.15);
+rgba(30,41,59,.12);
+
+
+}
+
+/* ==================================
+   LCMT LIGHT THEME OVERRIDES
+================================== */
+
+
+/* default text repair */
+
+.app-shell,
+.page-container,
+.card,
+.lcmt-card,
+.post-card,
+.connection-card,
+.friend-card,
+.community-card{
+
+color:var(--text-primary);
+
+}
+
+
+
+/* headings */
+
+h1,
+h2,
+h3,
+h4,
+h5{
+
+color:#172033;
+
+}
+
+
+
+/* normal text */
+
+p,
+span,
+small,
+label{
+
+color:inherit;
+
+}
+
+
+
+/* remove old white text on light surfaces */
+
+.post-card *,
+.connection-card *,
+.friend-card *,
+.community-card *,
+.network-card *{
+
+text-shadow:none;
+
+}
+
+
+
+/* metadata */
+
+.username,
+.bio,
+.meta,
+.timestamp{
+
+color:#64748B !important;
+
+}
+
+
+
+/* comments */
+
+.comment,
+.reply,
+.comment-text{
+
+color:#334155 !important;
+
+}
+
+
+
+/* likes */
+
+.like-count,
+.like-button.active{
+
+color:#FF5C8A !important;
+
+}
+
+
+
+/* buttons keep white */
+
+button,
+.primary-btn,
+.follow-btn,
+.connect-btn{
+
+color:white;
+
+}
+
+
+
+/* glass cards */
+
+.post-card,
+.connection-card,
+.friend-card,
+.community-card,
+.card{
+
+
+background:
+
+rgba(255,255,255,.78)!important;
+
+
+border:
+
+1px solid rgba(148,163,184,.25)!important;
+
 
 }

@@ -9,29 +9,28 @@ import {
 
 import "./Followers.css"
 
-export default function Friends(){
+export default function Friends() {
 
   const user = JSON.parse(
     localStorage.getItem("user") || "{}"
   )
 
-  const [friends,setFriends] =
+  const [friends, setFriends] =
     useState<any[]>([])
 
-  useEffect(()=>{
+  useEffect(() => {
 
-    async function load(){
+    async function load() {
 
-      try{
+      try {
 
-        const data =
-          await getFriends(user._id)
+        const data = await getFriends(
+          user._id
+        )
 
         setFriends(data)
 
-      }
-
-      catch(error){
+      } catch (error) {
 
         console.log(error)
 
@@ -41,9 +40,9 @@ export default function Friends(){
 
     load()
 
-  },[])
+  }, [])
 
-  return(
+  return (
 
     <main className="social-page">
 
@@ -53,50 +52,46 @@ export default function Friends(){
 
       {
 
-        friends.length===0
+        friends.length === 0 ?
 
-        ?
+          <p>
+            No friends yet
+          </p>
 
-        <p>
-          No friends yet
-        </p>
+          :
 
-        :
+          friends.map(person => (
 
-        friends.map((person:any)=>(
+            <div
+              key={person._id}
+              className="user-row"
+            >
 
-          <div
-            key={person._id}
-            className="user-row"
-          >
-
-            <img
-              src={
-                person.image ||
-                "https://i.pravatar.cc/100"
-              }
-              alt={person.name}
-            />
-
-            <div>
-
-              <h3>
-                {person.name}
-              </h3>
-
-              <p>
-                {
-                  person.headline ||
-                  person.bio ||
-                  "LCMT Member"
+              <img
+                src={
+                  person.image ||
+                  "https://i.pravatar.cc/100"
                 }
-              </p>
+                alt={person.name}
+              />
+
+              <div>
+
+                <h3>
+                  {person.name}
+                </h3>
+
+                <p>
+                  {person.headline ||
+                    person.bio ||
+                    "LCMT Member"}
+                </p>
+
+              </div>
 
             </div>
 
-          </div>
-
-        ))
+          ))
 
       }
 

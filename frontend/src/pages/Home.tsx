@@ -78,9 +78,16 @@ const response =
 await api.get("/feed")
 
 
-const formatted =
-response.data.map(formatPost)
+const posts =
+Array.isArray(response.data)
+?
+response.data
+:
+response.data.posts || []
 
+
+const formatted =
+posts.map(formatPost)
 
 setPosts(formatted)
 

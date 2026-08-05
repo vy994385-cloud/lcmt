@@ -13,9 +13,12 @@ getFollowers
 
 import "./Followers.css"
 
+import { useNavigate } from "react-router-dom"
+
 export default function Followers(){
 
 const location = useLocation()
+const navigate = useNavigate()
 
 const currentUser =
 JSON.parse(
@@ -74,10 +77,10 @@ followers.length===0
 followers.map((person:any)=>(
 
 <div
-key={person._id}
-className="user-row"
+  key={person._id}
+  className="user-row"
+  onClick={() => navigate(`/profile/${person._id}`)}
 >
-
 <img
 src={
 person.image ||
