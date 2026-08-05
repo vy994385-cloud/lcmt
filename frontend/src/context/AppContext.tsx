@@ -196,13 +196,11 @@ console.log(error)
 
 }
 
-useEffect(()=>{
+useEffect(() => {
 
-refreshUsers()
-refreshMatches()
-refreshNotifications()
+  refreshNotifications()
 
-},[])
+}, [])
 
 useEffect(()=>{
 

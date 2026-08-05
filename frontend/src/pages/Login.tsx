@@ -21,7 +21,7 @@ function Login(){
 
 const navigate = useNavigate()
 
-const { refreshUsers } = useApp()
+const {} = useApp()
 
 
 
@@ -73,7 +73,6 @@ async function handleLogin(e: React.FormEvent) {
       response.data.user._id
     )
 
-    await refreshUsers()
 
     toast.success("Welcome back!")
 
