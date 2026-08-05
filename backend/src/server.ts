@@ -22,6 +22,7 @@ import { setIO } from "./socket"
 import friendRoutes from "./routes/friendRoutes"
 import networkRoutes from "./routes/networkRoutes"
 import followRoutes from "./routes/followRoutes"
+import socialRoutes from "./routes/socialRoutes"
 import notificationRoutes from "./routes/notificationRoutes"
 import path from "path"
 import mediaRoutes from "./routes/mediaRoutes"
@@ -196,6 +197,11 @@ friendRoutes
 )
 
 app.use("/api/follow", followRoutes)
+
+app.use(
+  "/api/social",
+  socialRoutes
+)
 
 app.use("/api/network", networkRoutes)
 

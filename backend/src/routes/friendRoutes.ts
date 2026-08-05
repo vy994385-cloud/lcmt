@@ -3,7 +3,8 @@ import express from "express"
 import {
   sendFriendRequest,
   acceptFriendRequest,
-  rejectFriendRequest
+  rejectFriendRequest,
+  getFriends
 } from "../controllers/friendController"
 
 import {
@@ -14,13 +15,11 @@ import {
 const router = express.Router()
 
 
-
 router.post(
   "/request/:id",
   protect,
   sendFriendRequest
 )
-
 
 
 router.post(
@@ -30,13 +29,18 @@ router.post(
 )
 
 
-
 router.post(
   "/reject/:id",
   protect,
   rejectFriendRequest
 )
 
+
+router.get(
+  "/:id",
+  protect,
+  getFriends
+)
 
 
 export default router

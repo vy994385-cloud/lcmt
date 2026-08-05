@@ -7,7 +7,8 @@ import {
   likePost,
   addComment,
   deletePost,
-  updatePost
+  updatePost,
+  toggleSavePost
 } from "../controllers/feedController"
 
 import { protect } from "../middleware/authMiddleware"
@@ -54,6 +55,12 @@ router.post(
   "/:id/comment",
   protect,
   addComment
+)
+
+router.post(
+  "/:id/save",
+  protect,
+  toggleSavePost
 )
 
 export default router

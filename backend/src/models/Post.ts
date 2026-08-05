@@ -39,6 +39,16 @@ type:Number,
 default:0
 },
 
+saveCount:{
+type:Number,
+default:0
+},
+
+savedBy:[{
+type:Schema.Types.ObjectId,
+ref:"User"
+}],
+
 likes:[{
 type:Schema.Types.ObjectId,
 ref:"User"

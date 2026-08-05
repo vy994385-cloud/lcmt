@@ -290,9 +290,13 @@ await Post.findById(repost._id)
 "name username image"
 )
 
-.populate(
-"originalPost"
-)
+.populate({
+  path: "originalPost",
+  populate: {
+    path: "user",
+    select: "name username image"
+  }
+})
 
 .populate(
 "community",

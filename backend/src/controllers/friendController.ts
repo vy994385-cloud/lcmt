@@ -346,3 +346,49 @@ export async function rejectFriendRequest(
   }
 
 }
+
+// =========================
+// GET USER FRIENDS
+// =========================
+
+export async function getFriends(
+  req: AuthRequest,
+  res: Response
+){
+
+  try{
+
+    const user =
+      await User.findById(req.params.id)
+      .populate(
+        "friends",
+        "name image username bio college course"
+      )
+
+    if(!user){
+
+      return res.status(404).json({
+        message:"User not found"
+      })
+
+    }
+
+
+    return res.json(
+      user.friends || []
+    )
+
+
+  }
+  catch(error){
+
+    console.log(error)
+
+    return res.status(500).json({
+      message:"Server error"
+    })
+
+  }
+
+}
+
